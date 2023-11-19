@@ -49,12 +49,15 @@ export const MovieView = ({ movies, handleReset }) => {
                 </Card.Text>
                 <div className="row list-unstyled">
                     {similarMovies.map((movie) => (
-                        <div className="col-md-4 my-2" key={movie.id}>
-                            <li>{movie.title}</li>
+                        <div className="col-sm-2 my-1" key={movie.id}>
+                            <Link to={`/Movies/${movie.id}`}>
+                                <Button variant="outline-dark" size="sm" className="width-lg">
+                                    {movie.title}
+                                </Button>
+                            </Link>
                         </div>
                     ))}
                 </div>
-
                 <Card.Text className="d-flex justify-content-between">
                     <Link to={`/`}>
                         <Button
