@@ -33,7 +33,6 @@ export const getMovies = () => async (dispatch) => {
                     director: data.Director,
                     actor: data.Actors,
                     genre: data.Genre,
-                    featured: data.Featured,
                 };
             });
             dispatch({ type: GET_MOVIES_SUCCESS, movies: historyMovieApi });

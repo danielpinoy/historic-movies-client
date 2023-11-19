@@ -1,6 +1,6 @@
 import React from "react";
 import Card from "react-bootstrap/Card";
-import "./movie-card.scss";
+// import "./movie-card.scss";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 
@@ -23,3 +23,21 @@ MovieCard.prototypes = {
         image: PropTypes.string.isRequired,
     }).isRequired,
 };
+
+// $white-color: #ffff;
+// $black-color: #000;
+
+// .hover {
+// 	background-color: $white-color;
+// 	transition: background-color 0.3s ease;
+// 	cursor: pointer;
+// 	&:hover {
+// 		background-color: $black-color;
+// 		color: $white-color
+// }
+
+// }
+
+// .remove-decoration{
+// 	text-decoration: none,
+// }

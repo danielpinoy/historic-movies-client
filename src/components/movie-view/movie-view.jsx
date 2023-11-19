@@ -1,4 +1,3 @@
-import "./movie-view.scss";
 import { Button, Card } from "react-bootstrap";
 import { useParams } from "react-router";
 import { Link } from "react-router-dom";
@@ -11,7 +10,6 @@ export const MovieView = ({ movies }) => {
     const { movieId } = useParams();
     const dispatch = useDispatch();
     const storedUser = JSON.parse(localStorage.getItem("user"));
-
     const isMovieInFavorites = storedUser.FavoriteMovies.includes(String(movieId));
     const movie = movies.find((m) => m.id === movieId);
     const similarMovies = movies.filter(
@@ -44,10 +42,6 @@ export const MovieView = ({ movies }) => {
 
                 <Card.Text>
                     <strong>Genre:</strong> {movie.genre.Name}
-                </Card.Text>
-
-                <Card.Text>
-                    <strong>Featured:</strong> {movie.featured ? "Yes" : "No"}
                 </Card.Text>
 
                 <Card.Text className="list-unstyled">

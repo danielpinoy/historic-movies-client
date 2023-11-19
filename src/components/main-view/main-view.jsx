@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
+import { Form, Col, Row } from "react-bootstrap";
 import { ProfileEditView } from "../profileEdit-view/profileEdit-view";
 import { MovieCard } from "../movie-card/movie-card";
 import { MovieView } from "../movie-view/movie-view";
@@ -23,7 +22,7 @@ export const MainView = () => {
 
     // eslint-disable-next-line
     const [token, setToken] = useState(storedToken ? storedToken : null);
-
+    const [searchTerm, setSearchTerm] = useState("");
     const [isEditingProfile, setUserEdit] = useState(null);
     const dispatch = useDispatch();
 
@@ -35,12 +34,26 @@ export const MainView = () => {
     const user = useSelector((state) => state.user);
     const { movies, loading, error } = useSelector((state) => state.movies);
 
+    const filteredMovies = movies.filter((movie) =>
+        movie.title.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
     // Map movies to MovieCard components
-    const updatedMovie = movies.map((movie) => (
-        <Col key={movie.id} md={3} className="mb-4">
-            <MovieCard movie={movie} />
-        </Col>
-    ));
+    let updatedMovie;
+    if (filteredMovies.length === 0) {
+        updatedMovie = (
+            <Alert key="dark" variant="light">
+                No Movies to find
+            </Alert>
+        );
+    } else {
+        updatedMovie = filteredMovies.map((movie) => (
+            <Col key={movie.id} md={3} className="mb-4">
+                <MovieCard movie={movie} />
+            </Col>
+        ));
+    }
+
     return (
         <BrowserRouter>
             <NavigationBar
@@ -117,7 +130,7 @@ export const MainView = () => {
                             ) : movies.length === 0 ? (
                                 <Col>The list is empty!</Col>
                             ) : (
-                                <Col md={12}>
+                                <Col md={10}>
                                     <MovieView movies={movies} />
                                 </Col>
                             )
@@ -144,6 +157,13 @@ export const MainView = () => {
                             ) : (
                                 <>
                                     {error && <Alert variant="danger">{error}</Alert>}
+                                    <Form.Control
+                                        type="text"
+                                        placeholder="Search Movies"
+                                        value={searchTerm}
+                                        className="mt-3 mb-3"
+                                        onChange={(e) => setSearchTerm(e.target.value)}
+                                    />
 
                                     {updatedMovie}
                                 </>
