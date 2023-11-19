@@ -38,6 +38,11 @@ export const MainView = () => {
         movie.title.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
+    // Reset the searchBar
+    const handleResetSearchTerm = () => {
+        setSearchTerm("");
+    };
+
     // Map movies to MovieCard components
     let updatedMovie;
     if (filteredMovies.length === 0) {
@@ -131,7 +136,10 @@ export const MainView = () => {
                                 <Col>The list is empty!</Col>
                             ) : (
                                 <Col md={10}>
-                                    <MovieView movies={movies} />
+                                    <MovieView
+                                        movies={movies}
+                                        handleReset={handleResetSearchTerm}
+                                    />
                                 </Col>
                             )
                         }

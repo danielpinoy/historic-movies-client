@@ -5,7 +5,7 @@ import { Spinner, Alert } from "react-bootstrap";
 
 import { addFavoriteMovieToUser } from "../../actions/userActions";
 import { useDispatch, useSelector } from "react-redux";
-export const MovieView = ({ movies }) => {
+export const MovieView = ({ movies, handleReset }) => {
     const { user, loading, error } = useSelector((state) => state.user);
     const { movieId } = useParams();
     const dispatch = useDispatch();
@@ -57,7 +57,10 @@ export const MovieView = ({ movies }) => {
 
                 <Card.Text className="d-flex justify-content-between">
                     <Link to={`/`}>
-                        <Button variant="primary" style={{ cursor: "pointer" }}>
+                        <Button
+                            variant="primary"
+                            style={{ cursor: "pointer" }}
+                            onClick={handleReset}>
                             Close
                         </Button>
                     </Link>
