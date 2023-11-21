@@ -39,9 +39,7 @@ export const MainView = () => {
     );
 
     // Reset the searchBar
-    const handleResetSearchTerm = () => {
-        setSearchTerm("");
-    };
+    const handleResetSearchTerm = () => setSearchTerm("");
 
     // Map movies to MovieCard components
     let updatedMovie;
