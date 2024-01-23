@@ -7,19 +7,10 @@ const storedToken = localStorage.getItem("token");
 export const getMovies = () => async (dispatch) => {
     dispatch({ type: GET_MOVIES_REQUEST });
 
-    const timeoutId = setTimeout(() => {
-        dispatch({
-            type: GET_MOVIES_FAILURE,
-            error: "The request took too long. Please try again later.",
-        });
-    }, 10000);
-    // dadas
     try {
         const response = await fetch("https://history-movie-api.onrender.com/Movies", {
             headers: { Authorization: `Bearer ${storedToken}` },
         });
-
-        clearTimeout(timeoutId);
 
         const movieData = await response.json();
 

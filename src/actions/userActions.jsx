@@ -28,26 +28,38 @@ export const EDIT_USER_REQUEST = "EDIT_USER_REQUEST",
 
 // SIGNUP
 export const signup = (Username, Password, Email, Birthday) => async (dispatch) => {
-    const data = {
-        Username,
-        Password,
-        Email,
-        Birthday,
-    };
-    const response = await fetch("https://history-movie-api.onrender.com/register", {
-        method: "POST",
-        body: JSON.stringify(data),
-        headers: {
-            "Content-Type": "application/json",
-        },
-    });
-    const signupUser = await response.json();
+    try {
+        const data = {
+            Username,
+            Password,
+            Email,
+            Birthday,
+        };
 
-    if (signupUser) {
-        dispatch({ type: SIGN_UP, user: signupUser });
-        alert("Signup successful");
-    } else {
-        alert("Signup failed");
+        const response = await fetch("https://history-movie-api.onrender.com/register", {
+            method: "POST",
+            body: JSON.stringify(data),
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+
+        if (!response.ok) {
+            // Handle non-successful response (e.g., server error)
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const signupUser = await response.json();
+
+        if (signupUser) {
+            dispatch({ type: SIGN_UP, user: signupUser });
+            alert("Signup successful");
+        } else {
+            alert("Signup failed");
+        }
+    } catch (error) {
+        console.error("Error during signup:", error);
+        alert("Signup failed. Please try again later.");
     }
 };
 
