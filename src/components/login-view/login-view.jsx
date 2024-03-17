@@ -11,7 +11,7 @@ export const LoginView = () => {
     const [password, setPassword] = useState("");
 
     const { user, loading, error } = useSelector((state) => state.user);
-
+    console.log(error);
     const login = (event) => {
         event.preventDefault();
         dispatch(loginUser({ username, password }));

@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createAsyncThunk } from "@reduxjs/toolkit";
 
 const storedToken = localStorage.getItem("token");
 const storedUser = JSON.parse(localStorage.getItem("user"));
@@ -32,6 +32,12 @@ export const loginUser = createAsyncThunk("user/login", async ({ username, passw
         body: JSON.stringify(data),
     });
     const userData = await response.json();
+
+    // If the server returns an object with "user" set to false, throw an error with the message
+    console.log(userData);
+    // if (!userData.user) {
+    //     throw new Error(userData.message || "Login failed");
+    // }
     return userData;
 });
 

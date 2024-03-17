@@ -33,13 +33,29 @@ const userSlice = createSlice({
             })
             .addCase(loginUser.fulfilled, (state, action) => {
                 state.loading = false;
-                state.user = action.payload.user;
-                localStorage.setItem("user", JSON.stringify(action.payload.user));
-                localStorage.setItem("token", action.payload.token);
+                console.log(action.payload);
+                if (action.payload && action.payload.user !== false) {
+                    state.user = action.payload.user;
+                    localStorage.setItem("user", JSON.stringify(action.payload.user));
+                    localStorage.setItem("token", action.payload.token);
+                    window.location.reload();
+                }
+                // Wrong username and password
+                else if (action.payload && action.payload.user === false) {
+                    state.error = "Incorrect Username or Password";
+                }
             })
             .addCase(loginUser.rejected, (state, action) => {
                 state.loading = false;
-                state.error = "Wrong Password or Username";
+
+                state.error = "Network Problems";
+                // if (action.payload === undefined) {
+                //     state.error = "Network Error";
+                // } else {
+                //     // Check if the user is false, indicating an incorrect password
+                //     state.error =
+                //         action.payload.user === false ? action.payload.message : "Unknown Error";
+                // }
             })
             .addCase(editUser.pending, (state) => {
                 state.loading = true;
@@ -56,7 +72,6 @@ const userSlice = createSlice({
             })
             .addCase(deleteUser.fulfilled, (state) => {
                 state.user = null;
-                console.log("Finally");
             })
             .addCase(deleteUser.rejected, (state, action) => {
                 state.error = action.error.message;

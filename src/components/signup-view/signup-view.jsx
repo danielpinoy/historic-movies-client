@@ -4,6 +4,8 @@ import Form from "react-bootstrap/Form";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { signupUser } from "../../asyncThunk/userAsyncThunks";
+import { Alert } from "react-bootstrap";
+
 export const SignupView = () => {
     const navigate = useNavigate();
 
