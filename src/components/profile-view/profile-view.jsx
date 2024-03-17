@@ -2,9 +2,8 @@ import { Button, Card } from "react-bootstrap";
 import ListGroup from "react-bootstrap/ListGroup";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteUser, unFavoriteMovie } from "../../actions/userActions";
 import { Spinner, Alert } from "react-bootstrap";
-
+import { deleteUser, removeFavoriteMovie } from "../../asyncThunk/userAsyncThunks";
 export const ProfileView = ({ clickUpdate, movies, token }) => {
     const { user, loading, error } = useSelector((state) => state.user);
     const formattedBirthday = new Date(user.Birthday).toLocaleDateString();
@@ -13,13 +12,12 @@ export const ProfileView = ({ clickUpdate, movies, token }) => {
     const handleDeleteClick = () => {
         const confirmed = window.confirm("Are you sure you want to delete your Profile?");
         if (confirmed) {
-            dispatch(deleteUser(user, token));
+            dispatch(deleteUser({ user, token }));
         }
     };
 
     const onDeleteFavoriteMovie = (movieId) => {
-        console.log("inside onDeleteFavoriteMovie");
-        dispatch(unFavoriteMovie(user, movieId));
+        dispatch(removeFavoriteMovie({ user, movieId }));
     };
     const loadingUser = () => {
         if (loading) {
@@ -78,7 +76,6 @@ export const ProfileView = ({ clickUpdate, movies, token }) => {
 
                                 <Button
                                     onClick={() => {
-                                        console.log("e");
                                         clickUpdate(1);
                                     }}>
                                     Edit

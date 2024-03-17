@@ -9,8 +9,8 @@ import { ProfileView } from "../profile-view/profile-view";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { NavigationBar } from "../navigation-bar/navigation-bar";
 import { useSelector, useDispatch } from "react-redux";
-import { logout } from "../../actions/userActions";
-import { getMovies } from "../../actions/movieActions";
+import { logout } from "../../slice/userSlice";
+import { getMovies } from "../../slice/movieSlice";
 import { Alert } from "react-bootstrap";
 
 export const MainView = () => {

@@ -23,21 +23,3 @@ MovieCard.prototypes = {
         image: PropTypes.string.isRequired,
     }).isRequired,
 };
-
-// $white-color: #ffff;
-// $black-color: #000;
-
-// .hover {
-// 	background-color: $white-color;
-// 	transition: background-color 0.3s ease;
-// 	cursor: pointer;
-// 	&:hover {
-// 		background-color: $black-color;
-// 		color: $white-color
-// }
-
-// }
-
-// .remove-decoration{
-// 	text-decoration: none,
-// }

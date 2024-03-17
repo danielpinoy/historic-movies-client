@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Button, Card, ListGroup } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { editUser } from "../../actions/userActions";
+import { editUser } from "../../asyncThunk/userAsyncThunks";
 import { Alert } from "react-bootstrap";
 
 export const ProfileEditView = ({ clickUpdate, token }) => {
@@ -15,8 +15,7 @@ export const ProfileEditView = ({ clickUpdate, token }) => {
     };
 
     const handleSubmit = () => {
-        console.log(user, loading);
-        dispatch(editUser(user, updatedUserData, token));
+        dispatch(editUser({ userData: user, updatedUserData, token }));
         clickUpdate(null);
     };
 

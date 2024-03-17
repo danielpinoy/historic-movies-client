@@ -2,9 +2,8 @@ import { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import { useDispatch } from "react-redux";
-import { signup } from "../../actions/userActions";
 import { useNavigate } from "react-router-dom";
-
+import { signupUser } from "../../asyncThunk/userAsyncThunks";
 export const SignupView = () => {
     const navigate = useNavigate();
 
@@ -15,8 +14,12 @@ export const SignupView = () => {
     const dispatch = useDispatch();
     const signUpSubmit = (event) => {
         event.preventDefault();
+        console.log(password);
+        console.log(email);
 
-        dispatch(signup(username, password, email, birthday));
+        dispatch(
+            signupUser({ Username: username, Password: password, Email: email, Birthday: birthday })
+        );
         setUsername("");
         setPassword("");
         setEmail("");

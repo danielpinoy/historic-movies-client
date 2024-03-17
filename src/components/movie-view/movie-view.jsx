@@ -2,14 +2,14 @@ import { Button, Card } from "react-bootstrap";
 import { useParams } from "react-router";
 import { Link } from "react-router-dom";
 import { Spinner, Alert } from "react-bootstrap";
-
-import { addFavoriteMovieToUser } from "../../actions/userActions";
+import { addFavoriteMovieToUser } from "../../asyncThunk/userAsyncThunks";
 import { useDispatch, useSelector } from "react-redux";
 export const MovieView = ({ movies, handleReset }) => {
     const { user, loading, error } = useSelector((state) => state.user);
     const { movieId } = useParams();
     const dispatch = useDispatch();
     const storedUser = JSON.parse(localStorage.getItem("user"));
+
     const isMovieInFavorites = storedUser.FavoriteMovies.includes(String(movieId));
     const movie = movies.find((m) => m.id === movieId);
     const similarMovies = movies.filter(
@@ -49,7 +49,7 @@ export const MovieView = ({ movies, handleReset }) => {
                 </Card.Text>
                 <div className="row list-unstyled">
                     {similarMovies.map((movie) => (
-                        <div className="col-sm-2 my-1" key={movie.id}>
+                        <div className="col-sm-4 my-1" key={movie.id}>
                             <Link to={`/Movies/${movie.id}`}>
                                 <Button variant="outline-dark" size="sm" className="width-lg">
                                     {movie.title}
@@ -74,7 +74,7 @@ export const MovieView = ({ movies, handleReset }) => {
                             {error && <Alert variant="danger">{error}</Alert>}
                             <Button
                                 onClick={() => {
-                                    dispatch(addFavoriteMovieToUser(user._id, movieId));
+                                    dispatch(addFavoriteMovieToUser({ userId: user._id, movieId }));
                                 }}
                                 variant="dark"
                                 style={{ cursor: "pointer" }}

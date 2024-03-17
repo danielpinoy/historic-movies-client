@@ -1,12 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { userReducer, asyncUserReducer } from "../reducers/userReducer"; // Import your root reducer
-import movieReducer from "../reducers/movieReducer";
+// import { userReducer, asyncUserReducer } from "../reducers/userReducer"; // Import your root reducer
+import userReducer from "../slice/userSlice";
+import movieReducer from "../slice/movieSlice";
 // Create and configure the Redux store
 const store = configureStore({
     reducer: {
         user: userReducer,
-        // eslint-disable-next-line
-        user: asyncUserReducer,
         movies: movieReducer,
     },
 });

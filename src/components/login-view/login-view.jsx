@@ -4,7 +4,7 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import { Spinner, Alert } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { login } from "../../actions/userActions";
+import { loginUser } from "../../asyncThunk/userAsyncThunks";
 export const LoginView = () => {
     const dispatch = useDispatch();
     const [username, setUsername] = useState("");
@@ -12,14 +12,13 @@ export const LoginView = () => {
 
     const { user, loading, error } = useSelector((state) => state.user);
 
-    const loginUser = (event) => {
+    const login = (event) => {
         event.preventDefault();
-        console.log(user);
-        dispatch(login(username, password));
+        dispatch(loginUser({ username, password }));
     };
 
     return (
-        <Form onSubmit={loginUser}>
+        <Form onSubmit={login}>
             <Form.Group className="mt-3">
                 <Form.Label>
                     <h3>Log In</h3>
