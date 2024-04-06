@@ -10,6 +10,7 @@ export const LoginView = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
 
+    // eslint-disable-next-line no-unused-vars
     const { user, loading, error } = useSelector((state) => state.user);
     console.log(error);
     const login = (event) => {

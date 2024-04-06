@@ -6,6 +6,7 @@ import { Alert } from "react-bootstrap";
 
 export const ProfileEditView = ({ clickUpdate, token }) => {
     const dispatch = useDispatch();
+    // eslint-disable-next-line no-unused-vars
     const { user, loading, error } = useSelector((state) => state.user);
 
     const [updatedUserData, setUpdatedUserData] = useState(user);
