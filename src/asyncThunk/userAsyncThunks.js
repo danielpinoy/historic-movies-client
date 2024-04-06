@@ -49,7 +49,6 @@ export const loginUser = createAsyncThunk(
             }
 
             const userData = await response.json();
-            console.log(userData);
             return userData;
         } catch (error) {
             return rejectWithValue(error.message);
@@ -134,7 +133,6 @@ export const addFavoriteMovieToUser = createAsyncThunk(
                 const errorData = await response.json();
                 throw new Error(errorData.error);
             }
-
             const updatedUser = await response.json();
             return updatedUser;
         } catch (error) {
@@ -166,7 +164,8 @@ export const removeFavoriteMovie = createAsyncThunk(
                 };
                 return updatedUser;
             } else {
-                throw new Error("Failed to remove favorite movie.");
+                const updatedUser = storedUser;
+                return updatedUser;
             }
         } catch (error) {
             return rejectWithValue(error.message);
