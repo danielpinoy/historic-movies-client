@@ -15,8 +15,6 @@ export const SignupView = () => {
     const dispatch = useDispatch();
     const signUpSubmit = (event) => {
         event.preventDefault();
-        console.log(password);
-        console.log(email);
 
         dispatch(
             signupUser({ Username: username, Password: password, Email: email, Birthday: birthday })

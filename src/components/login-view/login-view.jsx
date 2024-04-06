@@ -12,7 +12,6 @@ export const LoginView = () => {
 
     // eslint-disable-next-line no-unused-vars
     const { user, loading, error } = useSelector((state) => state.user);
-    console.log(error);
     const login = (event) => {
         event.preventDefault();
         dispatch(loginUser({ username, password }));
