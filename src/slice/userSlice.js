@@ -51,13 +51,6 @@ const userSlice = createSlice({
             .addCase(loginUser.rejected, (state, action) => {
                 state.loading = false;
                 state.error = "Network Problems";
-                // if (action.payload === undefined) {
-                //     state.error = "Network Error";
-                // } else {
-                //     // Check if the user is false, indicating an incorrect password
-                //     state.error =
-                //         action.payload.user === false ? action.payload.message : "Unknown Error";
-                // }
             })
             .addCase(editUser.pending, (state) => {
                 state.loading = true;
@@ -76,7 +69,7 @@ const userSlice = createSlice({
                 state.user = null;
             })
             .addCase(deleteUser.rejected, (state, action) => {
-                state.error = action.error.message;
+                state.error = "Network Problem. Please try again later.";
             })
             .addCase(addFavoriteMovieToUser.pending, (state) => {
                 state.loading = true;
