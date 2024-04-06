@@ -8,7 +8,7 @@ export const NavigationBar = ({ user, loggedOut }) => {
         <Navbar bg="light" expand="lg">
             <Container>
                 <Navbar.Brand as={Link} to="/">
-                    HistoricMovie App
+                    RetroLens
                 </Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
