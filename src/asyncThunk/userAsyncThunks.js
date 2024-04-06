@@ -6,22 +6,29 @@ const storedUser = JSON.parse(localStorage.getItem("user"));
 // Async thunks
 export const signupUser = createAsyncThunk(
     "user/signup",
-    async ({ Username, Password, Email, Birthday }) => {
-        const data = { Username, Password, Email, Birthday };
-        console.log(data, "data");
-        const response = await fetch("https://history-movie-api.onrender.com/register", {
-            method: "POST",
-            body: JSON.stringify(data),
-            headers: {
-                "Content-Type": "application/json",
-            },
-        });
-        const signupUser = await response.json();
-        console.log(signupUser);
-        return signupUser;
+    async ({ Username, Password, Email, Birthday }, { rejectWithValue }) => {
+        try {
+            const data = { Username, Password, Email, Birthday };
+            const response = await fetch("https://history-movie-api.onrender.com/register", {
+                method: "POST",
+                body: JSON.stringify(data),
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error);
+            }
+
+            const signupUser = await response.json();
+            return signupUser;
+        } catch (error) {
+            return rejectWithValue(error.message);
+        }
     }
 );
-
 export const loginUser = createAsyncThunk("user/login", async ({ username, password }) => {
     const data = { Username: username, Password: password };
     const response = await fetch("https://history-movie-api.onrender.com/login", {
