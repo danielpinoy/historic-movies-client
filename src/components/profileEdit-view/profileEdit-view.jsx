@@ -22,7 +22,6 @@ export const ProfileEditView = ({ clickUpdate, token }) => {
 
     return (
         <>
-            loading ?<div>LOADING</div>:
             <Card>
                 <Card.Body>
                     <Card.Title>Edit Profile</Card.Title>

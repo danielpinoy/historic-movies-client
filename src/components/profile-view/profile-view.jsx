@@ -1,4 +1,4 @@
-import { Button, Card } from "react-bootstrap";
+import { Button, Card, Col, Row } from "react-bootstrap";
 import ListGroup from "react-bootstrap/ListGroup";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -22,69 +22,67 @@ export const ProfileView = ({ clickUpdate, movies, token }) => {
     const loadingUser = () => {
         if (loading) {
             return (
-                <div className="loadingData">
-                    <Alert key="dark" variant="dark">
-                        <Spinner animation="border" variant="dark" size="sm" />
-                        Loading...
-                    </Alert>
+                <div className="text-center">
+                    <Spinner animation="border" variant="primary" />
+                    <p>Loading...</p>
                 </div>
             );
         } else if (error) {
             return <Alert variant="danger">{error}</Alert>;
         }
         return (
-            <>
-                <Card>
-                    <Card.Body>
-                        <ListGroup>
-                            <ListGroup.Item>
-                                <Card.Title>Profile</Card.Title>
-                                <h4>
-                                    {user.Username.charAt(0).toUpperCase() + user.Username.slice(1)}
-                                </h4>
-                            </ListGroup.Item>
-                        </ListGroup>
-                        <ListGroup className="list-group-flush">
-                            <ListGroup.Item>
-                                <strong>Birthday:</strong> {formattedBirthday}
-                            </ListGroup.Item>
-                            <ListGroup.Item>
-                                <strong>Email:</strong>: {user.Email}
-                            </ListGroup.Item>
-                            <ListGroup.Item className="d-flex flex-column">
-                                <h4>Favorite Movies:</h4>
-                                {error && <Alert variant="danger">{error}</Alert>}
-
-                                {favoriteMovies.map((movie) => {
-                                    return (
-                                        <div key={movie.title} className="d-flex">
-                                            <h5>{movie.title}</h5>
-
+            <Card>
+                <Card.Body>
+                    <Card.Title className="mb-4">
+                        <h2>Profile</h2>
+                    </Card.Title>
+                    <ListGroup variant="flush">
+                        <ListGroup.Item>
+                            <strong>Username: </strong>
+                            {user.Username.charAt(0).toUpperCase() + user.Username.slice(1)}
+                        </ListGroup.Item>
+                        <ListGroup.Item>
+                            <strong>Birthday:</strong> {formattedBirthday}
+                        </ListGroup.Item>
+                        <ListGroup.Item>
+                            <strong>Email:</strong> {user.Email}
+                        </ListGroup.Item>
+                        <ListGroup.Item>
+                            <h4>Favorite Movies:</h4>
+                            {error && <Alert variant="danger">{error}</Alert>}
+                            {favoriteMovies.length === 0 ? (
+                                <p>No favorite movies.</p>
+                            ) : (
+                                favoriteMovies.map((movie) => (
+                                    <Row key={movie.title} className="mb-2">
+                                        <Col xs={9}>{movie.title}</Col>
+                                        <Col xs={3} className="text-right">
                                             <Button
+                                                variant="danger"
                                                 size="sm"
                                                 onClick={() => onDeleteFavoriteMovie(movie.id)}>
                                                 Delete
                                             </Button>
-                                        </div>
-                                    );
-                                })}
-                            </ListGroup.Item>
-                            <ListGroup.Item className="d-flex justify-content-between">
-                                <Button onClick={handleDeleteClick} className="btn btn-danger">
-                                    Delete
-                                </Button>
-
-                                <Button
-                                    onClick={() => {
-                                        clickUpdate(1);
-                                    }}>
-                                    Edit
-                                </Button>
-                            </ListGroup.Item>
-                        </ListGroup>
-                    </Card.Body>
-                </Card>
-            </>
+                                        </Col>
+                                    </Row>
+                                ))
+                            )}
+                        </ListGroup.Item>
+                    </ListGroup>
+                </Card.Body>
+                <Card.Footer>
+                    <Row>
+                        <Col>
+                            <Button variant="danger" onClick={handleDeleteClick}>
+                                Delete User
+                            </Button>
+                        </Col>
+                        <Col>
+                            <Button onClick={() => clickUpdate(1)}>Edit User</Button>
+                        </Col>
+                    </Row>
+                </Card.Footer>
+            </Card>
         );
     };
     return <div>{loadingUser()}</div>;

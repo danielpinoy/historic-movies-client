@@ -89,7 +89,7 @@ export const MainView = () => {
                                 {storedUser ? (
                                     <Navigate to="/" />
                                 ) : (
-                                    <Col md={4}>
+                                    <Col md={12}>
                                         <LoginView />
                                     </Col>
                                 )}
