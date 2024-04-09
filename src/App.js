@@ -1,6 +1,6 @@
 import Container from "react-bootstrap/Container";
 import { Provider } from "react-redux";
-import { MainView } from "./components/main-view/main-view";
+import { MainView } from "./components/main-view";
 import store from "./store/configureStore";
 
 const App = () => {

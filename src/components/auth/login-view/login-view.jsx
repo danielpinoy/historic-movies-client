@@ -4,9 +4,9 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import { Spinner, Alert, Row, Col, Image } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { loginUser } from "../../asyncThunk/userAsyncThunks";
-import loginImage from "../../assets/Logo_RetroLens.png";
-export const LoginView = () => {
+import { loginUser } from "../../../asyncThunk/userAsyncThunks";
+import loginImage from "../../../assets/Logo_RetroLens.png";
+const LoginView = () => {
     const dispatch = useDispatch();
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
@@ -64,3 +64,5 @@ export const LoginView = () => {
         </Row>
     );
 };
+
+export default LoginView;

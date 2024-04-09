@@ -4,7 +4,7 @@ import Card from "react-bootstrap/Card";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 
-export const MovieCard = ({ movie }) => {
+const MovieCard = ({ movie }) => {
     return (
         <Link to={`/movies/${encodeURIComponent(movie.id)}`} className="remove-decoration">
             <Card className="hover h-100">
@@ -23,3 +23,4 @@ MovieCard.prototypes = {
         image: PropTypes.string.isRequired,
     }).isRequired,
 };
+export default MovieCard;

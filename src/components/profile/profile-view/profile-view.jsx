@@ -3,8 +3,8 @@ import ListGroup from "react-bootstrap/ListGroup";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Spinner, Alert } from "react-bootstrap";
-import { deleteUser, removeFavoriteMovie } from "../../asyncThunk/userAsyncThunks";
-export const ProfileView = ({ clickUpdate, movies, token }) => {
+import { deleteUser, removeFavoriteMovie } from "../../../asyncThunk/userAsyncThunks";
+const ProfileView = ({ clickUpdate, movies, token }) => {
     const { user, loading, error } = useSelector((state) => state.user);
     const formattedBirthday = new Date(user.Birthday).toLocaleDateString();
     const favoriteMovies = movies.filter((m) => user.FavoriteMovies.includes(m.id));
@@ -87,3 +87,5 @@ export const ProfileView = ({ clickUpdate, movies, token }) => {
     };
     return <div>{loadingUser()}</div>;
 };
+
+export default ProfileView;

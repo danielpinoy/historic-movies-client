@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { Button, Card, ListGroup } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { editUser } from "../../asyncThunk/userAsyncThunks";
+import { editUser } from "../../../asyncThunk/userAsyncThunks";
 import { Alert } from "react-bootstrap";
 
-export const ProfileEditView = ({ clickUpdate, token }) => {
+const ProfileEditView = ({ clickUpdate, token }) => {
     const dispatch = useDispatch();
     // eslint-disable-next-line no-unused-vars
     const { user, loading, error } = useSelector((state) => state.user);
@@ -70,3 +70,5 @@ export const ProfileEditView = ({ clickUpdate, token }) => {
         </>
     );
 };
+
+export default ProfileEditView;

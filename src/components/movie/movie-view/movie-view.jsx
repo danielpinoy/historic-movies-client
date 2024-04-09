@@ -2,9 +2,9 @@ import { Button, Card } from "react-bootstrap";
 import { useParams } from "react-router";
 import { Link } from "react-router-dom";
 import { Spinner, Alert } from "react-bootstrap";
-import { addFavoriteMovieToUser } from "../../asyncThunk/userAsyncThunks";
+import { addFavoriteMovieToUser } from "../../../asyncThunk/userAsyncThunks";
 import { useDispatch, useSelector } from "react-redux";
-export const MovieView = ({ movies, handleReset }) => {
+const MovieView = ({ movies, handleReset }) => {
     const { user, loading, error } = useSelector((state) => state.user);
     const { movieId } = useParams();
     const dispatch = useDispatch();
@@ -101,3 +101,5 @@ export const MovieView = ({ movies, handleReset }) => {
         </Card>
     );
 };
+
+export default MovieView;

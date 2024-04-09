@@ -3,9 +3,9 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { signupUser } from "../../asyncThunk/userAsyncThunks";
+import { signupUser } from "../../../asyncThunk/userAsyncThunks";
 
-export const SignupView = () => {
+const SignupView = () => {
     const navigate = useNavigate();
 
     const [username, setUsername] = useState("");
@@ -74,3 +74,5 @@ export const SignupView = () => {
         </Form>
     );
 };
+
+export default SignupView;

@@ -1,16 +1,13 @@
 import { useState, useEffect } from "react";
 import { Form, Col, Row } from "react-bootstrap";
-import { ProfileEditView } from "../profileEdit-view/profileEdit-view";
-import { MovieCard } from "../movie-card/movie-card";
-import { MovieView } from "../movie-view/movie-view";
-import { LoginView } from "../login-view/login-view";
-import { SignupView } from "../signup-view/signup-view";
-import { ProfileView } from "../profile-view/profile-view";
+import { MovieCard, MovieView } from "./movie/index.tsx";
+import { ProfileView, ProfileEditView } from "./profile/index.tsx";
+import { LoginView, SignupView } from "./auth/index";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { NavigationBar } from "../navigation-bar/navigation-bar";
+import { NavigationBar } from "./navigation-bar/navigation-bar";
 import { useSelector, useDispatch } from "react-redux";
-import { logout } from "../../slice/userSlice";
-import { getMovies } from "../../slice/movieSlice";
+import { logout } from "../slice/userSlice";
+import { getMovies } from "../slice/movieSlice";
 import { Alert } from "react-bootstrap";
 
 export const MainView = () => {
