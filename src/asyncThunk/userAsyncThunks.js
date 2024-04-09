@@ -9,13 +9,16 @@ export const signupUser = createAsyncThunk(
     async ({ Username, Password, Email, Birthday }, { rejectWithValue }) => {
         try {
             const data = { Username, Password, Email, Birthday };
-            const response = await fetch("https://history-modvie-api.onrender.com/register", {
-                method: "POST",
-                body: JSON.stringify(data),
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            });
+            const response = await fetch(
+                "https://historymovieapi-production.up.railway.app/register",
+                {
+                    method: "POST",
+                    body: JSON.stringify(data),
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                }
+            );
 
             if (!response.ok) {
                 const errorData = await response.json();
@@ -35,13 +38,16 @@ export const loginUser = createAsyncThunk(
     async ({ username, password }, { rejectWithValue }) => {
         try {
             const data = { Username: username, Password: password };
-            const response = await fetch("https://history-movie-api.onrender.com/login", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(data),
-            });
+            const response = await fetch(
+                "https://historymovieapi-production.up.railway.app/login",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(data),
+                }
+            );
 
             if (!response.ok) {
                 const errorData = await response.json();
@@ -61,7 +67,7 @@ export const editUser = createAsyncThunk(
     async ({ userData, updatedUserData, token }, { rejectWithValue }) => {
         try {
             const response = await fetch(
-                `https://history-movie-api.onrender.com/user/${userData.Username}`,
+                `https://historymovieapi-production.up.railway.app/user/${userData.Username}`,
                 {
                     method: "PUT",
                     headers: {
@@ -90,7 +96,7 @@ export const deleteUser = createAsyncThunk(
     async ({ user, token }, { rejectWithValue }) => {
         try {
             const response = await fetch(
-                `https://history-movie-api.onrender.com/user/${user._id}`,
+                `https://historymovieapi-production.up.railway.app/user/${user._id}`,
                 {
                     method: "DELETE",
                     headers: {
@@ -118,7 +124,7 @@ export const addFavoriteMovieToUser = createAsyncThunk(
             console.log(userId + " " + movieId);
 
             const response = await fetch(
-                "https://history-movie-api.onrender.com/user/addfavorite",
+                "https://historymovieapi-production.up.railway.app/user/addfavorite",
                 {
                     method: "POST",
                     headers: {
@@ -147,7 +153,7 @@ export const removeFavoriteMovie = createAsyncThunk(
         try {
             const encodedMovieId = encodeURIComponent(movieId);
             const response = await fetch(
-                `https://history-movie-api.onrender.com/user/${user._id}/${encodedMovieId}`,
+                `https://historymovieapi-production.up.railway.app/user/${user._id}/${encodedMovieId}`,
                 {
                     method: "DELETE",
                     headers: {
