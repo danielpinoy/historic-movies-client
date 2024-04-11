@@ -28,7 +28,6 @@ const userSlice = createSlice({
             .addCase(signupUser.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
-                console.log(action.payload);
             })
             .addCase(loginUser.pending, (state) => {
                 state.loading = true;
@@ -50,7 +49,7 @@ const userSlice = createSlice({
             })
             .addCase(loginUser.rejected, (state, action) => {
                 state.loading = false;
-                state.error = "Network Problems";
+                state.error = action.payload;
             })
             .addCase(editUser.pending, (state) => {
                 state.loading = true;
