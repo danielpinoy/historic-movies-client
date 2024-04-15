@@ -103,18 +103,20 @@ export const MainView = () => {
                                 <Navigate to="/login" replace />
                             ) : (
                                 <Col md={12} className="d-flex justify-content-center">
-                                    {!isEditingProfile ? (
-                                        <ProfileView
-                                            movies={movies}
-                                            token={token}
-                                            clickUpdate={(num) => setUserEdit(num)}
-                                        />
-                                    ) : (
-                                        <ProfileEditView
-                                            token={storedToken}
-                                            clickUpdate={(num) => setUserEdit(num)}
-                                        />
-                                    )}
+                                    <div className="profile-container">
+                                        {!isEditingProfile ? (
+                                            <ProfileView
+                                                movies={movies}
+                                                token={token}
+                                                clickUpdate={(num) => setUserEdit(num)}
+                                            />
+                                        ) : (
+                                            <ProfileEditView
+                                                token={storedToken}
+                                                clickUpdate={(num) => setUserEdit(num)}
+                                            />
+                                        )}
+                                    </div>
                                 </Col>
                             )
                         }

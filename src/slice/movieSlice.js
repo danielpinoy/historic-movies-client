@@ -9,20 +9,19 @@ export const getMovies = createAsyncThunk("movies/getMovies", async (_, { reject
         });
 
         const movieData = await response.json();
-
         if (movieData) {
-            const historyMovieApi = movieData.map((data) => {
-                return {
-                    id: data._id,
-                    title: data.Title,
-                    description: data.Description,
-                    image: data.Image,
-                    director: data.Director,
-                    actor: data.Actors,
-                    genre: data.Genre,
-                    featured: data.Featured,
-                };
-            });
+            const historyMovieApi = movieData.map((data) => ({
+                id: data._id,
+                title: data.Title,
+                description: data.Description,
+                image: data.Image,
+                director: data.Director,
+                actor: data.Actors,
+                genre: data.Genre,
+                featured: data.Featured,
+                ReleaseDate: data.ReleaseDate,
+                Runtime: data.Runtime,
+            }));
             return historyMovieApi;
         } else {
             return rejectWithValue("Network Problem. Please try again later.");

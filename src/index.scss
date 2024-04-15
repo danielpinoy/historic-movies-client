@@ -1,52 +1,74 @@
-
 body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu",
+        "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+    font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
 }
-
 
 .loadingData {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 40vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 40vh;
 }
-
 
 $white-color: #ffff;
 $black-color: #000;
 
-
 .hover {
-	background-color: $white-color;
-	transition: background-color 0.3s ease;
-	cursor: pointer;
-	&:hover {
-		background-color: $black-color; 
-		color: $white-color
-}
-	
-}
-
-.remove-decoration{
-	text-decoration: none,
+    background-color: $white-color;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+    &:hover {
+        background-color: $black-color;
+        color: $white-color;
+    }
 }
 
-.d-flex{
-  gap:5px;
+.remove-decoration {
+    text-decoration: none;
+}
+
+.d-flex {
+    gap: 5px;
 }
 
 .width-lg {
-  width: 150px; 
+    width: 150px;
 }
 
-@import '~bootstrap/scss/bootstrap.scss';
+// Profile
+.profile-container {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+}
+.profile-card {
+    position: relative;
+    overflow: hidden;
+}
+
+.profile-card .card-body {
+    position: relative;
+    z-index: 1;
+}
+
+// Spinner Loading
+
+.spinner-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.spinner-content {
+    text-align: center;
+}
+
+@import "~bootstrap/scss/bootstrap.scss";

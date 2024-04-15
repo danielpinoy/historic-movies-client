@@ -22,16 +22,19 @@ const ProfileView = ({ clickUpdate, movies, token }) => {
     const loadingUser = () => {
         if (loading) {
             return (
-                <div className="text-center">
-                    <Spinner animation="border" variant="primary" />
-                    <p>Loading...</p>
+                <div className="spinner-container">
+                    <div className="spinner-content">
+                        <Spinner animation="border" variant="primary" />
+                        <p>Loading...</p>
+                    </div>
                 </div>
             );
         } else if (error) {
             return <Alert variant="danger">{error}</Alert>;
         }
         return (
-            <Card>
+            <Card className="profile-card">
+                <div className="profile-background"></div>
                 <Card.Body>
                     <Card.Title className="mb-4">
                         <h2>Profile</h2>

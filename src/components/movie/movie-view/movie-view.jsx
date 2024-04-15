@@ -1,4 +1,4 @@
-import { Button, Card } from "react-bootstrap";
+import { Button, Card, Col, Row } from "react-bootstrap";
 import { useParams } from "react-router";
 import { Link } from "react-router-dom";
 import { Spinner, Alert } from "react-bootstrap";
@@ -10,94 +10,95 @@ const MovieView = ({ movies, handleReset }) => {
     const dispatch = useDispatch();
     const isMovieInFavorites = user.FavoriteMovies.includes(String(movieId));
     const movie = movies.find((m) => m.id === movieId);
-    const similarMovies = movies.filter(
-        (m) => m.genre.Name === movie.genre.Name && m.id !== movieId
-    );
+    const similarMovies = movies
+        .filter((m) => m.id !== movieId && m.genre.some((genre) => movie.genre.includes(genre)))
+        .sort(() => 0.5 - Math.random())
+        .slice(0, 5);
 
+    console.log(similarMovies);
     return (
-        <Card>
-            <Card.Body className="d-flex flex-column">
-                <Card.Header as="h5">{movie.title}</Card.Header>
-
-                <Card.Text>{movie.description}</Card.Text>
-                <Card.Text>
-                    <strong>Director:</strong> {movie.director.Name}
-                    <br />
-                    {movie.director.Bio}
-                </Card.Text>
-
-                <strong>Actors:</strong>
-
-                <ul className="list-unstyled">
-                    <div className="row">
-                        {movie.actor.map((actor, index) => (
-                            <div className="col-md-4 my-2" key={index}>
-                                <li>{actor}</li>
-                            </div>
-                        ))}
-                    </div>
-                </ul>
-
-                <Card.Text>
-                    <strong>Genre:</strong> {movie.genre.Name}
-                </Card.Text>
-
-                <Card.Text className="list-unstyled">
-                    <strong>Similar Movies:</strong>
-                </Card.Text>
-                <div className="row list-unstyled">
-                    {similarMovies.map((movie) => (
-                        <div className="col-sm-4 my-1" key={movie.id}>
-                            <Link to={`/Movies/${movie.id}`}>
-                                <Button variant="outline-dark" size="sm" className="width-lg">
-                                    {movie.title}
+        <Card className="bg-light">
+            <Row className="g-0">
+                <Col md={4}>
+                    <Card.Img src={movie.image} alt={`${movie.title} Poster`} />
+                </Col>
+                <Col md={8}>
+                    <Card.Body>
+                        <Card.Title>{movie.title}</Card.Title>
+                        <Card.Text>
+                            <Row>
+                                <Col>Date: {movie.ReleaseDate.slice(0, 4)}</Col>
+                                <Col>{movie.Runtime}</Col>
+                                <Col>Genre: {movie.genre.join(", ")}</Col>
+                            </Row>
+                            <Row>
+                                <Col className="mt-3 mb-3">{movie.description}</Col>
+                            </Row>
+                        </Card.Text>
+                        <Col>Similar Movies</Col>
+                        <Row>
+                            {similarMovies.map((movie) => (
+                                <Col sm={4} key={movie.id} className="my-1">
+                                    <Link to={`/Movies/${movie.id}`}>
+                                        <Button
+                                            variant="outline-dark"
+                                            size="sm"
+                                            className="width-100">
+                                            {movie.title}
+                                        </Button>
+                                    </Link>
+                                </Col>
+                            ))}
+                        </Row>
+                        <Card.Text className="d-flex justify-content-between mt-3">
+                            <Link to={`/`}>
+                                <Button
+                                    variant="primary"
+                                    style={{ cursor: "pointer" }}
+                                    onClick={handleReset}>
+                                    Close
                                 </Button>
                             </Link>
-                        </div>
-                    ))}
-                </div>
-                <Card.Text className="d-flex justify-content-between">
-                    <Link to={`/`}>
-                        <Button
-                            variant="primary"
-                            style={{ cursor: "pointer" }}
-                            onClick={handleReset}>
-                            Close
-                        </Button>
-                    </Link>
-                    {isMovieInFavorites ? (
-                        <Button variant="secondary">Already Your Favorite</Button>
-                    ) : (
-                        <>
-                            {error && <Alert variant="danger">{error}</Alert>}
-                            <Button
-                                onClick={() => {
-                                    dispatch(addFavoriteMovieToUser({ userId: user._id, movieId }));
-                                }}
-                                variant="dark"
-                                style={{ cursor: "pointer" }}
-                                disabled={loading}>
-                                {loading ? (
-                                    <>
-                                        <Spinner
-                                            as="span"
-                                            animation="border"
-                                            size="sm"
-                                            role="status"
-                                            aria-hidden="true"
-                                            className="me-1"
-                                            variant="secondary"
-                                        />
-                                        Adding...
-                                    </>
-                                ) : (
-                                    "Add To Favorite"
-                                )}
-                            </Button>
-                        </>
-                    )}
-                </Card.Text>
-            </Card.Body>
+                            {isMovieInFavorites ? (
+                                <Button variant="secondary">Already Your Favorite</Button>
+                            ) : (
+                                <>
+                                    {error && <Alert variant="danger">{error}</Alert>}
+                                    <Button
+                                        onClick={() => {
+                                            dispatch(
+                                                addFavoriteMovieToUser({
+                                                    userId: user._id,
+                                                    movieId,
+                                                })
+                                            );
+                                        }}
+                                        variant="dark"
+                                        style={{ cursor: "pointer" }}
+                                        disabled={loading}>
+                                        {loading ? (
+                                            <>
+                                                <Spinner
+                                                    as="span"
+                                                    animation="border"
+                                                    size="sm"
+                                                    role="status"
+                                                    aria-hidden="true"
+                                                    className="me-1"
+                                                    variant="secondary"
+                                                />
+                                                Adding...
+                                            </>
+                                        ) : (
+                                            "Add To Favorite"
+                                        )}
+                                    </Button>
+                                </>
+                            )}
+                        </Card.Text>
+                    </Card.Body>
+                </Col>
+            </Row>
         </Card>
     );
 };
