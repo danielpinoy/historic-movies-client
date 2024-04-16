@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Form, Col, Row } from "react-bootstrap";
 import { MovieCard, MovieView } from "./movie/index.tsx";
-import { ProfileView, ProfileEditView } from "./profile/index.tsx";
+import { ProfileView, ProfileEditView, ChangePasswordView } from "./profile/index.tsx";
 import { LoginView, SignupView } from "./auth/index";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { NavigationBar } from "./navigation-bar/navigation-bar";
@@ -116,6 +116,22 @@ export const MainView = () => {
                                                 clickUpdate={(num) => setUserEdit(num)}
                                             />
                                         )}
+                                    </div>
+                                </Col>
+                            )
+                        }
+                    />
+
+                    {/* Change Password View */}
+                    <Route
+                        path="/change-password"
+                        element={
+                            !storedUser ? (
+                                <Navigate to="/login" replace />
+                            ) : (
+                                <Col md={12} className="d-flex justify-content-center">
+                                    <div className="profile-container">
+                                        <ChangePasswordView />
                                     </div>
                                 </Col>
                             )

@@ -3,9 +3,12 @@ import { Button, Card, ListGroup } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { editUser } from "../../../asyncThunk/userAsyncThunks";
 import { Alert } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 
 const ProfileEditView = ({ clickUpdate, token }) => {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
+
     // eslint-disable-next-line no-unused-vars
     const { user, loading, error } = useSelector((state) => state.user);
 
@@ -17,6 +20,15 @@ const ProfileEditView = ({ clickUpdate, token }) => {
 
     const handleSubmit = () => {
         dispatch(editUser({ userData: user, updatedUserData, token }));
+        clickUpdate(null);
+    };
+
+    const handleChangePassword = () => {
+        navigate("/change-password");
+        clickUpdate(null);
+    };
+
+    const handleBackProfile = () => {
         clickUpdate(null);
     };
 
@@ -35,15 +47,7 @@ const ProfileEditView = ({ clickUpdate, token }) => {
                                 onChange={handleChange}
                             />
                         </ListGroup.Item>
-                        <ListGroup.Item>
-                            Password:
-                            <input
-                                type="text"
-                                name="Password"
-                                value={updatedUserData.Password}
-                                onChange={handleChange}
-                            />
-                        </ListGroup.Item>
+
                         <ListGroup.Item>
                             Date of Birth:
                             <input
@@ -63,10 +67,18 @@ const ProfileEditView = ({ clickUpdate, token }) => {
                             />
                         </ListGroup.Item>
                     </ListGroup>
+                    <Button className="me-2" onClick={handleSubmit}>
+                        Update
+                    </Button>
+                    <Button className="me-2" variant="secondary" onClick={handleChangePassword}>
+                        Change Password
+                    </Button>
+                    <Button variant="secondary" onClick={handleBackProfile}>
+                        Back
+                    </Button>
                 </Card.Body>
             </Card>
             {error && <Alert variant="danger">{error}</Alert>}
-            <Button onClick={handleSubmit}>Update</Button>
         </>
     );
 };

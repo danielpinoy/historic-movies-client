@@ -133,6 +133,32 @@ export const addFavoriteMovieToUser = createAsyncThunk(
     }
 );
 
+export const changePassword = createAsyncThunk(
+    "user/changePassword",
+    async ({ userData, passwordData }, { rejectWithValue }) => {
+        try {
+            const response = await fetch(`${API_URL}/user/${userData.Username}/change-password`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${localStorage.getItem("token")}`,
+                },
+                body: JSON.stringify(passwordData),
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message);
+            }
+
+            await response.json(); // Consume the response body
+            return { success: true, message: "Password changed successfully" };
+        } catch (error) {
+            return rejectWithValue(error.message);
+        }
+    }
+);
+
 export const removeFavoriteMovie = createAsyncThunk(
     "user/removeFavoriteMovie",
     async ({ user, movieId }, { rejectWithValue }) => {

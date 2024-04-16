@@ -13,7 +13,7 @@ const MovieView = ({ movies, handleReset }) => {
     const similarMovies = movies
         .filter((m) => m.id !== movieId && m.genre.some((genre) => movie.genre.includes(genre)))
         .sort(() => 0.5 - Math.random())
-        .slice(0, 5);
+        .slice(0, 10);
 
     console.log(similarMovies);
     return (
@@ -39,13 +39,8 @@ const MovieView = ({ movies, handleReset }) => {
                         <Row>
                             {similarMovies.map((movie) => (
                                 <Col sm={4} key={movie.id} className="my-1">
-                                    <Link to={`/Movies/${movie.id}`}>
-                                        <Button
-                                            variant="outline-dark"
-                                            size="sm"
-                                            className="width-100">
-                                            {movie.title}
-                                        </Button>
+                                    <Link to={`/Movies/${movie.id}`} className="movie-link">
+                                        <div className="movie-title">{movie.title}</div>
                                     </Link>
                                 </Col>
                             ))}

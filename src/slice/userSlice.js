@@ -5,6 +5,7 @@ import {
     deleteUser,
     addFavoriteMovieToUser,
     removeFavoriteMovie,
+    changePassword,
 } from "../asyncThunk/userAsyncThunks";
 import { createSlice } from "@reduxjs/toolkit";
 const storedUser = JSON.parse(localStorage.getItem("user"));
@@ -96,6 +97,22 @@ const userSlice = createSlice({
             .addCase(removeFavoriteMovie.rejected, (state, action) => {
                 state.loading = false;
                 state.error = "Network Problem. Please try again later.";
+            })
+
+            // Add cases for changePassword async thunk
+            .addCase(changePassword.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(changePassword.fulfilled, (state, action) => {
+                state.loading = false;
+                if (action.payload.success) {
+                    alert(action.payload.message);
+                }
+            })
+            .addCase(changePassword.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload;
             });
     },
 });

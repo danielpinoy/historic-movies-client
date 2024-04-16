@@ -15,7 +15,7 @@ const ProfileView = ({ clickUpdate, movies, token }) => {
             dispatch(deleteUser({ user, token }));
         }
     };
-
+    console.log(user);
     const onDeleteFavoriteMovie = (movieId) => {
         dispatch(removeFavoriteMovie({ user, movieId }));
     };
@@ -60,12 +60,11 @@ const ProfileView = ({ clickUpdate, movies, token }) => {
                                     <Row key={movie.title} className="mb-2">
                                         <Col xs={9}>{movie.title}</Col>
                                         <Col xs={3} className="text-right">
-                                            <Button
-                                                variant="danger"
-                                                size="sm"
+                                            <p
+                                                className=" delete-button"
                                                 onClick={() => onDeleteFavoriteMovie(movie.id)}>
                                                 Delete
-                                            </Button>
+                                            </p>
                                         </Col>
                                     </Row>
                                 ))

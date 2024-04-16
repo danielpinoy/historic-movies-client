@@ -1,3 +1,4 @@
 import ProfileView from "./profile-view/profile-view";
 import ProfileEditView from "./profileEdit-view/profileEdit-view";
-export { ProfileView, ProfileEditView };
+import ChangePasswordView from "./profileEdit-view/change-password/change-password-view";
+export { ProfileView, ProfileEditView, ChangePasswordView };
