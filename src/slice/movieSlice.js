@@ -4,7 +4,7 @@ const storedToken = localStorage.getItem("token");
 
 export const getMovies = createAsyncThunk("movies/getMovies", async (_, { rejectWithValue }) => {
     try {
-        const response = await fetch("https://history-movie-api.onrender.com/Movies", {
+        const response = await fetch("https://historymovieapi-production.up.railway.app/Movies", {
             headers: { Authorization: `Bearer ${storedToken}` },
         });
 
