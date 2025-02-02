@@ -41,7 +41,7 @@ const MovieView = ({ movies, handleReset }) => {
             <Row>
               {similarMovies.map((movie) => (
                 <Col sm={4} key={movie.id} className="my-1">
-                  <Link to={`/Movies/${movie.id}`} className="movie-link">
+                  <Link to={`/Movies/${movie.id}`} className="link-primary">
                     <div className="movie-title">{movie.title}</div>
                   </Link>
                 </Col>
