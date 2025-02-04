@@ -39,7 +39,10 @@ const userSlice = createSlice({
                 console.log(action.payload);
                 if (action.payload && action.payload.user !== false) {
                     state.user = action.payload.user;
-                    localStorage.setItem("user", JSON.stringify(action.payload.user));
+                    localStorage.setItem(
+                        "user",
+                        JSON.stringify(action.payload.user)
+                    );
                     localStorage.setItem("token", action.payload.token);
                     window.location.reload();
                 }

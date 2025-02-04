@@ -48,7 +48,7 @@ export const MainView = () => {
   // Render movies grid or empty state
   const renderMovies = () => {
     if (filteredMovies.length === 0) {
-      return <Alert variant="light">No Movies to find</Alert>;
+      return <Alert variant="light">No Movies Found</Alert>;
     }
 
     return filteredMovies.map((movie) => (
