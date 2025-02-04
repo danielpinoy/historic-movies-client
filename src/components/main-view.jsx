@@ -1,198 +1,178 @@
-import { useState, useEffect } from "react";
-import { Form, Col, Row } from "react-bootstrap";
+import { useState, useEffect, useMemo } from "react";
+import { Form, Col, Row, Alert } from "react-bootstrap";
 import { MovieCard, MovieView } from "./movie/index.tsx";
-import { ProfileView, ProfileEditView, ChangePasswordView } from "./profile/index.tsx";
+import {
+  ProfileView,
+  ProfileEditView,
+  ChangePasswordView,
+} from "./profile/index.tsx";
 import { LoginView, SignupView } from "./auth/index";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { NavigationBar } from "./navigation-bar/navigation-bar";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../slice/userSlice";
 import { getMovies } from "../slice/movieSlice";
-import { Alert } from "react-bootstrap";
 
 export const MainView = () => {
-    // Retrieve user information from local storage
-    const storedUser = JSON.parse(localStorage.getItem("user"));
+  // State management
+  const storedUser = JSON.parse(localStorage.getItem("user"));
+  const storedToken = localStorage.getItem("token");
+  const [token, setToken] = useState(storedToken ?? null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [isEditingProfile, setUserEdit] = useState(null);
 
-    // Retrieve token from local storage or set it to null if not present
-    const storedToken = localStorage.getItem("token");
+  // Redux
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user);
+  const { movies, loading, error } = useSelector((state) => state.movies);
 
-    // eslint-disable-next-line
-    const [token, setToken] = useState(storedToken ? storedToken : null);
-    const [searchTerm, setSearchTerm] = useState("");
-    const [isEditingProfile, setUserEdit] = useState(null);
-    const dispatch = useDispatch();
+  // Effects
+  useEffect(() => {
+    dispatch(getMovies());
+  }, [dispatch]);
 
-    useEffect(() => {
-        dispatch(getMovies());
-    }, [dispatch]);
-
-    // Get user information and movie data from Redux store
-    const user = useSelector((state) => state.user);
-    const { movies, loading, error } = useSelector((state) => state.movies);
-
-    const filteredMovies = movies.filter((movie) =>
+  // Memoized filtered movies for performance
+  const filteredMovies = useMemo(
+    () =>
+      movies.filter((movie) =>
         movie.title.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+      ),
+    [movies, searchTerm]
+  );
 
-    // Reset the searchBar
-    const handleResetSearchTerm = () => setSearchTerm("");
+  // Event handlers
+  const handleLogout = () => dispatch(logout());
+  const handleResetSearchTerm = () => setSearchTerm("");
+  const handleSearch = (e) => setSearchTerm(e.target.value);
 
-    // Map movies to MovieCard components
-    let updatedMovie;
+  // Render movies grid or empty state
+  const renderMovies = () => {
     if (filteredMovies.length === 0) {
-        updatedMovie = (
-            <Alert key="dark" variant="light">
-                No Movies to find
-            </Alert>
-        );
-    } else {
-        updatedMovie = filteredMovies.map((movie) => (
-            <Col key={movie.id} md={3} className="mb-4">
-                <MovieCard movie={movie} />
-            </Col>
-        ));
+      return <Alert variant="light">No Movies to find</Alert>;
     }
 
-    return (
-        <BrowserRouter>
-            <NavigationBar
-                user={user}
-                loggedOut={() => {
-                    dispatch(logout());
-                }}
-            />
-            <Row>
-                <Routes>
-                    <Route
-                        path="/signup"
-                        element={
-                            storedUser ? (
-                                <Navigate to="/" />
-                            ) : (
-                                <Col md={5}>
-                                    <SignupView />
-                                </Col>
-                            )
-                        }
-                    />
+    return filteredMovies.map((movie) => (
+      <Col key={movie.id} md={3} className="mb-4">
+        <MovieCard movie={movie} />
+      </Col>
+    ));
+  };
 
-                    {/* Login view */}
+  return (
+    <BrowserRouter>
+      <NavigationBar user={user} loggedOut={handleLogout} />
+      <Row>
+        <Routes>
+          <Route
+            path="/signup"
+            element={
+              storedUser ? (
+                <Navigate to="/" />
+              ) : (
+                <Col md={5}>
+                  <SignupView />
+                </Col>
+              )
+            }
+          />
 
-                    <Route
-                        path="/login"
-                        element={
-                            <>
-                                {storedUser ? (
-                                    <Navigate to="/" />
-                                ) : (
-                                    <Col md={12}>
-                                        <LoginView />
-                                    </Col>
-                                )}
-                            </>
-                        }
-                    />
+          <Route
+            path="/login"
+            element={storedUser ? <Navigate to="/" /> : <LoginView />}
+          />
 
-                    {/* User profile view */}
+          <Route
+            path="/users"
+            element={
+              !storedUser ? (
+                <Navigate to="/login" replace />
+              ) : (
+                <Col md={12} className="d-flex justify-content-center">
+                  <div className="profile-container">
+                    {!isEditingProfile ? (
+                      <ProfileView
+                        movies={movies}
+                        token={token}
+                        clickUpdate={setUserEdit}
+                      />
+                    ) : (
+                      <ProfileEditView
+                        token={storedToken}
+                        clickUpdate={setUserEdit}
+                      />
+                    )}
+                  </div>
+                </Col>
+              )
+            }
+          />
 
-                    <Route
-                        path="/users"
-                        element={
-                            !storedUser ? (
-                                <Navigate to="/login" replace />
-                            ) : (
-                                <Col md={12} className="d-flex justify-content-center">
-                                    <div className="profile-container">
-                                        {!isEditingProfile ? (
-                                            <ProfileView
-                                                movies={movies}
-                                                token={token}
-                                                clickUpdate={(num) => setUserEdit(num)}
-                                            />
-                                        ) : (
-                                            <ProfileEditView
-                                                token={storedToken}
-                                                clickUpdate={(num) => setUserEdit(num)}
-                                            />
-                                        )}
-                                    </div>
-                                </Col>
-                            )
-                        }
-                    />
+          <Route
+            path="/change-password"
+            element={
+              !storedUser ? (
+                <Navigate to="/login" replace />
+              ) : (
+                <Col md={12} className="d-flex justify-content-center">
+                  <div className="profile-container">
+                    <ChangePasswordView />
+                  </div>
+                </Col>
+              )
+            }
+          />
 
-                    {/* Change Password View */}
-                    <Route
-                        path="/change-password"
-                        element={
-                            !storedUser ? (
-                                <Navigate to="/login" replace />
-                            ) : (
-                                <Col md={12} className="d-flex justify-content-center">
-                                    <div className="profile-container">
-                                        <ChangePasswordView />
-                                    </div>
-                                </Col>
-                            )
-                        }
-                    />
+          <Route
+            path="/Movies/:movieId"
+            element={
+              !storedUser ? (
+                <Navigate to="/login" replace />
+              ) : movies.length === 0 ? (
+                <Col>The list is empty!</Col>
+              ) : (
+                <Col md={10}>
+                  <MovieView
+                    movies={movies}
+                    handleReset={handleResetSearchTerm}
+                  />
+                </Col>
+              )
+            }
+          />
 
-                    {/* Movie details view */}
+          <Route
+            path="/"
+            element={
+              !storedUser ? (
+                <Navigate to="/login" replace />
+              ) : loading ? (
+                <Alert variant="dark">Loading...</Alert>
+              ) : (
+                <>
+                  {error && (
+                    <Alert variant="danger">
+                      {typeof error === "string"
+                        ? error
+                        : "An unexpected error occurred"}
+                    </Alert>
+                  )}
 
-                    <Route
-                        path="/Movies/:movieId"
-                        element={
-                            !storedUser ? (
-                                <Navigate to="/login" replace />
-                            ) : movies.length === 0 ? (
-                                <Col>The list is empty!</Col>
-                            ) : (
-                                <Col md={10}>
-                                    <MovieView
-                                        movies={movies}
-                                        handleReset={handleResetSearchTerm}
-                                    />
-                                </Col>
-                            )
-                        }
-                    />
+                  <Form.Control
+                    type="text"
+                    placeholder="Search Movies"
+                    value={searchTerm}
+                    className="mt-3 mb-3"
+                    onChange={handleSearch}
+                    aria-label="Search movies"
+                  />
 
-                    {/* Home view */}
-
-                    <Route
-                        path="/"
-                        element={
-                            !storedUser ? (
-                                <Navigate to="/login" replace />
-                            ) : loading ? (
-                                <Alert key="dark" variant="dark">
-                                    Loading...
-                                </Alert>
-                            ) : movies.length === 0 ? (
-                                <div className="loadingData">
-                                    <Alert key="dark" variant="danger">
-                                        No Movies to Show
-                                    </Alert>
-                                </div>
-                            ) : (
-                                <>
-                                    {error && <Alert variant="danger">{error}</Alert>}
-                                    <Form.Control
-                                        type="text"
-                                        placeholder="Search Movies"
-                                        value={searchTerm}
-                                        className="mt-3 mb-3"
-                                        onChange={(e) => setSearchTerm(e.target.value)}
-                                    />
-
-                                    {updatedMovie}
-                                </>
-                            )
-                        }
-                    />
-                </Routes>
-            </Row>
-        </BrowserRouter>
-    );
+                  {renderMovies()}
+                </>
+              )
+            }
+          />
+        </Routes>
+      </Row>
+    </BrowserRouter>
+  );
 };
