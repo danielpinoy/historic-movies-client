@@ -36,12 +36,13 @@ const userSlice = createSlice({
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.loading = false;
-        console.log(action.payload);
+        // console.log(action.payload);
         if (action.payload && action.payload.user !== false) {
           state.user = action.payload.user;
           localStorage.setItem("user", JSON.stringify(action.payload.user));
           localStorage.setItem("token", action.payload.token);
           window.location.reload();
+          console.log(action.payload);
         }
         // Wrong username and password
         else if (action.payload && action.payload.user === false) {
