@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { loginUser } from "../../../asyncThunk/userAsyncThunks";
 import loginImage from "../../../assets/Logo_RetroLens.png";
 import NotificationToast from "../../NotificationToast";
+import { clearStates } from "../../../slice/userSlice";
 const LoginView = () => {
   const dispatch = useDispatch();
   const [username, setUsername] = useState("");
@@ -15,11 +16,13 @@ const LoginView = () => {
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const [toastType, setToastType] = useState("success");
+  const [loginAttempted, setLoginAttempted] = useState(false);
 
   // eslint-disable-next-line no-unused-vars
   const { user, loading, error } = useSelector((state) => state.user);
   const login = (event) => {
     event.preventDefault();
+    setLoginAttempted(true);
     dispatch(loginUser({ username, password }));
   };
 
@@ -28,17 +31,23 @@ const LoginView = () => {
     console.log("Error state:", error);
 
     if (error) {
-      console.log("Showing error toast");
+      // console.log("Showing error toast");
       setToastMessage(error);
       setToastType("danger");
       setShowToast(true);
-    } else if (user) {
-      console.log("Showing success toast");
+    } else if (user && loginAttempted) {
+      // console.log("Showing success toast");
       setToastMessage("Login successful! Welcome back!");
       setToastType("success");
       setShowToast(true);
     }
+    // bug fix: notification doesn't repeat appear after clicking link
+    dispatch(clearStates());
+    // Reset loginAttempted when component unmounts or when navigating away
+
+    return () => setLoginAttempted(false);
   }, [user, error]);
+
   return (
     <>
       <NotificationToast

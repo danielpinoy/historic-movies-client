@@ -26,6 +26,11 @@ export const signupUser = createAsyncThunk(
       const signupUser = await response.json();
       return signupUser;
     } catch (error) {
+      if (!navigator.onLine || error.message === "Failed to fetch") {
+        return rejectWithValue(
+          "Unable to connect to server. Please check your internet connection and try again."
+        );
+      }
       return rejectWithValue(error.message);
     }
   }

@@ -18,12 +18,15 @@ const userSlice = createSlice({
       localStorage.clear();
       state.user = null;
     },
+    clearStates: (state) => {
+      state.error = null;
+      state.success = null;
+    },
   },
   extraReducers: (builder) => {
     builder
       .addCase(signupUser.fulfilled, (state, action) => {
         state.user = action.payload;
-        alert("Signup successful");
         console.log(action.payload);
       })
       .addCase(signupUser.rejected, (state, action) => {
@@ -42,7 +45,7 @@ const userSlice = createSlice({
           localStorage.setItem("user", JSON.stringify(action.payload.user));
           localStorage.setItem("token", action.payload.token);
           window.location.reload();
-          console.log(action.payload);
+          // console.log(action.payload);
         }
         // Wrong username and password
         else if (action.payload && action.payload.user === false) {
@@ -118,5 +121,5 @@ const userSlice = createSlice({
   },
 });
 
-export const { logout } = userSlice.actions;
+export const { logout, clearStates } = userSlice.actions;
 export default userSlice.reducer;
