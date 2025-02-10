@@ -44,7 +44,6 @@ const LoginView = () => {
     // bug fix: notification doesn't repeat appear after clicking link
     dispatch(clearStates());
     // Reset loginAttempted when component unmounts or when navigating away
-
     return () => setLoginAttempted(false);
   }, [user, error]);
 
