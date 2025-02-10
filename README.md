@@ -90,3 +90,11 @@ The application includes comprehensive error handling:
 -Toast notifications for user feedback
 -Loading states and spinners
 -Error messages with clear user guidance
+
+### Contact
+
+For any inquiries or feedback, please contact [Daniel John](mailto:almirante.danieljohn@gmail.com).
+
+### Demo
+
+https://kaleidoscopic-tiramisu-9e52da.netlify.app/login
