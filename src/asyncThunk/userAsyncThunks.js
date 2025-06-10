@@ -3,7 +3,8 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 const storedToken = localStorage.getItem("token");
 const storedUser = JSON.parse(localStorage.getItem("user"));
 
-const API_URL = "https://history-movie-api.vercel.app";
+const API_URL =
+  "https://xo4xjqevs42mbp46utxi3dua3y0lwywt.lambda-url.eu-north-1.on.aws";
 // Async thunks
 export const signupUser = createAsyncThunk(
   "user/signup",
