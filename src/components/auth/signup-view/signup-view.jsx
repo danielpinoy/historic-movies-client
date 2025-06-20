@@ -39,6 +39,9 @@ const SignupView = () => {
   const signUpSubmit = async (event) => {
     event.preventDefault();
 
+    console.log("Form submitted - loading should be true now"); // Add this
+    console.log("Current loading state:", loading); // Add this
+
     try {
       const resultAction = await dispatch(
         signupUser({
