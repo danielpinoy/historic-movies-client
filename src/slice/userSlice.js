@@ -30,7 +30,7 @@ const userSlice = createSlice({
         state.error = null;
       })
       .addCase(signupUser.fulfilled, (state, action) => {
-        state.loading = false; // Add this line
+        state.loading = false;
         state.user = action.payload;
         console.log(action.payload);
       })
