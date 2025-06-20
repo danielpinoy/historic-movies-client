@@ -11,9 +11,9 @@ const SignupView = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const [username, setUsername] = useState("danieljohnall");
-  const [password, setPassword] = useState("12345");
-  const [email, setEmail] = useState("danielcool@gmail.com");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
   const [birthday, setBirthday] = useState("");
 
   // Add toast states
@@ -25,7 +25,7 @@ const SignupView = () => {
   // Watch for errors
   useEffect(() => {
     if (error) {
-      console.log(error);
+      console.log("Signup error:", error); // Debug log
       setToastMessage(error);
       setToastType("danger");
       setShowToast(true);
@@ -33,24 +33,6 @@ const SignupView = () => {
     // bug fix: notification doesn't repeat appear after clicking link
     dispatch(clearStates());
   }, [error]);
-
-  // const signUpSubmit = (event) => {
-  //   event.preventDefault();
-
-  //   dispatch(
-  //     signupUser({
-  //       Username: username,
-  //       Password: password,
-  //       Email: email,
-  //       Birthday: birthday,
-  //     })
-  //   );
-  //   setUsername("");
-  //   setPassword("");
-  //   setEmail("");
-  //   setBirthday("");
-  //   navigate("/login");
-  // };
 
   const signUpSubmit = async (event) => {
     event.preventDefault();

@@ -21,7 +21,10 @@ export const signupUser = createAsyncThunk(
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message);
+        // Check both 'message' and 'error' fields
+        throw new Error(
+          errorData.error || errorData.message || "Registration failed"
+        );
       }
 
       const signupUser = await response.json();
