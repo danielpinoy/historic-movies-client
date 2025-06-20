@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
+import { Spinner } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { signupUser } from "../../../asyncThunk/userAsyncThunks";
@@ -21,18 +22,19 @@ const SignupView = () => {
   const [toastMessage, setToastMessage] = useState("");
   const [toastType, setToastType] = useState("success");
 
-  const { error } = useSelector((state) => state.user);
+  const { loading, error } = useSelector((state) => state.user);
+
   // Watch for errors
   useEffect(() => {
     if (error) {
-      console.log("Signup error:", error); // Debug log
+      console.log(error);
       setToastMessage(error);
       setToastType("danger");
       setShowToast(true);
     }
     // bug fix: notification doesn't repeat appear after clicking link
     dispatch(clearStates());
-  }, [error]);
+  }, [error, dispatch]);
 
   const signUpSubmit = async (event) => {
     event.preventDefault();
@@ -62,7 +64,6 @@ const SignupView = () => {
         // Delay navigation to allow toast to be seen
         setTimeout(() => {
           dispatch(clearStates()); // Clear states before navigating
-
           navigate("/login");
         }, 2000);
       }
@@ -91,6 +92,7 @@ const SignupView = () => {
             onChange={(e) => setUsername(e.target.value)}
             required
             minLength="3"
+            disabled={loading}
           />
         </Form.Group>
 
@@ -101,18 +103,19 @@ const SignupView = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
+            disabled={loading}
           />
         </Form.Group>
 
         <Form.Group className="mb-3">
           <Form.Label>Email:</Form.Label>
-
           <Form.Control
             type="email"
             placeholder="ExampleName123@example.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
+            disabled={loading}
           />
         </Form.Group>
 
@@ -123,9 +126,33 @@ const SignupView = () => {
             value={birthday}
             onChange={(e) => setBirthday(e.target.value)}
             required
+            disabled={loading}
           />
         </Form.Group>
-        <Button type="submit">Submit</Button>
+
+        <Button
+          type="submit"
+          disabled={loading}
+          variant="primary"
+          className="w-100"
+          size="lg"
+        >
+          {loading ? (
+            <>
+              <Spinner
+                as="span"
+                animation="border"
+                size="sm"
+                role="status"
+                aria-hidden="true"
+                className="me-2"
+              />
+              Creating account...
+            </>
+          ) : (
+            "Create Account"
+          )}
+        </Button>
       </Form>
     </>
   );
