@@ -1,14 +1,19 @@
 import { useState, useEffect, useMemo } from "react";
 import { Form, Col, Row, Alert } from "react-bootstrap";
-import { MovieCard, MovieView } from "./movie/index.tsx";
+import { MovieCard, MovieView } from "../pages/MoviesPage/index.tsx";
+// import {
+//   ProfileView,
+//   ProfileEditView,
+//   ChangePasswordView,
+// } from "./profile/index.tsx";
 import {
   ProfileView,
   ProfileEditView,
   ChangePasswordView,
-} from "./profile/index.tsx";
-import { LoginView, SignupView } from "./auth/index";
+} from "./ProfilePage/index.tsx";
+import { LoginView, SignupView } from "../pages/AuthPage/index";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { NavigationBar } from "./navigation-bar/navigation-bar";
+import { NavigationBar } from "../components/layout/navigation-bar.jsx";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../slice/userSlice";
 import { getMovies } from "../slice/movieSlice";

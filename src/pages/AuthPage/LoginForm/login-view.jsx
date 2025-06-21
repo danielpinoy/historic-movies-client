@@ -6,7 +6,7 @@ import { Spinner, Alert, Row, Col, Image } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { loginUser } from "../../../asyncThunk/userAsyncThunks";
 import loginImage from "../../../assets/Logo_RetroLens.png";
-import NotificationToast from "../../NotificationToast";
+import NotificationToast from "../../../common/NotificationToast";
 import { clearStates } from "../../../slice/userSlice";
 const LoginView = () => {
   const dispatch = useDispatch();

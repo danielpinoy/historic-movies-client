@@ -5,7 +5,7 @@ import { Spinner } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { signupUser } from "../../../asyncThunk/userAsyncThunks";
-import NotificationToast from "../../NotificationToast";
+import NotificationToast from "../../../common/NotificationToast";
 import { clearStates } from "../../../slice/userSlice";
 
 const SignupView = () => {
