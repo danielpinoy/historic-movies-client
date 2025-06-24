@@ -1,9 +1,7 @@
 import { useState, useEffect } from "react";
-import Button from "react-bootstrap/Button";
-import Form from "react-bootstrap/Form";
-import { Spinner } from "react-bootstrap";
+import { Button, Form, Spinner, Card, Alert, Row, Col } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { signupUser } from "../../../asyncThunk/userAsyncThunks";
 import NotificationToast from "../../../common/NotificationToast";
 import { clearStates } from "../../../slice/userSlice";
@@ -17,7 +15,7 @@ const SignupView = () => {
   const [email, setEmail] = useState("");
   const [birthday, setBirthday] = useState("");
 
-  // Add toast states
+  // Toast states
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const [toastType, setToastType] = useState("success");
@@ -27,20 +25,15 @@ const SignupView = () => {
   // Watch for errors
   useEffect(() => {
     if (error) {
-      console.log(error);
       setToastMessage(error);
       setToastType("danger");
       setShowToast(true);
     }
-    // bug fix: notification doesn't repeat appear after clicking link
     dispatch(clearStates());
   }, [error, dispatch]);
 
   const signUpSubmit = async (event) => {
     event.preventDefault();
-
-    console.log("Form submitted - loading should be true now"); // Add this
-    console.log("Current loading state:", loading); // Add this
 
     try {
       const resultAction = await dispatch(
@@ -66,7 +59,7 @@ const SignupView = () => {
 
         // Delay navigation to allow toast to be seen
         setTimeout(() => {
-          dispatch(clearStates()); // Clear states before navigating
+          dispatch(clearStates());
           navigate("/login");
         }, 2000);
       }
@@ -85,78 +78,129 @@ const SignupView = () => {
         type={toastType}
         onClose={() => setShowToast(false)}
       />
-      <Form onSubmit={signUpSubmit}>
-        <Form.Group className="mb-3">
-          <Form.Label>Username:</Form.Label>
-          <Form.Control
-            type="text"
-            placeholder="ExampleName123"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-            minLength="3"
-            disabled={loading}
-          />
-        </Form.Group>
 
-        <Form.Group className="mb-3">
-          <Form.Label>Password:</Form.Label>
-          <Form.Control
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            disabled={loading}
-          />
-        </Form.Group>
+      <Row className="justify-content-center align-items-center min-vh-100">
+        <Col lg={6} xl={5}>
+          <Card className="bg-dark text-white border-warning shadow-lg">
+            {/* Header */}
+            <Card.Header className="bg-warning text-dark text-center py-4 border-0">
+              <h2 className="mb-1 fw-bold">🎬 Join RetroLens</h2>
+              <p className="mb-0 opacity-75">
+                Create your account to get started
+              </p>
+            </Card.Header>
 
-        <Form.Group className="mb-3">
-          <Form.Label>Email:</Form.Label>
-          <Form.Control
-            type="email"
-            placeholder="ExampleName123@example.com"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            disabled={loading}
-          />
-        </Form.Group>
+            <Card.Body className="p-5">
+              <Form onSubmit={signUpSubmit}>
+                <Form.Group className="mb-3">
+                  <Form.Label className="text-warning fw-semibold">
+                    Username
+                  </Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="Choose a unique username"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    required
+                    minLength="3"
+                    disabled={loading}
+                    className="bg-secondary border-warning text-white"
+                  />
+                  <Form.Text className="text-muted">
+                    Minimum 3 characters, letters and numbers only
+                  </Form.Text>
+                </Form.Group>
 
-        <Form.Group className="mb-3">
-          <Form.Label>Birthday:</Form.Label>
-          <Form.Control
-            type="date"
-            value={birthday}
-            onChange={(e) => setBirthday(e.target.value)}
-            required
-            disabled={loading}
-          />
-        </Form.Group>
+                <Form.Group className="mb-3">
+                  <Form.Label className="text-warning fw-semibold">
+                    Password
+                  </Form.Label>
+                  <Form.Control
+                    type="password"
+                    placeholder="Create a secure password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    disabled={loading}
+                    className="bg-secondary border-warning text-white"
+                  />
+                </Form.Group>
 
-        <Button
-          type="submit"
-          disabled={loading}
-          variant="primary"
-          className="w-100"
-          size="lg"
-        >
-          {loading ? (
-            <>
-              <Spinner
-                as="span"
-                animation="border"
-                size="sm"
-                role="status"
-                aria-hidden="true"
-                className="me-2"
-              />
-              Creating account...
-            </>
-          ) : (
-            "Create Account"
-          )}
-        </Button>
-      </Form>
+                <Form.Group className="mb-3">
+                  <Form.Label className="text-warning fw-semibold">
+                    Email Address
+                  </Form.Label>
+                  <Form.Control
+                    type="email"
+                    placeholder="your.email@example.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    disabled={loading}
+                    className="bg-secondary border-warning text-white"
+                  />
+                </Form.Group>
+
+                <Form.Group className="mb-4">
+                  <Form.Label className="text-warning fw-semibold">
+                    Date of Birth
+                  </Form.Label>
+                  <Form.Control
+                    type="date"
+                    value={birthday}
+                    onChange={(e) => setBirthday(e.target.value)}
+                    required
+                    disabled={loading}
+                    className="bg-secondary border-warning text-white"
+                  />
+                </Form.Group>
+
+                {error && (
+                  <Alert variant="danger" className="mb-3">
+                    {error}
+                  </Alert>
+                )}
+
+                <Button
+                  type="submit"
+                  disabled={loading}
+                  variant="warning"
+                  className="w-100 fw-semibold text-dark"
+                  size="lg"
+                >
+                  {loading ? (
+                    <>
+                      <Spinner
+                        as="span"
+                        animation="border"
+                        size="sm"
+                        role="status"
+                        aria-hidden="true"
+                        className="me-2"
+                      />
+                      Creating account...
+                    </>
+                  ) : (
+                    "Create Account"
+                  )}
+                </Button>
+              </Form>
+
+              <div className="text-center mt-4">
+                <p className="text-light mb-0">
+                  Already have an account?{" "}
+                  <Link
+                    to="/login"
+                    className="text-warning text-decoration-none fw-semibold"
+                  >
+                    Sign in here
+                  </Link>
+                </p>
+              </div>
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
     </>
   );
 };

@@ -1,7 +1,6 @@
-import { Button, Card, Col, Row } from "react-bootstrap";
+import { Button, Card, Col, Row, Spinner, Alert, Badge } from "react-bootstrap";
 import { useParams } from "react-router";
 import { Link } from "react-router-dom";
-import { Spinner, Alert } from "react-bootstrap";
 import { addFavoriteMovieToUser } from "../../../asyncThunk/userAsyncThunks";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -11,6 +10,7 @@ const MovieView = ({ movies, handleReset }) => {
   const dispatch = useDispatch();
   const isMovieInFavorites = user.FavoriteMovies.includes(String(movieId));
   const movie = movies.find((m) => m.id === movieId);
+
   const similarMovies = movies
     .filter(
       (m) =>
@@ -20,108 +20,174 @@ const MovieView = ({ movies, handleReset }) => {
     .slice(0, 3);
 
   return (
-    <Card className="movie-view-card">
-      <Row className="g-0">
-        <Col md={4}>
-          <Card.Img
-            src={movie.image}
-            alt={`${movie.title} Poster`}
-            className="card-img"
-          />
-        </Col>
-        <Col md={8}>
-          <Card.Body>
-            <Card.Title className="text-hierarchy-page-title">
-              {movie.title}
-            </Card.Title>
+    <div className="container-fluid py-4">
+      <Card className="bg-dark text-white border-warning shadow-lg overflow-hidden">
+        <Row className="g-0">
+          {/* Movie Poster */}
+          <Col lg={4}>
+            <div className="p-3">
+              <img
+                src={movie.image}
+                alt={`${movie.title} Poster`}
+                className="img-fluid rounded shadow-lg"
+                style={{
+                  maxHeight: "600px",
+                  objectFit: "cover",
+                  width: "100%",
+                }}
+              />
+            </div>
+          </Col>
 
-            <Card.Text>
-              <Row className="movie-metadata">
-                <Col>
-                  <strong>Released:</strong> {movie.ReleaseDate.slice(0, 4)}
+          {/* Movie Details */}
+          <Col lg={8}>
+            <Card.Body className="p-4 p-lg-5">
+              {/* Movie Title */}
+              <div className="mb-4">
+                <h1 className="text-warning fw-bold mb-2 display-5">
+                  {movie.title}
+                </h1>
+                <div className="d-flex flex-wrap gap-2 mb-3">
+                  {movie.genre.map((g, index) => (
+                    <Badge key={index} bg="secondary" className="fs-6">
+                      {g}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+
+              {/* Movie Metadata */}
+              <Row className="mb-4">
+                <Col sm={6} className="mb-3">
+                  <div className="bg-secondary rounded p-3">
+                    <strong className="text-warning d-block mb-1">
+                      Release Year
+                    </strong>
+                    <span className="text-light h5 mb-0">
+                      {movie.ReleaseDate.slice(0, 4)}
+                    </span>
+                  </div>
                 </Col>
-                <Col>
-                  <strong>Runtime:</strong> {movie.Runtime}
-                </Col>
-                <Col>
-                  <strong>Genre:</strong> {movie.genre.join(", ")}
+                <Col sm={6} className="mb-3">
+                  <div className="bg-secondary rounded p-3">
+                    <strong className="text-warning d-block mb-1">
+                      Runtime
+                    </strong>
+                    <span className="text-light h5 mb-0">{movie.Runtime}</span>
+                  </div>
                 </Col>
               </Row>
 
-              <Row className="movie-description">
-                <Col className="mt-3 mb-3">{movie.description}</Col>
-              </Row>
-            </Card.Text>
+              {/* Movie Description */}
+              <div className="mb-4">
+                <h4 className="text-warning mb-3">📖 Synopsis</h4>
+                <Card className="bg-secondary border-0">
+                  <Card.Body>
+                    <p className="text-light mb-0 lead">{movie.description}</p>
+                  </Card.Body>
+                </Card>
+              </div>
 
-            <div className="similar-movies-section">
-              <Col className="text-hierarchy-section-header">
-                🎬 You Might Also Like
-              </Col>
-              <Row>
-                {similarMovies.map((movie) => (
-                  <Col sm={4} key={movie.id} className="my-1">
-                    <Link to={`/Movies/${movie.id}`} className="movie-link">
-                      <div className="movie-title">{movie.title}</div>
+              {/* Similar Movies */}
+              {similarMovies.length > 0 && (
+                <div className="mb-4">
+                  <h4 className="text-warning mb-3">🎬 You Might Also Like</h4>
+                  <Row>
+                    {similarMovies.map((similarMovie) => (
+                      <Col md={4} key={similarMovie.id} className="mb-2">
+                        <Link
+                          to={`/Movies/${similarMovie.id}`}
+                          className="text-decoration-none"
+                        >
+                          <Card className="bg-secondary text-white border-0 h-100">
+                            <Card.Body className="p-3">
+                              <h6 className="text-warning mb-1">
+                                {similarMovie.title}
+                              </h6>
+                              <small className="text-light">
+                                {similarMovie.ReleaseDate?.slice(0, 4)}
+                              </small>
+                            </Card.Body>
+                          </Card>
+                        </Link>
+                      </Col>
+                    ))}
+                  </Row>
+                </div>
+              )}
+
+              {/* Action Buttons */}
+              <div className="border-top border-secondary pt-4">
+                <Row className="align-items-center">
+                  <Col md={6} className="mb-3 mb-md-0">
+                    <Link to="/">
+                      <Button
+                        variant="outline-light"
+                        onClick={handleReset}
+                        size="lg"
+                        className="fw-semibold"
+                      >
+                        ← Back to Movies
+                      </Button>
                     </Link>
                   </Col>
-                ))}
-              </Row>
-            </div>
 
-            <div className="movie-actions d-flex justify-content-between mt-4">
-              <Link to={"/"}>
-                <Button variant="secondary" onClick={handleReset}>
-                  ← Back to Movies
-                </Button>
-              </Link>
-
-              {isMovieInFavorites ? (
-                <Button variant="outline-warning" disabled>
-                  ⭐ Already in Favorites
-                </Button>
-              ) : (
-                <>
-                  {error && (
-                    <Alert variant="danger" className="flex-grow-1 mx-3">
-                      {error}
-                    </Alert>
-                  )}
-                  <Button
-                    onClick={() => {
-                      dispatch(
-                        addFavoriteMovieToUser({
-                          userId: user._id,
-                          movieId,
-                        })
-                      );
-                    }}
-                    variant="primary"
-                    disabled={loading}
-                  >
-                    {loading ? (
-                      <>
-                        <Spinner
-                          as="span"
-                          animation="border"
-                          size="sm"
-                          role="status"
-                          aria-hidden="true"
-                          className="me-1"
-                          variant="light"
-                        />
-                        Adding...
-                      </>
-                    ) : (
-                      "⭐ Add To Favorites"
+                  <Col md={6}>
+                    {error && (
+                      <Alert variant="danger" className="mb-3">
+                        {error}
+                      </Alert>
                     )}
-                  </Button>
-                </>
-              )}
-            </div>
-          </Card.Body>
-        </Col>
-      </Row>
-    </Card>
+
+                    {isMovieInFavorites ? (
+                      <Button
+                        variant="outline-warning"
+                        disabled
+                        size="lg"
+                        className="w-100 fw-semibold"
+                      >
+                        ⭐ Already in Favorites
+                      </Button>
+                    ) : (
+                      <Button
+                        onClick={() => {
+                          dispatch(
+                            addFavoriteMovieToUser({
+                              userId: user._id,
+                              movieId,
+                            })
+                          );
+                        }}
+                        variant="warning"
+                        disabled={loading}
+                        size="lg"
+                        className="w-100 fw-semibold text-dark"
+                      >
+                        {loading ? (
+                          <>
+                            <Spinner
+                              as="span"
+                              animation="border"
+                              size="sm"
+                              role="status"
+                              aria-hidden="true"
+                              className="me-2"
+                            />
+                            Adding...
+                          </>
+                        ) : (
+                          "⭐ Add To Favorites"
+                        )}
+                      </Button>
+                    )}
+                  </Col>
+                </Row>
+              </div>
+            </Card.Body>
+          </Col>
+        </Row>
+      </Card>
+    </div>
   );
 };
 

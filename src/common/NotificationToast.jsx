@@ -2,22 +2,64 @@ import React from "react";
 import { Toast, ToastContainer } from "react-bootstrap";
 
 const NotificationToast = ({ show, message, type, onClose }) => {
+  // Map types to Bootstrap variants and icons
+  const getToastConfig = (type) => {
+    const configs = {
+      success: {
+        bg: "success",
+        icon: "✅",
+        title: "Success!",
+        textColor: "white",
+      },
+      danger: {
+        bg: "danger",
+        icon: "❌",
+        title: "Error!",
+        textColor: "white",
+      },
+      warning: {
+        bg: "warning",
+        icon: "⚠️",
+        title: "Warning!",
+        textColor: "dark",
+      },
+      info: {
+        bg: "info",
+        icon: "ℹ️",
+        title: "Info",
+        textColor: "white",
+      },
+    };
+    return configs[type] || configs.info;
+  };
+
+  const config = getToastConfig(type);
+
   return (
-    <ToastContainer position="top-start" className="p-3">
+    <ToastContainer position="top-end" className="p-3" style={{ zIndex: 9999 }}>
       <Toast
         show={show}
         onClose={onClose}
-        delay={3000}
+        delay={4000}
         autohide
-        bg={type}
-        className="text-white"
+        bg={config.bg}
+        className={`text-${config.textColor} border-0 shadow-lg`}
       >
-        <Toast.Header closeButton>
-          <strong className="me-auto">
-            {type === "success" ? "Success!" : "Error!"}
-          </strong>
+        <Toast.Header
+          closeButton
+          className={`bg-${config.bg} text-${config.textColor} border-0`}
+        >
+          <span className="me-2" style={{ fontSize: "1.2em" }}>
+            {config.icon}
+          </span>
+          <strong className="me-auto fw-bold">{config.title}</strong>
+          <small className={`text-${config.textColor} opacity-75`}>
+            just now
+          </small>
         </Toast.Header>
-        <Toast.Body>{message}</Toast.Body>
+        <Toast.Body className={`text-${config.textColor} fw-medium`}>
+          {message}
+        </Toast.Body>
       </Toast>
     </ToastContainer>
   );
