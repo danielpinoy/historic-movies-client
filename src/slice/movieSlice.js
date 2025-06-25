@@ -16,15 +16,21 @@ export const getMovies = createAsyncThunk(
       if (movieData) {
         const historyMovieApi = movieData.map((data) => ({
           id: data._id,
-          title: data.Title,
-          description: data.Description,
-          image: data.Image,
-          director: data.Director,
-          actor: data.Actors,
-          genre: data.Genre,
-          featured: data.Featured,
-          ReleaseDate: data.ReleaseDate,
-          Runtime: data.Runtime,
+          title: data.title,
+          description: data.description,
+          image: data.image,
+          director: data.director,
+          actor: data.actors,
+          genre: data.genre,
+          featured: data.featured,
+          releaseDate: data.releaseDate,
+          runtime: data.runtime,
+          // New fields you can use:
+          rating: data.rating, // NEW: TMDB rating (number)
+          voteCount: data.voteCount, // NEW: How many people voted
+          tmdbId: data.tmdbId, // NEW: TMDB ID
+          budget: data.budget, // NEW: Movie budget
+          revenue: data.revenue, // NEW: Box office revenue
         }));
         return historyMovieApi;
       } else {

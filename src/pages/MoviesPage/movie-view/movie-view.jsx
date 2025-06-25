@@ -11,6 +11,15 @@ const MovieView = ({ movies, handleReset }) => {
   const isMovieInFavorites = user.FavoriteMovies.includes(String(movieId));
   const movie = movies.find((m) => m.id === movieId);
 
+  // Add safety check
+  if (!movie) {
+    return (
+      <Alert variant="warning" className="text-center">
+        Movie not found
+      </Alert>
+    );
+  }
+
   const similarMovies = movies
     .filter(
       (m) =>
@@ -18,6 +27,16 @@ const MovieView = ({ movies, handleReset }) => {
     )
     .sort(() => 0.5 - Math.random())
     .slice(0, 3);
+
+  // Safe date extraction
+  const getYear = (dateString) => {
+    if (!dateString) return "Unknown";
+    try {
+      return new Date(dateString).getFullYear() || "Unknown";
+    } catch {
+      return "Unknown";
+    }
+  };
 
   return (
     <div className="container-fluid py-4">
@@ -64,7 +83,7 @@ const MovieView = ({ movies, handleReset }) => {
                       Release Year
                     </strong>
                     <span className="text-light h5 mb-0">
-                      {movie.ReleaseDate.slice(0, 4)}
+                      {getYear(movie.releaseDate)}
                     </span>
                   </div>
                 </Col>
@@ -73,10 +92,42 @@ const MovieView = ({ movies, handleReset }) => {
                     <strong className="text-warning d-block mb-1">
                       Runtime
                     </strong>
-                    <span className="text-light h5 mb-0">{movie.Runtime}</span>
+                    <span className="text-light h5 mb-0">
+                      {movie.runtime
+                        ? `${movie.runtime} min`
+                        : movie.runtime || "Unknown"}
+                    </span>
                   </div>
                 </Col>
               </Row>
+
+              {/* NEW: Rating Section */}
+              {movie.rating && (
+                <Row className="mb-4">
+                  <Col sm={6} className="mb-3">
+                    <div className="bg-secondary rounded p-3">
+                      <strong className="text-warning d-block mb-1">
+                        TMDB Rating
+                      </strong>
+                      <span className="text-light h5 mb-0">
+                        ⭐ {movie.rating}/10
+                      </span>
+                    </div>
+                  </Col>
+                  {movie.voteCount && (
+                    <Col sm={6} className="mb-3">
+                      <div className="bg-secondary rounded p-3">
+                        <strong className="text-warning d-block mb-1">
+                          Votes
+                        </strong>
+                        <span className="text-light h5 mb-0">
+                          👥 {movie.voteCount.toLocaleString()}
+                        </span>
+                      </div>
+                    </Col>
+                  )}
+                </Row>
+              )}
 
               {/* Movie Description */}
               <div className="mb-4">
@@ -105,7 +156,7 @@ const MovieView = ({ movies, handleReset }) => {
                                 {similarMovie.title}
                               </h6>
                               <small className="text-light">
-                                {similarMovie.ReleaseDate?.slice(0, 4)}
+                                {getYear(similarMovie.releaseDate)}
                               </small>
                             </Card.Body>
                           </Card>
