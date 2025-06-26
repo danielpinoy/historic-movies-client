@@ -95,8 +95,6 @@ export const MainView = () => {
     </Col>
   );
 
-  // Search bar component (moved outside to prevent re-renders)
-
   // Error component
   const ErrorComponent = ({ error }) => (
     <Col xs={12}>
@@ -112,11 +110,17 @@ export const MainView = () => {
   return (
     <BrowserRouter>
       <div className="bg-dark min-vh-100">
-        <NavigationBar user={user} loggedOut={handleLogout} />
+        {/* <NavigationBar user={user} loggedOut={handleLogout} /> */}
 
         <Container fluid className="py-4">
           <Routes>
-            <Route path="/" element={<HomePage />} />
+            {/* Homepage Route - Hero Section */}
+            <Route
+              path="/"
+              element={
+                !storedUser ? <Navigate to="/login" replace /> : <HomePage />
+              }
+            />
 
             {/* Signup Route */}
             <Route
@@ -128,6 +132,77 @@ export const MainView = () => {
             <Route
               path="/login"
               element={storedUser ? <Navigate to="/" /> : <LoginView />}
+            />
+
+            {/* Movies List Route - Grid with Search */}
+            <Route
+              path="/movies"
+              element={
+                !storedUser ? (
+                  <Navigate to="/login" replace />
+                ) : (
+                  <>
+                    {/* Search bar for movies page */}
+                    <Row>
+                      <Col xs={12} className="mb-4">
+                        <InputGroup size="lg">
+                          <InputGroup.Text className="bg-warning text-dark fw-semibold">
+                            🔍
+                          </InputGroup.Text>
+                          <Form.Control
+                            type="text"
+                            placeholder="Search for movies by title..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            className="bg-dark text-white border-warning"
+                            style={{ fontSize: "1.1rem" }}
+                          />
+                          {searchTerm && (
+                            <button
+                              className="btn btn-outline-warning"
+                              onClick={() => setSearchTerm("")}
+                              type="button"
+                            >
+                              ✕
+                            </button>
+                          )}
+                        </InputGroup>
+                        {searchTerm && (
+                          <small className="text-warning mt-2 d-block">
+                            Showing {filteredMovies.length} result(s) for "
+                            {searchTerm}"
+                          </small>
+                        )}
+                      </Col>
+                    </Row>
+
+                    {/* Movies Grid */}
+                    <Row>
+                      {loading ? (
+                        <Col xs={12}>
+                          <LoadingComponent />
+                        </Col>
+                      ) : error ? (
+                        <ErrorComponent error={error} />
+                      ) : filteredMovies.length === 0 ? (
+                        <EmptyMoviesState />
+                      ) : (
+                        filteredMovies.map((movie) => (
+                          <Col
+                            key={movie.id}
+                            sm={6}
+                            md={4}
+                            lg={3}
+                            className="mb-4"
+                          >
+                            <MovieCard movie={movie} />
+                          </Col>
+                        ))
+                      )}
+                    </Row>
+                  </>
+                )
+              }
             />
 
             {/* Profile Routes */}
@@ -190,77 +265,6 @@ export const MainView = () => {
                       />
                     </Col>
                   </Row>
-                )
-              }
-            />
-
-            {/*  Route */}
-            <Route
-              path="/"
-              element={
-                !storedUser ? (
-                  <Navigate to="/login" replace />
-                ) : (
-                  <>
-                    {/* Search bar always visible when logged in */}
-                    <Row>
-                      <Col xs={12} className="mb-4">
-                        <InputGroup size="lg">
-                          <InputGroup.Text className="bg-warning text-dark fw-semibold">
-                            🔍
-                          </InputGroup.Text>
-                          <Form.Control
-                            type="text"
-                            placeholder="Search for movies by title..."
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                            className="bg-dark text-white border-warning"
-                            style={{ fontSize: "1.1rem" }}
-                          />
-                          {searchTerm && (
-                            <button
-                              className="btn btn-outline-warning"
-                              onClick={() => setSearchTerm("")}
-                              type="button"
-                            >
-                              ✕
-                            </button>
-                          )}
-                        </InputGroup>
-                        {searchTerm && (
-                          <small className="text-warning mt-2 d-block">
-                            Showing {filteredMovies.length} result(s) for "
-                            {searchTerm}"
-                          </small>
-                        )}
-                      </Col>
-                    </Row>
-
-                    {/* Content area */}
-                    <Row>
-                      {loading ? (
-                        <Col xs={12}>
-                          <LoadingComponent />
-                        </Col>
-                      ) : error ? (
-                        <ErrorComponent error={error} />
-                      ) : filteredMovies.length === 0 ? (
-                        <EmptyMoviesState />
-                      ) : (
-                        filteredMovies.map((movie) => (
-                          <Col
-                            key={movie.id}
-                            sm={6}
-                            md={4}
-                            lg={3}
-                            className="mb-4"
-                          >
-                            <MovieCard movie={movie} />
-                          </Col>
-                        ))
-                      )}
-                    </Row>
-                  </>
                 )
               }
             />
