@@ -21,26 +21,9 @@ const HeroSection = ({ movies }) => {
   return (
     <section className="hero-section">
       {/* Header */}
-      <Container className="py-4">
-        <Row className="mb-4">
-          <Col>
-            <div className="d-flex align-items-center">
-              <span className="text-warning me-3" style={{ fontSize: "2rem" }}>
-                🎬
-              </span>
-              <h1
-                className="text-white fw-bold mb-0"
-                style={{ fontSize: "2.5rem" }}
-              >
-                Movie Reviews
-              </h1>
-            </div>
-          </Col>
-        </Row>
-      </Container>
 
       {/* Movie Grid - Full Width */}
-      <div className="container-fluid px-0">
+      <div className="px-0">
         <Row className="g-0" style={{ height: "80vh" }}>
           {/* Large Movie Card - Left Side */}
           <Col lg={8}>

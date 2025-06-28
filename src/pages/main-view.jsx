@@ -112,7 +112,7 @@ export const MainView = () => {
       <div className="bg-dark min-vh-100">
         {/* <NavigationBar user={user} loggedOut={handleLogout} /> */}
 
-        <Container fluid className="py-4">
+        <div fluid className="py-4">
           <Routes>
             {/* Homepage Route - Hero Section */}
             <Route
@@ -269,7 +269,7 @@ export const MainView = () => {
               }
             />
           </Routes>
-        </Container>
+        </div>
       </div>
     </BrowserRouter>
   );

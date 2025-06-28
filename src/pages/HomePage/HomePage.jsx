@@ -1,4 +1,5 @@
 import HeroSection from "./sections/HeroSection";
+import HighlightsSection from "./sections/HighlightsSection"; // New import
 import { StickyNavigationBar } from "../../components/layout/navigation-bar";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../slice/userSlice";
@@ -15,7 +16,10 @@ const HomePage = () => {
       <HeroSection movies={movies} />
       <StickyNavigationBar user={user} loggedOut={handleLogout} />
 
-      {/* Add some content below to test the sticky behavior */}
+      {/* New Highlights Section */}
+      <HighlightsSection movies={movies} />
+
+      {/* Rest of your content */}
       <div className="container py-5">
         <div className="row">
           <div className="col-12 text-center">
@@ -23,7 +27,6 @@ const HomePage = () => {
             <p className="text-light">
               Discover more amazing historical movies in our collection.
             </p>
-            {/* You can add more content here */}
           </div>
         </div>
       </div>

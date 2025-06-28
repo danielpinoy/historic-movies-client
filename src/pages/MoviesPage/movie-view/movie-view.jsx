@@ -39,7 +39,7 @@ const MovieView = ({ movies, handleReset }) => {
   };
 
   return (
-    <div className="container-fluid py-4">
+    <div className=" py-4">
       <Card className="bg-dark text-white border-warning shadow-lg overflow-hidden">
         <Row className="g-0">
           {/* Movie Poster */}
