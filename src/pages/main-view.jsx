@@ -113,7 +113,7 @@ export const MainView = () => {
   return (
     <BrowserRouter>
       <div className="bg-dark min-vh-100">
-        <div fluid className="py-4">
+        <div fluid className="">
           <Routes>
             {/* PUBLIC ROUTES - No ProtectedRoute needed */}
             <Route

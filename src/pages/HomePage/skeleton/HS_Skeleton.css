@@ -1,0 +1,248 @@
+/* Shimmer Animation */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* Base skeleton background */
+.skeleton-bg {
+  background: linear-gradient(135deg, #283543 0%, #2d2d2d 50%, #1a1a1a 100%);
+  background-size: 400% 400%;
+  animation: shimmer 6s ease-in-out infinite;
+}
+
+/* Base skeleton element */
+.skeleton-element {
+  background: linear-gradient(90deg, #1a1a1a 25%, #2a2a2a 50%, #1a1a1a 75%);
+  background-size: 200% 100%;
+  animation: shimmer 13s infinite;
+  border-radius: 4px;
+}
+
+/* Hero Section Skeleton Styles */
+.hero-skeleton-section {
+  height: 80vh;
+}
+
+.hero-skeleton-card {
+  height: 100%;
+  background-color: #0d1117;
+  border: none;
+  border-radius: 15px;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-skeleton-body {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  position: relative;
+  z-index: 2;
+}
+
+/* Large skeleton elements */
+.skeleton-rating-badge {
+  width: 80px;
+  height: 50px;
+  border-radius: 50px;
+  background-color: #333;
+}
+
+.skeleton-title-large {
+  width: 60%;
+  height: 3rem;
+  background-color: #333;
+  border-radius: 8px;
+  margin-bottom: 0.5rem;
+}
+
+.skeleton-title-medium {
+  width: 40%;
+  height: 3rem;
+  background-color: #333;
+  border-radius: 8px;
+}
+
+.skeleton-metadata {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.skeleton-meta-item {
+  background-color: #333;
+  border-radius: 4px;
+}
+
+.skeleton-meta-stars {
+  width: 120px;
+  height: 20px;
+}
+
+.skeleton-meta-genre {
+  width: 80px;
+  height: 20px;
+}
+
+.skeleton-meta-year {
+  width: 100px;
+  height: 20px;
+}
+
+/* Description lines */
+.skeleton-description {
+  margin-bottom: 1.5rem;
+}
+
+.skeleton-description-line {
+  width: 100%;
+  height: 20px;
+  background-color: #333;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+}
+
+.skeleton-description-line:last-child {
+  width: 70%;
+}
+
+.skeleton-button {
+  width: 150px;
+  height: 50px;
+  background-color: #333;
+  border-radius: 25px;
+}
+
+/* Small card skeleton styles */
+.skeleton-small-card {
+  height: 100%;
+  background-color: #0d1117;
+  border: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.skeleton-small-body {
+  padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  position: relative;
+  z-index: 2;
+}
+
+.skeleton-small-rating {
+  width: 60px;
+  height: 30px;
+  background-color: #333;
+  border-radius: 15px;
+}
+
+.skeleton-small-title {
+  width: 80%;
+  height: 24px;
+  background-color: #333;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+}
+
+.skeleton-small-meta {
+  width: 100%;
+  height: 16px;
+  background-color: #333;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+}
+
+.skeleton-small-button {
+  width: 90px;
+  height: 32px;
+  background-color: #333;
+  border-radius: 4px;
+}
+
+/* Tiny card skeleton styles */
+.skeleton-tiny-rating {
+  width: 50px;
+  height: 25px;
+  background-color: #333;
+  border-radius: 12px;
+}
+
+.skeleton-tiny-title {
+  width: 90%;
+  height: 20px;
+  background-color: #333;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+}
+
+.skeleton-tiny-meta-line {
+  width: 100%;
+  height: 12px;
+  background-color: #333;
+  border-radius: 4px;
+  margin-bottom: 0.25rem;
+}
+
+.skeleton-tiny-meta-short {
+  width: 70%;
+  height: 12px;
+  background-color: #333;
+  border-radius: 4px;
+  margin-bottom: 0.25rem;
+}
+
+.skeleton-tiny-button {
+  width: 70px;
+  height: 24px;
+  background-color: #333;
+  border-radius: 4px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 991px) {
+  .skeleton-title-large {
+    height: 2.5rem;
+  }
+
+  .skeleton-title-medium {
+    height: 2.5rem;
+    width: 50%;
+  }
+
+  .skeleton-metadata {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
+
+@media (max-width: 767px) {
+  .hero-skeleton-section {
+    height: auto;
+    min-height: 70vh;
+  }
+
+  .skeleton-title-large {
+    height: 2rem;
+    width: 80%;
+  }
+
+  .skeleton-title-medium {
+    height: 2rem;
+    width: 60%;
+  }
+
+  .skeleton-button {
+    width: 120px;
+    height: 40px;
+  }
+}

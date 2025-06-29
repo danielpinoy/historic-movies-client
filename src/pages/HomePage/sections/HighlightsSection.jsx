@@ -12,7 +12,7 @@ const HighlightsSection = ({ movies }) => {
     const sortedMovies = [...movies]
       .filter((movie) => movie.rating && movie.rating > 7)
       .sort((a, b) => (b.rating || 0) - (a.rating || 0))
-      .slice(0, 4);
+      .slice(0, 3);
 
     return sortedMovies;
   };
@@ -59,7 +59,7 @@ const HighlightsSection = ({ movies }) => {
             <Col lg={3} md={6} key={movie.id} className="mb-4">
               <Card className="highlight-card h-100">
                 <div className="card-image-wrapper">
-                  <Badge bg="warning" className="rating-badge">
+                  <Badge bg="warning" className="rating-badges">
                     {movie.rating ? movie.rating.toFixed(1) : "N/A"}
                   </Badge>
                   <img

@@ -109,7 +109,7 @@
 }
 
 /* Rating badge */
-.rating-badge {
+.rating-badges {
   position: absolute;
   top: 1rem;
   right: 1rem;
@@ -122,7 +122,6 @@
   z-index: 2;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
-
 /* Card overlay */
 .card-overlay {
   position: absolute;

@@ -145,11 +145,6 @@ const NewReleasesSection = ({ movies = [] }) => {
             ))}
           </div>
         </div>
-
-        {/* View All Button */}
-        <div className="view-all-section">
-          <button className="view-all-btn">View All Movies</button>
-        </div>
       </div>
     </section>
   );
