@@ -76,6 +76,11 @@ export const getMovies = createAsyncThunk(
           const errorData = await response.json();
           throw new Error(errorData.message || `HTTP ${response.status}`);
         } catch (parseError) {
+          console.error("Full error details:", {
+            status: response.status,
+            statusText: response.statusText,
+            url: response.url,
+          });
           throw new Error(
             `Server error: ${response.status} ${response.statusText}`
           );
