@@ -59,7 +59,7 @@ const HighlightsSection = ({ movies }) => {
             <Col lg={3} md={6} key={movie.id} className="mb-4">
               <Card className="highlight-card h-100">
                 <div className="card-image-wrapper">
-                  <Badge className="rating-badge">
+                  <Badge bg="warning" className="rating-badge">
                     {movie.rating ? movie.rating.toFixed(1) : "N/A"}
                   </Badge>
                   <img

@@ -1,8 +1,14 @@
 import React from "react";
 import { Container, Row, Col, Badge, Button, Card } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import HeroSectionSkeleton from "../skeleton/HS_Skeleton";
 
-const HeroSection = ({ movies }) => {
+const HeroSection = ({ movies, loading = false }) => {
+  // Show skeleton while loading
+  if (loading || !movies || movies.length < 4) {
+    return <HeroSectionSkeleton />;
+  }
+
   // Get featured movie (first one or one marked as featured)
   const featuredMovie = movies.find((m) => m.featured) || movies[0];
 
@@ -16,12 +22,8 @@ const HeroSection = ({ movies }) => {
     return movie.rating || movie.Rating || "N/A";
   };
 
-  if (!featuredMovie || movies.length < 4) return null;
-
   return (
     <section className="hero-section">
-      {/* Header */}
-
       {/* Movie Grid - Full Width */}
       <div className="px-0">
         <Row className="g-0" style={{ height: "80vh" }}>
@@ -31,7 +33,7 @@ const HeroSection = ({ movies }) => {
               className="h-100 bg-transparent border-0 text-white position-relative overflow-hidden"
               style={{
                 borderRadius: "15px",
-                backgroundImage: `linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.7)), url(${featuredMovie.image})`,
+                backgroundImage: `linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.7)), url(${featuredMovie.heroImage})`,
                 backgroundSize: "cover",
                 backgroundPosition: "center",
               }}

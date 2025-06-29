@@ -8,19 +8,40 @@ import {
   changePassword,
 } from "../asyncThunk/userAsyncThunks";
 import { createSlice } from "@reduxjs/toolkit";
+
 const storedUser = JSON.parse(localStorage.getItem("user"));
 
 const userSlice = createSlice({
   name: "user",
-  initialState: { user: storedUser || null, loading: false, error: null },
+  initialState: {
+    user: storedUser || null,
+    loading: false,
+    error: null,
+    isAuthenticated: !!storedUser,
+  },
   reducers: {
     logout: (state) => {
       localStorage.clear();
       state.user = null;
+      state.isAuthenticated = false;
+      state.error = null;
+      // Force redirect to login
+      window.location.href = "/login";
     },
     clearStates: (state) => {
       state.error = null;
       state.success = null;
+    },
+    // Add action to handle automatic logout on auth errors
+    forceLogout: (state) => {
+      localStorage.clear();
+      state.user = null;
+      state.isAuthenticated = false;
+      state.error = "Session expired. Please log in again.";
+      // Redirect to login
+      setTimeout(() => {
+        window.location.href = "/login";
+      }, 100);
     },
   },
   extraReducers: (builder) => {
@@ -44,22 +65,21 @@ const userSlice = createSlice({
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.loading = false;
-        // console.log(action.payload);
         if (action.payload && action.payload.user !== false) {
           state.user = action.payload.user;
+          state.isAuthenticated = true;
           localStorage.setItem("user", JSON.stringify(action.payload.user));
           localStorage.setItem("token", action.payload.token);
           window.location.reload();
-          // console.log(action.payload);
-        }
-        // Wrong username and password
-        else if (action.payload && action.payload.user === false) {
+        } else if (action.payload && action.payload.user === false) {
           state.error = "Incorrect Username or Password";
+          state.isAuthenticated = false;
         }
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+        state.isAuthenticated = false;
       })
       .addCase(editUser.pending, (state) => {
         state.loading = true;
@@ -70,15 +90,32 @@ const userSlice = createSlice({
         state.user = action.payload;
         localStorage.setItem("user", JSON.stringify(action.payload));
       })
+      //  Force logout on auth errors in ALL async actions
       .addCase(editUser.rejected, (state, action) => {
         state.loading = false;
-        state.error = "Network Problem. Please try again later.";
+        // Check for auth error
+        if (action.payload?.includes("Session expired")) {
+          state.user = null;
+          state.isAuthenticated = false;
+          localStorage.clear();
+          window.location.href = "/login";
+        } else {
+          state.error = "Network Problem. Please try again later.";
+        }
       })
       .addCase(deleteUser.fulfilled, (state) => {
         state.user = null;
+        state.isAuthenticated = false;
       })
       .addCase(deleteUser.rejected, (state, action) => {
-        state.error = "Network Problem. Please try again later.";
+        if (action.payload?.includes("Session expired")) {
+          state.user = null;
+          state.isAuthenticated = false;
+          localStorage.clear();
+          window.location.href = "/login";
+        } else {
+          state.error = "Network Problem. Please try again later.";
+        }
       })
       .addCase(addFavoriteMovieToUser.pending, (state) => {
         state.loading = true;
@@ -91,7 +128,14 @@ const userSlice = createSlice({
       })
       .addCase(addFavoriteMovieToUser.rejected, (state, action) => {
         state.loading = false;
-        state.error = "Network Problem. Please try again later.";
+        if (action.payload?.includes("Session expired")) {
+          state.user = null;
+          state.isAuthenticated = false;
+          localStorage.clear();
+          window.location.href = "/login";
+        } else {
+          state.error = "Network Problem. Please try again later.";
+        }
       })
       .addCase(removeFavoriteMovie.pending, (state) => {
         state.loading = true;
@@ -100,15 +144,19 @@ const userSlice = createSlice({
       .addCase(removeFavoriteMovie.fulfilled, (state, action) => {
         state.loading = false;
         state.user = action.payload;
-        console.log(action.payload);
         localStorage.setItem("user", JSON.stringify(state.user));
       })
       .addCase(removeFavoriteMovie.rejected, (state, action) => {
         state.loading = false;
-        state.error = "Network Problem. Please try again later.";
+        if (action.payload?.includes("Session expired")) {
+          state.user = null;
+          state.isAuthenticated = false;
+          localStorage.clear();
+          window.location.href = "/login";
+        } else {
+          state.error = "Network Problem. Please try again later.";
+        }
       })
-
-      // Add cases for changePassword async thunk
       .addCase(changePassword.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -121,10 +169,17 @@ const userSlice = createSlice({
       })
       .addCase(changePassword.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        if (action.payload?.includes("Session expired")) {
+          state.user = null;
+          state.isAuthenticated = false;
+          localStorage.clear();
+          window.location.href = "/login";
+        } else {
+          state.error = action.payload;
+        }
       });
   },
 });
 
-export const { logout, clearStates } = userSlice.actions;
+export const { logout, clearStates, forceLogout } = userSlice.actions;
 export default userSlice.reducer;

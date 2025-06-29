@@ -23,10 +23,12 @@ const MovieCard = ({ movie }) => {
         }}
       >
         <div className="position-relative overflow-hidden">
+          {/* UPDATED: Using pre-optimized image directly */}
           <Card.Img
-            src={movie.image}
+            src={movie.image} // ← Already optimized! No need for optimization function
             alt={movie.title}
             className="card-img-top"
+            loading="lazy" // Keep lazy loading for performance
             style={{
               height: "400px",
               objectFit: "cover",
@@ -63,7 +65,7 @@ MovieCard.propTypes = {
   movie: PropTypes.shape({
     id: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
-    image: PropTypes.string.isRequired,
+    image: PropTypes.string.isRequired, // Now expects pre-optimized Cloudinary URL
     ReleaseDate: PropTypes.string,
   }).isRequired,
 };

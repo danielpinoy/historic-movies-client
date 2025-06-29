@@ -21,6 +21,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../slice/userSlice";
 import { getMovies } from "../slice/movieSlice";
 import HomePage from "./HomePage/HomePage.jsx";
+import ProtectedRoute from "../components/ProtectedRoute.jsx"; // Import ProtectedRoute
 
 export const MainView = () => {
   // State management
@@ -37,9 +38,11 @@ export const MainView = () => {
 
   // Effects
   useEffect(() => {
-    dispatch(getMovies());
-  }, [dispatch]);
-
+    // Only fetch once when component mounts
+    if (storedUser && storedToken) {
+      dispatch(getMovies());
+    }
+  }, []);
   // Memoized filtered movies for performance
   const filteredMovies = useMemo(
     () =>
@@ -110,37 +113,35 @@ export const MainView = () => {
   return (
     <BrowserRouter>
       <div className="bg-dark min-vh-100">
-        {/* <NavigationBar user={user} loggedOut={handleLogout} /> */}
-
         <div fluid className="py-4">
           <Routes>
-            {/* Homepage Route - Hero Section */}
-            <Route
-              path="/"
-              element={
-                !storedUser ? <Navigate to="/login" replace /> : <HomePage />
-              }
-            />
-
-            {/* Signup Route */}
+            {/* PUBLIC ROUTES - No ProtectedRoute needed */}
             <Route
               path="/signup"
               element={storedUser ? <Navigate to="/" /> : <SignupView />}
             />
-
-            {/* Login Route */}
             <Route
               path="/login"
               element={storedUser ? <Navigate to="/" /> : <LoginView />}
             />
 
-            {/* Movies List Route - Grid with Search */}
+            {/* PROTECTED ROUTES - Wrapped with ProtectedRoute */}
+
+            {/* Homepage Route - Protected */}
+            <Route
+              path="/"
+              element={
+                <ProtectedRoute>
+                  <HomePage />
+                </ProtectedRoute>
+              }
+            />
+
+            {/* Movies List Route - Protected */}
             <Route
               path="/movies"
               element={
-                !storedUser ? (
-                  <Navigate to="/login" replace />
-                ) : (
+                <ProtectedRoute>
                   <>
                     {/* Search bar for movies page */}
                     <Row>
@@ -201,17 +202,15 @@ export const MainView = () => {
                       )}
                     </Row>
                   </>
-                )
+                </ProtectedRoute>
               }
             />
 
-            {/* Profile Routes */}
+            {/* Profile Routes - Protected */}
             <Route
               path="/users"
               element={
-                !storedUser ? (
-                  <Navigate to="/login" replace />
-                ) : (
+                <ProtectedRoute>
                   <Row className="justify-content-center">
                     <Col lg={8} xl={6}>
                       {!isEditingProfile ? (
@@ -228,43 +227,53 @@ export const MainView = () => {
                       )}
                     </Col>
                   </Row>
-                )
+                </ProtectedRoute>
               }
             />
 
-            {/* Change Password Route */}
+            {/* Change Password Route - Protected */}
             <Route
               path="/change-password"
               element={
-                !storedUser ? (
-                  <Navigate to="/login" replace />
-                ) : (
+                <ProtectedRoute>
                   <Row className="justify-content-center">
                     <Col lg={8} xl={6}>
                       <ChangePasswordView />
                     </Col>
                   </Row>
-                )
+                </ProtectedRoute>
               }
             />
 
-            {/* Movie Detail Route */}
+            {/* Movie Detail Route - Protected */}
             <Route
               path="/Movies/:movieId"
               element={
-                !storedUser ? (
-                  <Navigate to="/login" replace />
-                ) : movies.length === 0 ? (
-                  <LoadingComponent />
+                <ProtectedRoute>
+                  {movies.length === 0 ? (
+                    <LoadingComponent />
+                  ) : (
+                    <Row className="justify-content-center">
+                      <Col lg={10} xl={8}>
+                        <MovieView
+                          movies={movies}
+                          handleReset={handleResetSearchTerm}
+                        />
+                      </Col>
+                    </Row>
+                  )}
+                </ProtectedRoute>
+              }
+            />
+
+            {/* Catch-all route - Redirect to login if not authenticated, home if authenticated */}
+            <Route
+              path="*"
+              element={
+                storedUser ? (
+                  <Navigate to="/" replace />
                 ) : (
-                  <Row className="justify-content-center">
-                    <Col lg={10} xl={8}>
-                      <MovieView
-                        movies={movies}
-                        handleReset={handleResetSearchTerm}
-                      />
-                    </Col>
-                  </Row>
+                  <Navigate to="/login" replace />
                 )
               }
             />

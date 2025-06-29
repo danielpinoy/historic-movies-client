@@ -1,5 +1,6 @@
 import HeroSection from "./sections/HeroSection";
-import HighlightsSection from "./sections/HighlightsSection"; // New import
+import HighlightsSection from "./sections/HighlightsSection";
+import NewReleasesSection from "./sections/NewReleasesSection"; // Import the new section
 import { StickyNavigationBar } from "../../components/layout/navigation-bar";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../slice/userSlice";
@@ -13,13 +14,19 @@ const HomePage = () => {
 
   return (
     <>
+      {/* Hero Section - Top of page */}
       <HeroSection movies={movies} />
+
+      {/* Sticky Navigation */}
       <StickyNavigationBar user={user} loggedOut={handleLogout} />
 
-      {/* New Highlights Section */}
+      {/* Highlights Section */}
       <HighlightsSection movies={movies} />
 
-      {/* Rest of your content */}
+      {/* NEW: New Releases Section */}
+      <NewReleasesSection movies={movies} />
+
+      {/* Optional: Additional content sections
       <div className="container py-5">
         <div className="row">
           <div className="col-12 text-center">
@@ -29,7 +36,7 @@ const HomePage = () => {
             </p>
           </div>
         </div>
-      </div>
+      </div> */}
     </>
   );
 };
