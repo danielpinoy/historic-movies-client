@@ -59,6 +59,7 @@ const HeroSection = ({ movies, loading = false }) => {
   const getRating = (movie) => {
     return movie.rating || movie.Rating || "N/A";
   };
+  console.log(featuredMovie.images);
 
   return (
     <section className="hero-section">
@@ -66,7 +67,6 @@ const HeroSection = ({ movies, loading = false }) => {
       <div className="px-0">
         <Row
           className="g-0"
-          style={{ height: "80vh" }}
           key={animationKey} // Force re-render for animations
         >
           {/* Large Movie Card - Left Side */}

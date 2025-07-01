@@ -1,11 +1,11 @@
-/* Hero Section Advanced Animations */
+.hero-section {
+  min-height: 100vh;
+}
+.hero-section .row {
+  height: 80vh !important;
+}
 
-/* .hero-section {
-  position: relative;
-  overflow: hidden;
-} */
-
-/* Ken Burns Effect - Slow zoom on background images */
+/* Ken Burns Effect - Slow zoom on background images
 @keyframes kenBurns {
   0% {
     transform: scale(1);

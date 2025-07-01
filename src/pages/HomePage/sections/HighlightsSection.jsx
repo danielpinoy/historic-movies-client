@@ -1,5 +1,13 @@
 import React, { useState } from "react";
-import { Container, Row, Col, Card, Badge, Button } from "react-bootstrap";
+import {
+  Container,
+  Row,
+  Col,
+  Card,
+  Badge,
+  ButtonGroup,
+  Button,
+} from "react-bootstrap";
 import { Link } from "react-router-dom";
 import "./HighlightsSection.css";
 
@@ -109,26 +117,37 @@ const HighlightsSection = ({ movies }) => {
             <p className="highlights-subtitle">{sectionInfo.subtitle}</p>
           </div>
 
-          <div className="tab-buttons">
-            <button
-              className={`tab-btn ${activeTab === "author" ? "active" : ""}`}
+          <ButtonGroup className="custom-tab-buttons">
+            <Button
+              variant={activeTab === "author" ? "info" : "outline-secondary"}
+              className={`tab-btn ${
+                activeTab === "author" ? "active author-active" : ""
+              }`}
               onClick={() => setActiveTab("author")}
             >
-              Author Picks
-            </button>
-            <button
-              className={`tab-btn ${activeTab === "featured" ? "active" : ""}`}
+              <span className="tab-text">Author Picks</span>
+            </Button>
+            <Button
+              variant={
+                activeTab === "featured" ? "warning" : "outline-secondary"
+              }
+              className={`tab-btn ${
+                activeTab === "featured" ? "active featured-active" : ""
+              }`}
               onClick={() => setActiveTab("featured")}
             >
-              Featured
-            </button>
-            <button
-              className={`tab-btn ${activeTab === "hidden" ? "active" : ""}`}
+              <span className="tab-text">Featured</span>
+            </Button>
+            <Button
+              variant={activeTab === "hidden" ? "success" : "outline-secondary"}
+              className={`tab-btn ${
+                activeTab === "hidden" ? "active hidden-active" : ""
+              }`}
               onClick={() => setActiveTab("hidden")}
             >
-              Hidden Gems
-            </button>
-          </div>
+              <span className="tab-text">Hidden Gems</span>
+            </Button>
+          </ButtonGroup>
         </div>
 
         <Row className="mt-5">

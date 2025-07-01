@@ -1,9 +1,8 @@
+// src/slice/movieSlice.js
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { makeAPICall, resetAPIHealth } from "../config/api";
 
-const API_URL =
-  "https://xo4xjqevs42mbp46utxi3dua3y0lwywt.lambda-url.eu-north-1.on.aws";
-
-// Helper functions (keep your existing auth helpers)
+// Helper functions
 const handleAuthError = (response) => {
   if (response.status === 401 || response.status === 403) {
     localStorage.clear();
@@ -50,9 +49,9 @@ export const getMovies = createAsyncThunk(
         );
       }
 
-      console.log("Fetching movies from API...");
+      console.log("Fetching movies from API with automatic fallback...");
 
-      const response = await fetch(`${API_URL}/Movies`, {
+      const response = await makeAPICall("/Movies", {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
@@ -90,37 +89,59 @@ export const getMovies = createAsyncThunk(
       const movieData = await response.json();
 
       if (movieData && Array.isArray(movieData)) {
-        // FIXED: Map all the new optimized image fields
+        // Map all movie data with comprehensive image fallbacks
         const historyMovieApi = movieData.map((data) => ({
           id: data._id,
           title: data.title,
           description: data.description,
-          image: data.image, // Pre-optimized main image (300x450)
-          heroImage: data.heroImage, // Pre-optimized hero image (600x800) - ADD THIS!
+
+          // Comprehensive image handling with fallbacks
+          // Primary image for movie cards and general use
+          image: data.images?.poster || data.image,
+
+          // Specific image types with smart fallbacks
+          posterImage: data.images?.poster || data.image,
+          heroImage: data.images?.backdrop || data.heroImage || data.image,
+          thumbnailImage: data.images?.thumbnail || data.image,
+          backdrop: data.images?.backdrop || data.heroImage || data.image, // For components expecting 'backdrop'
+          originalImage: data.images?.original || data.image,
+
+          // Keep the full images object for flexibility
+          images: data.images || {
+            thumbnail: data.image,
+            poster: data.image,
+            backdrop: data.heroImage || data.image,
+            original: data.image,
+          },
+
           director: data.director,
-          actor: data.actors,
-          genre: data.genre,
-          featured: data.featured,
+          actor: data.actors || data.actor, // Handle both field names
+          genre: data.genre || [],
+          featured: data.featured || false,
           releaseDate: data.releaseDate,
-          runtime: data.runtime,
-          rating: data.rating,
-          voteCount: data.voteCount,
+          runtime: data.runtime || 0,
+          rating: data.rating || 0,
+          voteCount: data.voteCount || 0,
           tmdbId: data.tmdbId,
-          budget: data.budget,
-          revenue: data.revenue,
+          budget: data.budget || 0,
+          revenue: data.revenue || 0,
+          popularity: data.popularity || 0,
         }));
 
         console.log(
-          `Successfully loaded ${historyMovieApi.length} movies with optimized images`
+          `✅ Successfully loaded ${historyMovieApi.length} movies with fallback-ready images`
         );
 
-        // Debug: Log first movie to verify fields
+        // Debug: Log first movie to verify fields and fallbacks
         if (historyMovieApi.length > 0) {
-          console.log("Sample movie with images:", {
-            title: historyMovieApi[0].title,
-            image: historyMovieApi[0].image,
-            heroImage: historyMovieApi[0].heroImage,
-            hasCloudinary: historyMovieApi[0].image?.includes("cloudinary"),
+          const firstMovie = historyMovieApi[0];
+          console.log("Sample movie with all image fields:", {
+            title: firstMovie.title,
+            image: firstMovie.image,
+            heroImage: firstMovie.heroImage,
+            backdrop: firstMovie.backdrop,
+            hasCloudinary: firstMovie.image?.includes("cloudinary"),
+            hasImages: !!firstMovie.images,
           });
         }
 
@@ -160,6 +181,7 @@ const movieSlice = createSlice({
     loading: false,
     error: null,
     lastFetchTime: null,
+    apiStatus: null, // Track which API is being used
   },
   reducers: {
     clearMovieError: (state) => {
@@ -170,10 +192,17 @@ const movieSlice = createSlice({
       state.loading = false;
       state.error = null;
       state.lastFetchTime = null;
+      state.apiStatus = null;
     },
     stopLoading: (state) => {
       state.loading = false;
       isRequestInProgress = false;
+    },
+    // New action to manually reset API health check
+    resetAPIHealthCheck: (state) => {
+      resetAPIHealth();
+      state.apiStatus = null;
+      console.log("🔄 API health check reset from Redux");
     },
   },
   extraReducers: (builder) => {
@@ -189,10 +218,12 @@ const movieSlice = createSlice({
         state.movies = action.payload;
         state.error = null;
         state.lastFetchTime = Date.now();
+        state.apiStatus = "connected";
       })
       .addCase(getMovies.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || "Failed to load movies";
+        state.apiStatus = "error";
 
         if (
           action.payload?.includes("Session expired") ||
@@ -211,5 +242,10 @@ const movieSlice = createSlice({
   },
 });
 
-export const { clearMovieError, clearMovies, stopLoading } = movieSlice.actions;
+export const {
+  clearMovieError,
+  clearMovies,
+  stopLoading,
+  resetAPIHealthCheck,
+} = movieSlice.actions;
 export default movieSlice.reducer;

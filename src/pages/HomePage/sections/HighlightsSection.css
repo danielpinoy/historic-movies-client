@@ -7,17 +7,6 @@
   overflow: hidden;
 }
 
-/* Background gradient effect */
-.highlights-section::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 300px;
-  pointer-events: none;
-}
-
 /* Header styles */
 .highlights-header {
   display: flex;
@@ -42,37 +31,69 @@
   margin: 0;
 }
 
-/* Tab buttons */
-.tab-buttons {
-  display: flex;
-  gap: 0.5rem;
-  background-color: rgba(0, 219, 77, 0.05);
-  padding: 0.25rem;
+/* Custom Tab Buttons using Bootstrap ButtonGroup */
+.custom-tab-buttons {
+  background-color: rgba(61, 34, 34, 0.1);
+  padding: 4px;
   border-radius: 50px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.tab-btn {
-  padding: 0.5rem 1.5rem;
+.custom-tab-buttons .tab-btn {
   border: none;
-  background: transparent;
-  background-color: #ba7e7e;
+  padding: 0.75rem 1.5rem;
   font-weight: 500;
   font-size: 0.9rem;
-  border-radius: 50px;
-  transition: all 0.3s ease;
-  cursor: pointer;
   letter-spacing: 0.3px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  white-space: nowrap;
+  border-radius: 50px !important;
 }
 
-.tab-buttons .tab-btn:nth-child(1).active {
-  background-color: #0dcaf0 !important  ;
+.custom-tab-buttons .tab-btn:not(.active) {
+  background-color: transparent !important;
+  color: rgba(255, 255, 255, 0.7) !important;
+  border-color: transparent !important;
 }
-.tab-buttons .tab-btn:nth-child(2).active {
-  background-color: #0d6efd !important;
+
+.custom-tab-buttons .tab-btn:not(.active):hover {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  color: rgba(255, 255, 255, 0.9) !important;
+  transform: translateY(-1px);
+  border-color: transparent !important;
 }
-.tab-buttons .tab-btn:nth-child(3).active {
-  background-color: #198754 !important;
+
+/* Active states with better styling */
+.custom-tab-buttons .tab-btn.author-active {
+  background: linear-gradient(135deg, #17a2b8, #0dcaf0) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 15px rgba(23, 162, 184, 0.4);
+  font-weight: 600;
+  border-color: transparent !important;
 }
+
+.custom-tab-buttons .tab-btn.featured-active {
+  background: linear-gradient(
+    135deg,
+    rgb(13 110 253),
+    rgb(13 110 253)
+  ) !important;
+  color: #1a1a1a !important;
+  box-shadow: 0 2px 15px rgb(13 110 253);
+  font-weight: 600;
+  border-color: transparent !important;
+}
+
+.custom-tab-buttons .tab-btn.hidden-active {
+  background: linear-gradient(135deg, #198754, #20c997) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 15px rgba(25, 135, 84, 0.4);
+  font-weight: 600;
+  border-color: transparent !important;
+}
+
 /* Card styles */
 .highlight-card {
   background: transparent;
@@ -118,6 +139,7 @@
   z-index: 2;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
+
 /* Card overlay */
 .card-overlay {
   position: absolute;
@@ -217,7 +239,7 @@
     gap: 1.5rem;
   }
 
-  .tab-buttons {
+  .custom-tab-buttons {
     width: 100%;
     justify-content: center;
   }
@@ -244,13 +266,32 @@
     font-size: 1rem;
   }
 
-  .tab-btn {
-    padding: 0.4rem 1rem;
+  .custom-tab-buttons .tab-btn {
+    padding: 0.6rem 1rem;
     font-size: 0.85rem;
+    flex: 1;
+    text-align: center;
   }
 
   .card-image-wrapper {
     height: 300px;
+  }
+}
+
+@media (max-width: 480px) {
+  .custom-tab-buttons .tab-btn {
+    padding: 0.5rem 0.8rem;
+    font-size: 0.8rem;
+  }
+
+  /* Hide text on very small screens, show only icons */
+  .tab-text {
+    display: none;
+  }
+
+  .tab-icon {
+    margin-right: 0;
+    font-size: 1.2rem;
   }
 }
 
