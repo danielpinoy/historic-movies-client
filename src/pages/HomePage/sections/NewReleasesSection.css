@@ -1,6 +1,9 @@
-/* Magazine-Style New Releases Section */
+/* ===========================
+   NEW RELEASES SECTION SPECIFIC
+   =========================== */
+
 .magazine-releases {
-  background-color: #0d1117;
+  background-color: var(--primary-dark, #0d1117);
   padding: 5rem 0;
   position: relative;
 }
@@ -14,7 +17,7 @@
 .magazine-title {
   font-size: 3rem;
   font-weight: 800;
-  color: #ffffff;
+  color: var(--text-primary, #ffffff);
   margin-bottom: 0.5rem;
   text-transform: uppercase;
   letter-spacing: -1px;
@@ -22,10 +25,9 @@
 
 .magazine-subtitle {
   font-size: 1.2rem;
-  color: #8b949e;
-  margin: 0;
-  max-width: 600px;
+  color: var(--text-muted, #8b949e);
   margin: 0 auto;
+  max-width: 600px;
 }
 
 /* Magazine Layout */
@@ -39,24 +41,27 @@
   display: block;
 }
 
-/* Featured Card - Left Side with Page Curl Effect */
+/* Featured Card with Page Curl Effect */
 .magazine-featured-card {
   background: rgba(255, 255, 255, 0.05);
   border-radius: 16px;
   overflow: hidden;
-  object-fit: contain;
   height: 700px;
-  width: 700px;
-  background-position: center top;
+  width: 100%;
   cursor: pointer;
-  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transition: var(
+    --transition-smooth,
+    all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)
+  );
   border: 1px solid rgba(255, 255, 255, 0.1);
   position: relative;
-  /* Page curl shadow effect */
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2), 15px 15px 30px rgba(0, 0, 0, 0.1),
     inset -2px -2px 10px rgba(255, 255, 255, 0.05);
+  animation: featuredCardEntrance 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94)
+    forwards;
 }
 
+/* Page curl effect */
 .magazine-featured-card::before {
   content: "";
   position: absolute;
@@ -68,7 +73,7 @@
   border-width: 0 30px 30px 0;
   border-color: transparent rgba(255, 255, 255, 0.1) transparent transparent;
   z-index: 1;
-  transition: all 0.3s ease;
+  transition: var(--transition-base, all 0.3s ease);
 }
 
 .magazine-featured-card:hover {
@@ -83,6 +88,7 @@
   border-color: transparent rgba(255, 255, 255, 0.2) transparent transparent;
 }
 
+/* Featured Image */
 .magazine-featured-image-wrapper {
   position: relative;
   width: 100%;
@@ -101,33 +107,33 @@
   transform: scale(1.05);
 }
 
-/* Featured Card Badges */
-.magazine-featured-rating {
+/* Featured Badges */
+.magazine-featured-rating,
+.magazine-featured-new {
   position: absolute;
+  font-weight: 700;
+  border-radius: 8px;
+  z-index: 3;
+}
+
+.magazine-featured-rating {
   top: 1.5rem;
   right: 1.5rem;
-  background: #f4c430;
-  color: #0d1117;
-  font-weight: 700;
+  background: var(--primary-warning, #f4c430);
+  color: var(--primary-dark, #0d1117);
   padding: 0.6rem 1rem;
-  border-radius: 8px;
   font-size: 1.1rem;
-  z-index: 3;
 }
 
 .magazine-featured-new {
-  position: absolute;
   top: 1.5rem;
   left: 1.5rem;
-  font-weight: 700;
   padding: 0.5rem 1rem;
-  border-radius: 6px;
   font-size: 0.9rem;
-  z-index: 3;
   animation: pulse 2s infinite;
 }
 
-/* Featured Card Overlay */
+/* Featured Overlay */
 .magazine-featured-overlay {
   position: absolute;
   bottom: 0;
@@ -165,7 +171,7 @@
 }
 
 .magazine-featured-stars {
-  color: #f4c430;
+  color: var(--primary-warning, #f4c430);
   font-size: 1.1rem;
   letter-spacing: 2px;
 }
@@ -184,7 +190,7 @@
   margin: 0;
 }
 
-/* Sidebar - Right Side */
+/* Sidebar */
 .magazine-sidebar {
   display: flex;
   flex-direction: column;
@@ -199,8 +205,24 @@
   display: flex;
   height: 210px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: var(--transition-base, all 0.3s ease);
   border: 1px solid rgba(255, 255, 255, 0.1);
+  opacity: 0;
+}
+
+.magazine-sidebar-card:nth-child(1) {
+  animation: sidebarCardEntrance 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.2s
+    forwards;
+}
+
+.magazine-sidebar-card:nth-child(2) {
+  animation: sidebarCardEntrance 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.4s
+    forwards;
+}
+
+.magazine-sidebar-card:nth-child(3) {
+  animation: sidebarCardEntrance 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.6s
+    forwards;
 }
 
 .magazine-sidebar-card:hover {
@@ -209,6 +231,7 @@
   border-color: rgba(244, 196, 48, 0.3);
 }
 
+/* Sidebar Image */
 .magazine-sidebar-image-wrapper {
   position: relative;
   width: 120px;
@@ -224,36 +247,33 @@
   transition: transform 0.3s ease;
 }
 
-/* .magazine-sidebar-card:hover .magazine-sidebar-image {
-  transform: scale(1.1);
-} */
-
 /* Sidebar Badges */
-.magazine-sidebar-rating {
+.magazine-sidebar-rating,
+.magazine-sidebar-new {
   position: absolute;
+  font-weight: 700;
+  z-index: 2;
+}
+
+.magazine-sidebar-rating {
   top: 0.5rem;
   right: 0.5rem;
-  background: #f4c430;
-  color: #0d1117;
-  font-weight: 700;
+  background: var(--primary-warning, #f4c430);
+  color: var(--primary-dark, #0d1117);
   padding: 0.3rem 0.6rem;
   border-radius: 4px;
   font-size: 0.8rem;
-  z-index: 2;
 }
 
 .magazine-sidebar-new {
-  position: absolute;
   top: 0.5rem;
   left: 0.5rem;
-  font-weight: 700;
   padding: 0.2rem 0.5rem;
   border-radius: 3px;
   font-size: 0.7rem;
-  z-index: 2;
 }
 
-/* Sidebar Content with Slide Up Animation */
+/* Sidebar Content */
 .magazine-sidebar-content {
   flex: 1;
   padding: 1rem 1.5rem;
@@ -262,7 +282,10 @@
   justify-content: center;
   color: white;
   transform: translateY(5px);
-  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transition: var(
+    --transition-smooth,
+    all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)
+  );
 }
 
 .magazine-sidebar-card:hover .magazine-sidebar-content {
@@ -280,7 +303,11 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
   opacity: 0.9;
-  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.1s;
+  transition: var(
+      --transition-smooth,
+      all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)
+    )
+    0.1s;
 }
 
 .magazine-sidebar-card:hover .magazine-sidebar-title {
@@ -293,7 +320,11 @@
   flex-direction: column;
   gap: 0.3rem;
   opacity: 0.8;
-  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.15s;
+  transition: var(
+      --transition-smooth,
+      all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)
+    )
+    0.15s;
 }
 
 .magazine-sidebar-card:hover .magazine-sidebar-meta {
@@ -302,7 +333,7 @@
 }
 
 .magazine-sidebar-stars {
-  color: #f4c430;
+  color: var(--primary-warning, #f4c430);
   font-size: 0.9rem;
   letter-spacing: 1px;
 }
@@ -313,7 +344,7 @@
   font-size: 0.85rem;
 }
 
-/* Call to Action */
+/* CTA */
 .magazine-cta {
   text-align: center;
 }
@@ -324,40 +355,20 @@
   border-radius: 50px;
   text-transform: uppercase;
   letter-spacing: 1px;
-  transition: all 0.3s ease;
+  transition: var(--transition-base, all 0.3s ease);
   border: none;
-  color: #0d1117;
+  color: var(--primary-dark, #0d1117);
 }
 
 .magazine-btn:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 25px rgba(244, 196, 48, 0.3);
-  color: #0d1117;
+  color: var(--primary-dark, #0d1117);
 }
 
-/* Initial Load Animations */
-.magazine-featured-card {
-  animation: featuredCardEntrance 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94)
-    forwards;
-}
-
-.magazine-sidebar-card:nth-child(1) {
-  animation: sidebarCardEntrance 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.2s
-    forwards;
-  opacity: 0;
-}
-
-.magazine-sidebar-card:nth-child(2) {
-  animation: sidebarCardEntrance 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.4s
-    forwards;
-  opacity: 0;
-}
-
-.magazine-sidebar-card:nth-child(3) {
-  animation: sidebarCardEntrance 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.6s
-    forwards;
-  opacity: 0;
-}
+/* ===========================
+   ANIMATIONS (Magazine-specific)
+   =========================== */
 
 @keyframes featuredCardEntrance {
   0% {
@@ -381,7 +392,10 @@
   }
 }
 
-/* Responsive Design */
+/* ===========================
+   RESPONSIVE
+   =========================== */
+
 @media (max-width: 991px) {
   .magazine-featured-card {
     height: 500px;
@@ -407,10 +421,6 @@
 
   .magazine-title {
     font-size: 2rem;
-  }
-
-  .magazine-layout {
-    flex-direction: column;
   }
 
   .magazine-featured-card {
@@ -480,13 +490,13 @@
   }
 }
 
-/* Performance optimizations */
+/* Performance */
 .magazine-featured-card,
 .magazine-sidebar-card {
   will-change: transform;
 }
 
-/* Reduced motion support */
+/* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
   .magazine-featured-card,
   .magazine-sidebar-card,

@@ -1,13 +1,15 @@
-/* Highlights Section Styles */
+/* ===========================
+   HIGHLIGHTS SECTION SPECIFIC
+   =========================== */
 
 .highlights-section {
-  background-color: #0d1117 !important;
+  background-color: var(--primary-dark, #0d1117) !important;
   padding: 4rem 0;
   position: relative;
   overflow: hidden;
 }
 
-/* Header styles */
+/* Header */
 .highlights-header {
   display: flex;
   justify-content: space-between;
@@ -20,18 +22,18 @@
 .highlights-title {
   font-size: 2.5rem;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--text-primary, #ffffff);
   margin-bottom: 0.5rem;
   letter-spacing: -0.5px;
 }
 
 .highlights-subtitle {
   font-size: 1.1rem;
-  color: #8b949e;
+  color: var(--text-muted, #8b949e);
   margin: 0;
 }
 
-/* Custom Tab Buttons using Bootstrap ButtonGroup */
+/* Custom Tab Buttons */
 .custom-tab-buttons {
   background-color: rgba(61, 34, 34, 0.1);
   padding: 4px;
@@ -46,7 +48,7 @@
   font-weight: 500;
   font-size: 0.9rem;
   letter-spacing: 0.3px;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: var(--transition-smooth, all 0.3s cubic-bezier(0.4, 0, 0.2, 1));
   position: relative;
   white-space: nowrap;
   border-radius: 50px !important;
@@ -62,16 +64,14 @@
   background-color: rgba(255, 255, 255, 0.1) !important;
   color: rgba(255, 255, 255, 0.9) !important;
   transform: translateY(-1px);
-  border-color: transparent !important;
 }
 
-/* Active states with better styling */
+/* Active states */
 .custom-tab-buttons .tab-btn.author-active {
   background: linear-gradient(135deg, #17a2b8, #0dcaf0) !important;
   color: #ffffff !important;
   box-shadow: 0 4px 15px rgba(23, 162, 184, 0.4);
   font-weight: 600;
-  border-color: transparent !important;
 }
 
 .custom-tab-buttons .tab-btn.featured-active {
@@ -83,7 +83,6 @@
   color: #1a1a1a !important;
   box-shadow: 0 2px 15px rgb(13 110 253);
   font-weight: 600;
-  border-color: transparent !important;
 }
 
 .custom-tab-buttons .tab-btn.hidden-active {
@@ -91,10 +90,9 @@
   color: #ffffff !important;
   box-shadow: 0 4px 15px rgba(25, 135, 84, 0.4);
   font-weight: 600;
-  border-color: transparent !important;
 }
 
-/* Card styles */
+/* Highlight Card */
 .highlight-card {
   background: transparent;
   border: none;
@@ -125,13 +123,13 @@
   transform: scale(1.1);
 }
 
-/* Rating badge */
-.rating-badges {
+/* Rating badge specific to highlights */
+.highlights-section .rating-badges {
   position: absolute;
   top: 1rem;
   right: 1rem;
-  background-color: #f4c430;
-  color: #0d1117;
+  background-color: var(--primary-warning, #f4c430);
+  color: var(--primary-dark, #0d1117);
   font-size: 1.1rem;
   font-weight: 700;
   padding: 0.5rem 0.75rem;
@@ -163,15 +161,12 @@
   opacity: 1;
 }
 
-.card-content {
-  color: #ffffff;
-}
-
+/* Card content */
 .card-content .movie-title {
   font-size: 1.5rem;
   font-weight: 700;
   margin-bottom: 0.5rem;
-  color: #ffffff;
+  color: var(--text-primary, #ffffff);
 }
 
 .movie-description {
@@ -182,14 +177,14 @@
 }
 
 /* Card footer */
-.card-footer {
+.highlights-section .card-footer {
   background-color: transparent;
   border: none;
   padding: 1.5rem 0.5rem;
 }
 
 .rating-stars {
-  color: #f4c430;
+  color: var(--primary-warning, #f4c430);
   font-size: 1rem;
   margin-bottom: 0.5rem;
   letter-spacing: 2px;
@@ -198,11 +193,15 @@
 .movie-title-footer {
   font-size: 1.1rem;
   font-weight: 600;
-  color: #ffffff;
+  color: var(--text-primary, #ffffff);
   margin-bottom: 0.5rem;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.text-muted {
+  color: var(--primary-warning) !important;
 }
 
 .movie-genres {
@@ -215,7 +214,7 @@
   display: inline-flex;
   align-items: center;
   font-size: 0.8rem;
-  color: #8b949e;
+  color: var(--text-muted, #8b949e);
   position: relative;
   padding-left: 1rem;
 }
@@ -227,11 +226,10 @@
   font-size: 0.7rem;
 }
 
-.text-muted {
-  color: #ffffff !important;
-}
+/* ===========================
+   RESPONSIVE
+   =========================== */
 
-/* Responsive adjustments */
 @media (max-width: 991px) {
   .highlights-header {
     flex-direction: column;
@@ -283,30 +281,4 @@
     padding: 0.5rem 0.8rem;
     font-size: 0.8rem;
   }
-
-  /* Hide text on very small screens, show only icons */
-  .tab-text {
-    display: none;
-  }
-
-  .tab-icon {
-    margin-right: 0;
-    font-size: 1.2rem;
-  }
-}
-
-/* Loading skeleton animation */
-@keyframes shimmer {
-  0% {
-    background-position: -200% 0;
-  }
-  100% {
-    background-position: 200% 0;
-  }
-}
-
-.skeleton {
-  background: linear-gradient(90deg, #1a1a1a 25%, #2a2a2a 50%, #1a1a1a 75%);
-  background-size: 200% 100%;
-  animation: shimmer 1.5s infinite;
 }
