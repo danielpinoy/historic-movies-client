@@ -1,0 +1,563 @@
+/* MovieGallery.css - Netflix Style */
+
+/* Enhanced scroll root for better performance */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Optimize the gallery root */
+.netflix-gallery {
+  background: #0d1117;
+  color: #ffffff;
+  min-height: 100vh;
+
+  /* Performance optimizations */
+  transform: translateZ(0);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ===========================
+   HEADER SECTION
+   =========================== */
+
+.netflix-header {
+  padding: 2rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.netflix-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #f4c430;
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.netflix-subtitle {
+  color: #8b949e;
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+/* ===========================
+   SEARCH SECTION
+   =========================== */
+
+.netflix-search-section {
+  padding: 2rem 0;
+  background: rgba(26, 26, 26, 0.5);
+  backdrop-filter: blur(10px);
+  margin-bottom: 2rem;
+}
+
+.netflix-search-container {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.netflix-search-icon {
+  background: #f4c430 !important;
+  color: #0d1117 !important;
+  border: 2px solid #f4c430 !important;
+  font-weight: bold;
+}
+
+.netflix-search-input {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border: 2px solid rgba(244, 196, 48, 0.3) !important;
+  color: #ffffff !important;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.netflix-search-input:focus {
+  background: rgba(255, 255, 255, 0.15) !important;
+  border-color: #f4c430 !important;
+  box-shadow: 0 0 0 3px rgba(244, 196, 48, 0.1) !important;
+  color: #ffffff !important;
+}
+
+.netflix-search-input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* ===========================
+   NETFLIX ROWS
+   =========================== */
+
+.netflix-content {
+  padding-bottom: 4rem;
+}
+
+.netflix-row {
+  margin-bottom: 3rem;
+}
+
+.netflix-row-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding: 0 4%;
+}
+
+.netflix-row-title {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.netflix-row-count {
+  background: rgba(244, 196, 48, 0.2);
+  color: #f4c430;
+  padding: 0.3rem 0.8rem;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+/* Optimize the entire scroll container for performance */
+.netflix-scroll-container {
+  position: relative;
+  overflow: hidden;
+  padding: 0 4%;
+
+  /* Force hardware acceleration */
+  transform: translateZ(0);
+  -webkit-perspective: 1000;
+  perspective: 1000;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+.netflix-scroll-container:hover .netflix-scroll-arrow {
+  opacity: 1;
+}
+
+/* ===========================
+   FRAMER MOTION SCROLL CONTAINER
+   =========================== */
+
+.netflix-movies-row-container {
+  overflow: hidden;
+  width: 100%;
+  position: relative;
+}
+
+.netflix-movies-row {
+  /* Remove old scroll properties - Framer Motion handles this */
+  position: relative;
+  padding-bottom: 1rem;
+}
+
+/* Movie card wrapper for Framer Motion */
+.netflix-movie-card-wrapper {
+  position: relative;
+}
+
+/* ===========================
+   NETFLIX SCROLL ARROWS
+   =========================== */
+
+.netflix-scroll-arrow {
+  position: absolute;
+  top: 35%;
+  background: rgba(0, 0, 0, 0.7);
+  border: 2px solid #f4c430;
+  color: #f4c430;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1.5rem;
+  font-weight: bold;
+  z-index: 100;
+  transition: all 0.3s ease;
+  opacity: 0;
+  backdrop-filter: blur(10px);
+}
+
+.netflix-scroll-arrow:hover {
+  background: #f4c430;
+  color: #0d1117;
+  transform: translateY(-50%) scale(1.1);
+  box-shadow: 0 4px 15px rgba(244, 196, 48, 0.4);
+}
+
+.netflix-scroll-left {
+  left: 1%;
+}
+
+.netflix-scroll-right {
+  right: 1%;
+}
+
+/* Show arrows on row hover */
+.netflix-row:hover .netflix-scroll-arrow {
+  opacity: 1;
+}
+
+/* ===========================
+   NETFLIX MOVIE CARDS - CONSISTENT SIZING
+   =========================== */
+
+.netflix-movie-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.netflix-movie-card {
+  position: relative;
+  border-radius: 6px;
+  overflow: hidden;
+  cursor: pointer;
+  background: #1a1a1a;
+  width: 100%;
+  height: 100%;
+
+  /* Remove transitions - Framer Motion handles this */
+}
+
+.netflix-movie-card:hover {
+  transform: scale(1.05);
+  z-index: 10;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.7);
+}
+
+/* Featured Row - Large Cards (16:9 aspect ratio) - FIXED SIZE */
+.featured-row .netflix-movie-card {
+  width: 300px;
+  height: 169px;
+  min-width: 300px; /* Prevent shrinking */
+  min-height: 169px;
+}
+
+/* Standard Row - Medium Cards (16:9 aspect ratio) - FIXED SIZE */
+.standard-row .netflix-movie-card {
+  width: 250px;
+  height: 141px;
+  min-width: 250px; /* Prevent shrinking */
+  min-height: 141px;
+}
+
+/* Poster Row - Tall Cards (2:3 aspect ratio) - FIXED SIZE */
+.poster-row .netflix-movie-card {
+  width: 150px;
+  height: 225px;
+  min-width: 150px; /* Prevent shrinking */
+  min-height: 225px;
+}
+
+.netflix-movie-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transition: transform 0.3s ease;
+  background: #1a1a1a; /* Fallback background */
+}
+
+.netflix-movie-card:hover .netflix-movie-image {
+  transform: scale(1.1);
+}
+
+/* ===========================
+   MOVIE CARD OVERLAYS & BADGES
+   =========================== */
+
+/* Featured Badge */
+.netflix-featured-badge {
+  position: absolute;
+  top: 0.5rem;
+  left: 0.5rem;
+  background: #e50914;
+  color: white;
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  font-weight: 700;
+  font-size: 0.7rem;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+/* Top 10 Ranking Badge */
+.netflix-ranking-badge {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background: #f4c430;
+  color: #0d1117;
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  font-weight: 700;
+  font-size: 0.75rem;
+  z-index: 2;
+}
+
+/* Genre Badge */
+.netflix-genre-badge {
+  position: absolute;
+  bottom: 0.5rem;
+  right: 0.5rem;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 0.2rem 0.5rem;
+  border-radius: 3px;
+  font-size: 0.7rem;
+  font-weight: 500;
+  z-index: 2;
+}
+
+/* Quick Rating Badge */
+.netflix-quick-rating {
+  position: absolute;
+  top: 0.5rem;
+  left: 0.5rem;
+  background: rgba(0, 0, 0, 0.8);
+  color: #f4c430;
+  padding: 0.2rem 0.5rem;
+  border-radius: 3px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+/* Override quick rating for featured movies */
+.netflix-featured-badge ~ .netflix-quick-rating {
+  top: 3rem;
+}
+
+/* ===========================
+   MOVIE INFO OVERLAY
+   =========================== */
+
+.netflix-movie-info {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.9));
+  padding: 1rem 0.8rem 0.8rem;
+  /* Remove transitions - Framer Motion handles this */
+}
+
+.netflix-movie-card:hover .netflix-movie-info {
+  /* Remove hover effects - Framer Motion handles this */
+}
+
+.netflix-movie-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 0.3rem;
+  line-height: 1.2;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.netflix-movie-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  font-size: 0.75rem;
+  color: #8b949e;
+}
+
+.netflix-movie-year,
+.netflix-movie-genre,
+.netflix-movie-rating {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.netflix-movie-rating {
+  color: #f4c430;
+  font-weight: 600;
+}
+
+/* ===========================
+   LOADING & ERROR STATES
+   =========================== */
+
+.netflix-loading,
+.netflix-error {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #0d1117;
+  color: #ffffff;
+}
+
+.loading-content,
+.error-content {
+  text-align: center;
+  padding: 3rem;
+}
+
+.loading-icon,
+.error-icon {
+  color: #f4c430;
+  margin-bottom: 1rem;
+}
+
+.loading-content h2,
+.error-content h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: #f4c430;
+}
+
+.loading-content p,
+.error-content p {
+  color: #8b949e;
+  font-size: 1.1rem;
+}
+
+/* ===========================
+   RESPONSIVE DESIGN
+   =========================== */
+
+@media (max-width: 768px) {
+  .netflix-row-header {
+    padding: 0 3%;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .netflix-scroll-container {
+    padding: 0 3%;
+  }
+
+  .netflix-title {
+    font-size: 2rem;
+  }
+
+  .netflix-row-title {
+    font-size: 1.2rem;
+  }
+
+  /* Hide arrows on mobile - touch scrolling is better */
+  .netflix-scroll-arrow {
+    display: none;
+  }
+
+  /* Smaller cards on mobile */
+  .featured-row .netflix-movie-card {
+    width: 250px;
+    height: 141px;
+    min-width: 250px;
+    min-height: 141px;
+  }
+
+  .standard-row .netflix-movie-card {
+    width: 200px;
+    height: 113px;
+    min-width: 200px;
+    min-height: 113px;
+  }
+
+  .poster-row .netflix-movie-card {
+    width: 120px;
+    height: 180px;
+    min-width: 120px;
+    min-height: 180px;
+  }
+}
+
+@media (max-width: 480px) {
+  .netflix-scroll-container {
+    padding: 0 2%;
+  }
+
+  .netflix-row-header {
+    padding: 0 2%;
+  }
+
+  /* Even smaller cards on very small screens */
+  .featured-row .netflix-movie-card {
+    width: 200px;
+    height: 113px;
+    min-width: 200px;
+    min-height: 113px;
+  }
+
+  .standard-row .netflix-movie-card {
+    width: 160px;
+    height: 90px;
+    min-width: 160px;
+    min-height: 90px;
+  }
+
+  .poster-row .netflix-movie-card {
+    width: 100px;
+    height: 150px;
+    min-width: 100px;
+    min-height: 150px;
+  }
+
+  .netflix-movie-title {
+    font-size: 0.8rem;
+  }
+
+  .netflix-movie-meta {
+    font-size: 0.7rem;
+  }
+}
+
+/* ===========================
+   ACCESSIBILITY
+   =========================== */
+
+.netflix-movie-card:focus {
+  outline: 2px solid #f4c430;
+  outline-offset: 2px;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .netflix-movie-card,
+  .netflix-movie-image,
+  .netflix-movie-info {
+    transition: none;
+  }
+
+  .netflix-movie-card:hover {
+    transform: none;
+  }
+}
+
+/* ===========================
+   HIDE SCROLLBARS BUT KEEP FUNCTIONALITY
+   =========================== */
+
+.netflix-movies-row {
+  /* Firefox */
+  scrollbar-width: none;
+  /* IE and Edge */
+  -ms-overflow-style: none;
+}
+
+/* Webkit browsers */
+.netflix-movies-row::-webkit-scrollbar {
+  display: none;
+}

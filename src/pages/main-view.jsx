@@ -21,14 +21,14 @@ import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../slice/userSlice";
 import { getMovies } from "../slice/movieSlice";
 import HomePage from "./HomePage/HomePage.jsx";
-import ProtectedRoute from "../components/ProtectedRoute.jsx"; // Import ProtectedRoute
+import ProtectedRoute from "../components/ProtectedRoute.jsx";
+import MovieGallery from "./MovieGalleryPage/MovieGallery.jsx";
 
 export const MainView = () => {
   // State management
   const storedUser = JSON.parse(localStorage.getItem("user"));
   const storedToken = localStorage.getItem("token");
   const [token, setToken] = useState(storedToken ?? null);
-  const [searchTerm, setSearchTerm] = useState("");
   const [isEditingProfile, setUserEdit] = useState(null);
 
   // Redux
@@ -43,19 +43,9 @@ export const MainView = () => {
       dispatch(getMovies());
     }
   }, []);
-  // Memoized filtered movies for performance
-  const filteredMovies = useMemo(
-    () =>
-      movies.filter((movie) =>
-        movie.title.toLowerCase().includes(searchTerm.toLowerCase())
-      ),
-    [movies, searchTerm]
-  );
 
   // Event handlers
   const handleLogout = () => dispatch(logout());
-  const handleResetSearchTerm = () => setSearchTerm("");
-  const handleSearch = (e) => setSearchTerm(e.target.value);
 
   // Loading component
   const LoadingComponent = () => (
@@ -74,40 +64,6 @@ export const MainView = () => {
         <p className="text-light">Please wait while we fetch your content</p>
       </div>
     </div>
-  );
-
-  // Empty state component
-  const EmptyMoviesState = () => (
-    <Col xs={12}>
-      <Alert variant="warning" className="text-center py-5">
-        <Alert.Heading className="text-dark">🎬 No Movies Found</Alert.Heading>
-        <p className="text-dark mb-0">
-          {searchTerm
-            ? `No movies match "${searchTerm}". Try a different search term.`
-            : "No movies are currently available."}
-        </p>
-        {searchTerm && (
-          <button
-            className="btn btn-outline-dark mt-3"
-            onClick={() => setSearchTerm("")}
-          >
-            Clear Search
-          </button>
-        )}
-      </Alert>
-    </Col>
-  );
-
-  // Error component
-  const ErrorComponent = ({ error }) => (
-    <Col xs={12}>
-      <Alert variant="danger" className="text-center py-4">
-        <Alert.Heading>⚠️ Something went wrong</Alert.Heading>
-        <p className="mb-0">
-          {typeof error === "string" ? error : "An unexpected error occurred"}
-        </p>
-      </Alert>
-    </Col>
   );
 
   return (
@@ -137,71 +93,16 @@ export const MainView = () => {
               }
             />
 
-            {/* Movies List Route - Protected */}
+            {/* Movies Gallery Route - */}
             <Route
               path="/movies"
               element={
                 <ProtectedRoute>
-                  <>
-                    {/* Search bar for movies page */}
-                    <Row>
-                      <Col xs={12} className="mb-4">
-                        <InputGroup size="lg">
-                          <InputGroup.Text className="bg-warning text-dark fw-semibold">
-                            🔍
-                          </InputGroup.Text>
-                          <Form.Control
-                            type="text"
-                            placeholder="Search for movies by title..."
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                            className="bg-dark text-white border-warning"
-                            style={{ fontSize: "1.1rem" }}
-                          />
-                          {searchTerm && (
-                            <button
-                              className="btn btn-outline-warning"
-                              onClick={() => setSearchTerm("")}
-                              type="button"
-                            >
-                              ✕
-                            </button>
-                          )}
-                        </InputGroup>
-                        {searchTerm && (
-                          <small className="text-warning mt-2 d-block">
-                            Showing {filteredMovies.length} result(s) for "
-                            {searchTerm}"
-                          </small>
-                        )}
-                      </Col>
-                    </Row>
-
-                    {/* Movies Grid */}
-                    <Row>
-                      {loading ? (
-                        <Col xs={12}>
-                          <LoadingComponent />
-                        </Col>
-                      ) : error ? (
-                        <ErrorComponent error={error} />
-                      ) : filteredMovies.length === 0 ? (
-                        <EmptyMoviesState />
-                      ) : (
-                        filteredMovies.map((movie) => (
-                          <Col
-                            key={movie.id}
-                            sm={6}
-                            md={4}
-                            lg={3}
-                            className="mb-4"
-                          >
-                            <MovieCard movie={movie} />
-                          </Col>
-                        ))
-                      )}
-                    </Row>
-                  </>
+                  <MovieGallery
+                    movies={movies}
+                    loading={loading}
+                    error={error}
+                  />
                 </ProtectedRoute>
               }
             />
@@ -255,7 +156,7 @@ export const MainView = () => {
                   ) : (
                     <MovieView
                       movies={movies}
-                      handleReset={handleResetSearchTerm}
+                      handleReset={() => {}} // No longer need search term reset
                     />
                   )}
                 </ProtectedRoute>
