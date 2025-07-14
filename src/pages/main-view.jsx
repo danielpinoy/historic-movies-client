@@ -253,14 +253,10 @@ export const MainView = () => {
                   {movies.length === 0 ? (
                     <LoadingComponent />
                   ) : (
-                    <Row className="justify-content-center">
-                      <Col lg={10} xl={8}>
-                        <MovieView
-                          movies={movies}
-                          handleReset={handleResetSearchTerm}
-                        />
-                      </Col>
-                    </Row>
+                    <MovieView
+                      movies={movies}
+                      handleReset={handleResetSearchTerm}
+                    />
                   )}
                 </ProtectedRoute>
               }

@@ -9,6 +9,7 @@ import {
   Button,
 } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { Star, Tag, Calendar, Users, Award, Eye, Gem } from "lucide-react";
 import "./HighlightsSection.css";
 
 const HighlightsSection = ({ movies }) => {
@@ -87,21 +88,25 @@ const HighlightsSection = ({ movies }) => {
         return {
           title: "Author's Choice",
           subtitle: "Our critics' highest rated recommendations.",
+          icon: <Award size={20} />,
         };
       case "featured":
         return {
           title: "Featured Movies",
           subtitle: "Popular acclaimed films everyone's talking about.",
+          icon: <Star size={20} />,
         };
       case "hidden":
         return {
           title: "Hidden Gems",
           subtitle: "Great movies you might have missed.",
+          icon: <Gem size={20} />,
         };
       default:
         return {
           title: "Highlights today",
           subtitle: "Be sure not to miss these reviews today.",
+          icon: <Eye size={20} />,
         };
     }
   };
@@ -113,7 +118,10 @@ const HighlightsSection = ({ movies }) => {
       <Container>
         <div className="highlights-header">
           <div>
-            <h2 className="highlights-title">{sectionInfo.title}</h2>
+            <h2 className="highlights-title d-flex align-items-center gap-3">
+              {sectionInfo.icon}
+              {sectionInfo.title}
+            </h2>
             <p className="highlights-subtitle">{sectionInfo.subtitle}</p>
           </div>
 
@@ -125,7 +133,10 @@ const HighlightsSection = ({ movies }) => {
               }`}
               onClick={() => setActiveTab("author")}
             >
-              <span className="tab-text">Author Picks</span>
+              <span className="tab-text d-flex align-items-center gap-2">
+                <Award size={16} />
+                Author Picks
+              </span>
             </Button>
             <Button
               variant={
@@ -136,7 +147,10 @@ const HighlightsSection = ({ movies }) => {
               }`}
               onClick={() => setActiveTab("featured")}
             >
-              <span className="tab-text">Featured</span>
+              <span className="tab-text d-flex align-items-center gap-2">
+                <Star size={16} />
+                Featured
+              </span>
             </Button>
             <Button
               variant={activeTab === "hidden" ? "success" : "outline-secondary"}
@@ -145,7 +159,10 @@ const HighlightsSection = ({ movies }) => {
               }`}
               onClick={() => setActiveTab("hidden")}
             >
-              <span className="tab-text">Hidden Gems</span>
+              <span className="tab-text d-flex align-items-center gap-2">
+                <Gem size={16} />
+                Hidden Gems
+              </span>
             </Button>
           </ButtonGroup>
         </div>
@@ -160,7 +177,11 @@ const HighlightsSection = ({ movies }) => {
               >
                 <Card className="highlight-card h-100">
                   <div className="card-image-wrapper">
-                    <Badge bg="warning" className="rating-badges">
+                    <Badge
+                      bg="warning"
+                      className="rating-badges d-flex align-items-center gap-1"
+                    >
+                      <Star size={14} fill="currentColor" />
                       {movie.rating ? movie.rating.toFixed(1) : "N/A"}
                     </Badge>
 
@@ -168,24 +189,27 @@ const HighlightsSection = ({ movies }) => {
                     {activeTab === "hidden" && (
                       <Badge
                         bg="success"
-                        className="position-absolute top-0 start-0 m-2"
+                        className="position-absolute top-0 start-0 m-2 d-flex align-items-center gap-1"
                       >
+                        <Gem size={12} />
                         HIDDEN GEM
                       </Badge>
                     )}
                     {activeTab === "author" && (
                       <Badge
                         bg="info"
-                        className="position-absolute top-0 start-0 m-2"
+                        className="position-absolute top-0 start-0 m-2 d-flex align-items-center gap-1"
                       >
+                        <Award size={12} />
                         EDITOR'S CHOICE
                       </Badge>
                     )}
                     {activeTab === "featured" && (
                       <Badge
                         bg="primary"
-                        className="position-absolute top-0 start-0 m-2"
+                        className="position-absolute top-0 start-0 m-2 d-flex align-items-center gap-1"
                       >
+                        <i className="bi bi-fire"></i>
                         POPULAR
                       </Badge>
                     )}
@@ -206,7 +230,8 @@ const HighlightsSection = ({ movies }) => {
 
                         {/* Show rating info for hidden gems */}
                         {activeTab === "hidden" && movie.voteCount && (
-                          <small className="text-warning d-block mt-2">
+                          <small className="text-warning d-flex align-items-center gap-1 mt-2">
+                            <Users size={12} />
                             {movie.voteCount} votes • Rating:{" "}
                             {movie.rating?.toFixed(1)}
                           </small>
@@ -216,14 +241,41 @@ const HighlightsSection = ({ movies }) => {
                   </div>
 
                   <Card.Body className="card-footer">
-                    <div className="rating-stars">
-                      {"★".repeat(Math.floor((movie.rating || 0) / 2))}
-                      {"☆".repeat(5 - Math.floor((movie.rating || 0) / 2))}
+                    <div className="rating-stars d-flex align-items-center gap-1">
+                      <Star
+                        size={16}
+                        fill="currentColor"
+                        className="text-warning"
+                      />
+                      <Star
+                        size={16}
+                        fill={movie.rating >= 4 ? "currentColor" : "none"}
+                        className="text-warning"
+                      />
+                      <Star
+                        size={16}
+                        fill={movie.rating >= 6 ? "currentColor" : "none"}
+                        className="text-warning"
+                      />
+                      <Star
+                        size={16}
+                        fill={movie.rating >= 8 ? "currentColor" : "none"}
+                        className="text-warning"
+                      />
+                      <Star
+                        size={16}
+                        fill={movie.rating >= 9 ? "currentColor" : "none"}
+                        className="text-warning"
+                      />
                     </div>
                     <h5 className="movie-title-footer">{movie.title}</h5>
                     <div className="movie-genres">
                       {movie.genre.slice(0, 2).map((g, i) => (
-                        <span key={i} className="genre-tag">
+                        <span
+                          key={i}
+                          className="genre-tag d-flex align-items-center gap-1"
+                        >
+                          <Tag size={10} />
                           {g}
                         </span>
                       ))}
@@ -231,17 +283,20 @@ const HighlightsSection = ({ movies }) => {
 
                     {/* Additional info based on tab */}
                     {activeTab === "hidden" && movie.voteCount && (
-                      <small className="text-muted d-block mt-1">
+                      <small className="text-muted d-flex align-items-center gap-1 mt-1">
+                        <Users size={12} />
                         Only {movie.voteCount} votes • Underrated gem
                       </small>
                     )}
                     {activeTab === "author" && movie.voteCount && (
-                      <small className="text-muted d-block mt-1">
+                      <small className="text-muted d-flex align-items-center gap-1 mt-1">
+                        <Users size={12} />
                         {movie.voteCount.toLocaleString()} votes
                       </small>
                     )}
                     {activeTab === "featured" && movie.voteCount && (
-                      <small className="text-muted d-block mt-1">
+                      <small className="text-muted d-flex align-items-center gap-1 mt-1">
+                        <Users size={12} />
                         {movie.voteCount.toLocaleString()} votes • Popular
                         choice
                       </small>

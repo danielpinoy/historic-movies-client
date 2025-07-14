@@ -59,7 +59,6 @@ const HeroSection = ({ movies, loading = false }) => {
   const getRating = (movie) => {
     return movie.rating || movie.Rating || "N/A";
   };
-  console.log(featuredMovie.images);
 
   return (
     <section className="hero-section">

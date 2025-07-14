@@ -1,6 +1,16 @@
 import { Button, Card, Col, Row, Spinner, Alert, Badge } from "react-bootstrap";
 import { useParams } from "react-router";
 import { Link } from "react-router-dom";
+import {
+  Star,
+  Calendar,
+  Clock,
+  Users,
+  Tag,
+  ArrowLeft,
+  Heart,
+  BookOpen,
+} from "lucide-react";
 import { addFavoriteMovieToUser } from "../../../asyncThunk/userAsyncThunks";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -68,7 +78,12 @@ const MovieView = ({ movies, handleReset }) => {
                 </h1>
                 <div className="d-flex flex-wrap gap-2 mb-3">
                   {movie.genre.map((g, index) => (
-                    <Badge key={index} bg="secondary" className="fs-6">
+                    <Badge
+                      key={index}
+                      bg="secondary"
+                      className="fs-6 d-flex align-items-center gap-1"
+                    >
+                      <Tag size={14} />
                       {g}
                     </Badge>
                   ))}
@@ -79,7 +94,8 @@ const MovieView = ({ movies, handleReset }) => {
               <Row className="mb-4">
                 <Col sm={6} className="mb-3">
                   <div className="bg-secondary rounded p-3">
-                    <strong className="text-warning d-block mb-1">
+                    <strong className="text-warning d-flex align-items-center gap-2 mb-1">
+                      <Calendar size={18} />
                       Release Year
                     </strong>
                     <span className="text-light h5 mb-0">
@@ -89,7 +105,8 @@ const MovieView = ({ movies, handleReset }) => {
                 </Col>
                 <Col sm={6} className="mb-3">
                   <div className="bg-secondary rounded p-3">
-                    <strong className="text-warning d-block mb-1">
+                    <strong className="text-warning d-flex align-items-center gap-2 mb-1">
+                      <Clock size={18} />
                       Runtime
                     </strong>
                     <span className="text-light h5 mb-0">
@@ -101,27 +118,35 @@ const MovieView = ({ movies, handleReset }) => {
                 </Col>
               </Row>
 
-              {/* NEW: Rating Section */}
+              {/* Rating Section */}
               {movie.rating && (
                 <Row className="mb-4">
                   <Col sm={6} className="mb-3">
                     <div className="bg-secondary rounded p-3">
-                      <strong className="text-warning d-block mb-1">
+                      <strong className="text-warning d-flex align-items-center gap-2 mb-1">
+                        <Star size={18} />
                         TMDB Rating
                       </strong>
-                      <span className="text-light h5 mb-0">
-                        ⭐ {movie.rating}/10
+                      <span className="text-light h5 mb-0 d-flex align-items-center gap-2">
+                        <Star
+                          size={20}
+                          fill="currentColor"
+                          className="text-warning"
+                        />
+                        {movie.rating}/10
                       </span>
                     </div>
                   </Col>
                   {movie.voteCount && (
                     <Col sm={6} className="mb-3">
                       <div className="bg-secondary rounded p-3">
-                        <strong className="text-warning d-block mb-1">
+                        <strong className="text-warning d-flex align-items-center gap-2 mb-1">
+                          <Users size={18} />
                           Votes
                         </strong>
-                        <span className="text-light h5 mb-0">
-                          👥 {movie.voteCount.toLocaleString()}
+                        <span className="text-light h5 mb-0 d-flex align-items-center gap-2">
+                          <Users size={20} className="text-warning" />
+                          {movie.voteCount.toLocaleString()}
                         </span>
                       </div>
                     </Col>
@@ -131,7 +156,10 @@ const MovieView = ({ movies, handleReset }) => {
 
               {/* Movie Description */}
               <div className="mb-4">
-                <h4 className="text-warning mb-3">📖 Synopsis</h4>
+                <h4 className="text-warning mb-3 d-flex align-items-center gap-2">
+                  <BookOpen size={20} />
+                  Synopsis
+                </h4>
                 <Card className="bg-secondary border-0">
                   <Card.Body>
                     <p className="text-light mb-0 lead">{movie.description}</p>
@@ -142,7 +170,10 @@ const MovieView = ({ movies, handleReset }) => {
               {/* Similar Movies */}
               {similarMovies.length > 0 && (
                 <div className="mb-4">
-                  <h4 className="text-warning mb-3">🎬 You Might Also Like</h4>
+                  <h4 className="text-warning mb-3 d-flex align-items-center gap-2">
+                    <i className="bi bi-collection-play"></i>
+                    You Might Also Like
+                  </h4>
                   <Row>
                     {similarMovies.map((similarMovie) => (
                       <Col md={4} key={similarMovie.id} className="mb-2">
@@ -155,7 +186,8 @@ const MovieView = ({ movies, handleReset }) => {
                               <h6 className="text-warning mb-1">
                                 {similarMovie.title}
                               </h6>
-                              <small className="text-light">
+                              <small className="text-light d-flex align-items-center gap-1">
+                                <Calendar size={12} />
                                 {getYear(similarMovie.releaseDate)}
                               </small>
                             </Card.Body>
@@ -176,9 +208,10 @@ const MovieView = ({ movies, handleReset }) => {
                         variant="outline-light"
                         onClick={handleReset}
                         size="lg"
-                        className="fw-semibold"
+                        className="fw-semibold d-flex align-items-center gap-2"
                       >
-                        ← Back to Movies
+                        <ArrowLeft size={18} />
+                        Back to Movies
                       </Button>
                     </Link>
                   </Col>
@@ -195,9 +228,10 @@ const MovieView = ({ movies, handleReset }) => {
                         variant="outline-warning"
                         disabled
                         size="lg"
-                        className="w-100 fw-semibold"
+                        className="w-100 fw-semibold d-flex align-items-center justify-content-center gap-2"
                       >
-                        ⭐ Already in Favorites
+                        <Star size={18} fill="currentColor" />
+                        Already in Favorites
                       </Button>
                     ) : (
                       <Button
@@ -212,7 +246,7 @@ const MovieView = ({ movies, handleReset }) => {
                         variant="warning"
                         disabled={loading}
                         size="lg"
-                        className="w-100 fw-semibold text-dark"
+                        className="w-100 fw-semibold text-dark d-flex align-items-center justify-content-center gap-2"
                       >
                         {loading ? (
                           <>
@@ -222,12 +256,14 @@ const MovieView = ({ movies, handleReset }) => {
                               size="sm"
                               role="status"
                               aria-hidden="true"
-                              className="me-2"
                             />
                             Adding...
                           </>
                         ) : (
-                          "⭐ Add To Favorites"
+                          <>
+                            <Heart size={18} />
+                            Add To Favorites
+                          </>
                         )}
                       </Button>
                     )}

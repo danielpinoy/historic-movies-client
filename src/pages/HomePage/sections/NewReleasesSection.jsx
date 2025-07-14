@@ -1,12 +1,11 @@
 import React from "react";
 import { Container, Row, Col, Badge } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { Star, Tag, Calendar, Sparkles } from "lucide-react";
 import "./NewReleasesSection.css";
 
 const NewReleasesSection = ({ movies = [] }) => {
   // Get newest movies for new releases
-  console.log("First movie object:", movies[0]);
-
   const getNewReleaseMovies = () => {
     if (!movies || movies.length === 0) return [];
 
@@ -25,7 +24,14 @@ const NewReleasesSection = ({ movies = [] }) => {
 
   const getStarRating = (rating) => {
     const stars = Math.floor((rating || 0) / 2);
-    return "★".repeat(stars) + "☆".repeat(5 - stars);
+    return Array.from({ length: 5 }, (_, index) => (
+      <Star
+        key={index}
+        size={14}
+        fill={index < stars ? "currentColor" : "none"}
+        className="text-warning"
+      />
+    ));
   };
 
   return (
@@ -33,7 +39,10 @@ const NewReleasesSection = ({ movies = [] }) => {
       <Container>
         {/* Section Header */}
         <div className="magazine-header">
-          <h2 className="magazine-title">New Releases</h2>
+          <h2 className="magazine-title d-flex align-items-center justify-content-center gap-3">
+            <Sparkles size={32} className="text-warning" />
+            New Releases
+          </h2>
           <p className="magazine-subtitle">
             Our most recently released reviews in a curated collection.
           </p>
@@ -53,14 +62,19 @@ const NewReleasesSection = ({ movies = [] }) => {
                   />
 
                   {/* Rating Badge */}
-                  <Badge className="magazine-featured-rating">
+                  <Badge className="magazine-featured-rating d-flex align-items-center gap-1">
+                    <Star size={16} fill="currentColor" />
                     {featuredMovie.rating
                       ? featuredMovie.rating.toFixed(1)
                       : "8.0"}
                   </Badge>
 
                   {/* NEW Badge */}
-                  <Badge bg="danger" className="magazine-featured-new">
+                  <Badge
+                    bg="danger"
+                    className="magazine-featured-new d-flex align-items-center gap-1"
+                  >
+                    <i className="bi bi-lightning-fill"></i>
                     NEW
                   </Badge>
 
@@ -72,13 +86,15 @@ const NewReleasesSection = ({ movies = [] }) => {
                       </h3>
 
                       <div className="magazine-featured-meta">
-                        <span className="magazine-featured-stars">
+                        <span className="magazine-featured-stars d-flex align-items-center gap-1">
                           {getStarRating(featuredMovie.rating)}
                         </span>
-                        <span className="magazine-featured-genre">
+                        <span className="magazine-featured-genre d-flex align-items-center gap-1">
+                          <Tag size={14} />
                           {(featuredMovie.genre || ["Drama"])[0]}
                         </span>
-                        <span className="magazine-featured-year">
+                        <span className="magazine-featured-year d-flex align-items-center gap-1">
+                          <Calendar size={14} />
                           {featuredMovie.releaseDate
                             ? new Date(featuredMovie.releaseDate).getFullYear()
                             : "2024"}
@@ -111,32 +127,35 @@ const NewReleasesSection = ({ movies = [] }) => {
                   <div className="magazine-sidebar-card">
                     <div className="magazine-sidebar-image-wrapper">
                       <img
-                        src={[movie.image]}
+                        src={movie.image}
                         alt={movie.title}
                         className="magazine-sidebar-image"
                       />
 
                       {/* Rating Badge */}
-                      <Badge className="magazine-sidebar-rating">
+                      <Badge className="magazine-sidebar-rating d-flex align-items-center gap-1">
+                        <Star size={12} fill="currentColor" />
                         {movie.rating ? movie.rating.toFixed(1) : "8.0"}
                       </Badge>
 
                       {/* NEW Badge */}
                       <Badge bg="danger" className="magazine-sidebar-new">
-                        NEW
+                        <i className="bi bi-lightning-fill"></i>
                       </Badge>
                     </div>
 
                     <div className="magazine-sidebar-content">
                       <h4 className="magazine-sidebar-title">{movie.title}</h4>
                       <div className="magazine-sidebar-meta">
-                        <span className="magazine-sidebar-stars">
+                        <span className="magazine-sidebar-stars d-flex align-items-center gap-1">
                           {getStarRating(movie.rating)}
                         </span>
-                        <span className="magazine-sidebar-genre">
+                        <span className="magazine-sidebar-genre d-flex align-items-center gap-1">
+                          <Tag size={12} />
                           {(movie.genre || ["Drama"])[0]}
                         </span>
-                        <span className="magazine-sidebar-year">
+                        <span className="magazine-sidebar-year d-flex align-items-center gap-1">
+                          <Calendar size={12} />
                           {movie.releaseDate
                             ? new Date(movie.releaseDate).getFullYear()
                             : "2024"}
@@ -150,12 +169,16 @@ const NewReleasesSection = ({ movies = [] }) => {
           </Col>
         </Row>
 
-        {/* View All Button */}
+        {/* View All Button
         <div className="magazine-cta">
-          <Link to="/movies" className="btn btn-warning btn-lg magazine-btn">
+          <Link
+            to="/movies"
+            className="btn btn-warning btn-lg magazine-btn d-flex align-items-center gap-2"
+          >
+            <i className="bi bi-collection-play"></i>
             View All New Releases
           </Link>
-        </div>
+        </div> */}
       </Container>
     </section>
   );

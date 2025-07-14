@@ -11,13 +11,13 @@ const App = () => {
         <MainView />
 
         {/* Optional: Global footer */}
-        <footer className="bg-secondary text-center py-3 mt-auto border-top border-warning">
+        {/* <footer className="bg-secondary text-center py-3 mt-auto border-top border-warning">
           <div className="">
             <small className="text-light">
               © 2024 RetroLens - Your Historic Movie Collection
             </small>
           </div>
-        </footer>
+        </footer> */}
       </div>
     </Provider>
   );
