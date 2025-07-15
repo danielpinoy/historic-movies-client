@@ -47,6 +47,12 @@ const Sidebar = () => {
     setIsOpen(false);
   };
 
+  // Handle nav link clicks
+  const handleNavLinkClick = () => {
+    // Close sidebar when clicking nav links on all devices
+    setIsOpen(false);
+  };
+
   // Navigation items
   const navItems = [
     { path: "/", label: "Home", exact: true },
@@ -167,7 +173,7 @@ const Sidebar = () => {
                     className={`nav-link ${
                       isActiveLink(item.path, item.exact) ? "active" : ""
                     }`}
-                    onClick={closeMobileSidebar}
+                    onClick={handleNavLinkClick}
                   >
                     <motion.span
                       initial={false}
@@ -198,7 +204,7 @@ const Sidebar = () => {
             <Link
               to="/users"
               className="user-info"
-              onClick={closeMobileSidebar}
+              onClick={handleNavLinkClick}
             >
               <div className="user-dot" />
               <span>{user?.Username || "User"}</span>
