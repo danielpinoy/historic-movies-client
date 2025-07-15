@@ -87,8 +87,8 @@ const MovieGallery = ({ movies, loading, error }) => {
       <div className="netflix-error">
         <div className="error-content">
           <Film size={48} className="error-icon" />
-          <h2>Something went wrong</h2>
-          <p>{error}</p>
+          <h2>Loading Movies...</h2>
+          <p>Preparing your cinematic experience</p>
         </div>
       </div>
     );
@@ -137,7 +137,7 @@ const MovieGallery = ({ movies, loading, error }) => {
             title="Featured Historical Movies"
             icon={<Sparkles size={24} />}
             movies={movieCategories.featured}
-            rowType="featured"
+            rowType="poster"
             showRanking={true}
           />
         )}
@@ -148,7 +148,7 @@ const MovieGallery = ({ movies, loading, error }) => {
             title="War & Action Movies"
             icon={<Sword size={24} />}
             movies={movieCategories.war}
-            rowType="standard"
+            rowType="poster"
             genreBadge="WAR"
           />
         )}
@@ -169,7 +169,7 @@ const MovieGallery = ({ movies, loading, error }) => {
             title="Critically Acclaimed"
             icon={<Award size={24} />}
             movies={movieCategories.highRated}
-            rowType="standard"
+            rowType="poster"
           />
         )}
 
@@ -212,13 +212,13 @@ const NetflixRow = ({
   const getCardDimensions = () => {
     switch (rowType) {
       case "featured":
-        return { width: 300, gap: 8, cardsToShow: 3 };
+        return { width: 300, gap: 4, cardsToShow: 3 };
       case "standard":
-        return { width: 250, gap: 8, cardsToShow: 4 };
+        return { width: 300, gap: 4, cardsToShow: 3 };
       case "poster":
-        return { width: 150, gap: 8, cardsToShow: 6 };
+        return { width: 300, gap: 4, cardsToShow: 3 };
       default:
-        return { width: 250, gap: 8, cardsToShow: 4 };
+        return { width: 300, gap: 4, cardsToShow: 3 };
     }
   };
 
@@ -257,15 +257,16 @@ const NetflixRow = ({
     <div className="netflix-row">
       <Container>
         <div className="netflix-row-header">
-          <h2 className="netflix-row-title">
-            {icon}
-            {title}
-          </h2>
-          <span className="netflix-row-count">{movies.length} movies</span>
+          <h2 className="netflix-row-title">{title}</h2>
         </div>
       </Container>
 
-      <div className="netflix-scroll-container">
+      <div
+        className={`netflix-scroll-container ${
+          showLeftArrow ? "has-left-content" : ""
+        }`}
+        ref={scrollContainerRef}
+      >
         {/* Left Arrow */}
         {showLeftArrow && (
           <motion.button
@@ -300,8 +301,7 @@ const NetflixRow = ({
 
         <div className="netflix-movies-row-container">
           <motion.div
-            ref={scrollContainerRef}
-            className={`netflix-movies-row ${rowType}-row`}
+            className={`netflix-movies-row `}
             style={{
               x: useTransform(springScrollX, (value) => -value),
               display: "flex",

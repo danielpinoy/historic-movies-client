@@ -1,4 +1,4 @@
-/* MovieGallery.css - Netflix Style */
+/* MovieGallery.css - Netflix Style with Fade Effect */
 
 /* Enhanced scroll root for better performance */
 html {
@@ -123,7 +123,10 @@ html {
   font-weight: 500;
 }
 
-/* Optimize the entire scroll container for performance */
+/* ===========================
+   NETFLIX SCROLL CONTAINER WITH FADE EFFECT
+   =========================== */
+
 .netflix-scroll-container {
   position: relative;
   overflow: hidden;
@@ -135,6 +138,54 @@ html {
   perspective: 1000;
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
+}
+
+/* Add fade overlay to the right edge */
+.netflix-scroll-container::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 120px; /* Wider fade effect */
+  height: 100%;
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    rgba(13, 17, 23, 0.6) 20%,
+    /* Start darker, earlier */ rgba(13, 17, 23, 0.9) 60%,
+    /* Much darker middle */ rgba(13, 17, 23, 1) 100%
+      /* Solid background color */
+  );
+  pointer-events: none; /* Allow clicks to pass through */
+  z-index: 10;
+  transition: opacity 0.3s ease;
+}
+
+/* Remove the hover opacity change - keep fade consistent */
+
+/* Also add fade to left edge if desired */
+.netflix-scroll-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 60px; /* Smaller fade on left */
+  height: 100%;
+  background: linear-gradient(
+    to left,
+    transparent 0%,
+    rgba(13, 17, 23, 0.5) 70%,
+    rgba(13, 17, 23, 1) 100%
+  );
+  pointer-events: none;
+  z-index: 10;
+  opacity: 0; /* Hidden by default */
+  transition: opacity 0.3s ease;
+}
+
+/* Show left fade when there's content to scroll back to */
+.netflix-scroll-container.has-left-content::before {
+  opacity: 1;
 }
 
 .netflix-scroll-container:hover .netflix-scroll-arrow {
@@ -181,7 +232,7 @@ html {
   cursor: pointer;
   font-size: 1.5rem;
   font-weight: bold;
-  z-index: 100;
+  z-index: 100; /* Higher than fade overlay */
   transition: all 0.3s ease;
   opacity: 0;
   backdrop-filter: blur(10px);
