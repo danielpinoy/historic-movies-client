@@ -1,74 +1,58 @@
 import React, { useState, useMemo } from "react";
-import { Container, Form, InputGroup } from "react-bootstrap";
+import { Container, Form, InputGroup, Dropdown } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import {
   Search,
   Film,
   Star,
-  Award,
   Sparkles,
-  Sword,
-  Drama,
   Calendar,
-  Trophy,
   Crown,
-  Zap,
   ChevronLeft,
   ChevronRight,
+  Filter,
 } from "lucide-react";
 import "./MovieGallery.css";
 
 const MovieGallery = ({ movies, loading, error }) => {
   const [searchTerm, setSearchTerm] = useState("");
+  const [genreFilter, setGenreFilter] = useState("All");
 
-  // Filter movies based on search
+  // Get all unique genres for filter dropdown
+  const allGenres = useMemo(() => {
+    const genres = new Set();
+    movies.forEach((movie) => {
+      movie.genre.forEach((g) => genres.add(g));
+    });
+    return ["All", ...Array.from(genres)].sort();
+  }, [movies]);
+
+  // Filter movies for "All Movies" section only (not featured)
   const filteredMovies = useMemo(() => {
-    return movies.filter((movie) =>
-      movie.title.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-  }, [movies, searchTerm]);
+    return movies.filter((movie) => {
+      const matchesSearch = movie.title
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase());
+      const matchesGenre =
+        genreFilter === "All" || movie.genre.includes(genreFilter);
+      return matchesSearch && matchesGenre;
+    });
+  }, [movies, searchTerm, genreFilter]);
 
-  // Categorize movies for different rows
+  // Categorize movies for the two rows only
   const movieCategories = useMemo(() => {
     return {
-      // Featured - Top rated movies (8.0+)
-      featured: filteredMovies
+      // Featured - Top rated movies (8.0+) - NOT affected by search/filter
+      featured: movies
         .filter((m) => m.rating >= 8.0)
         .sort((a, b) => (b.rating || 0) - (a.rating || 0))
         .slice(0, 10),
 
-      // War Movies
-      war: filteredMovies
-        .filter((m) =>
-          m.genre.some(
-            (g) =>
-              g.toLowerCase().includes("war") ||
-              g.toLowerCase().includes("action")
-          )
-        )
-        .sort((a, b) => (b.rating || 0) - (a.rating || 0))
-        .slice(0, 10),
-
-      // Drama Movies
-      drama: filteredMovies
-        .filter((m) => m.genre.some((g) => g.toLowerCase().includes("drama")))
-        .sort((a, b) => (b.rating || 0) - (a.rating || 0))
-        .slice(0, 10),
-
-      // Highly Rated (7.5+)
-      highRated: filteredMovies
-        .filter((m) => m.rating >= 7.5 && m.rating < 8.0)
-        .sort((a, b) => (b.rating || 0) - (a.rating || 0))
-        .slice(0, 10),
-
-      // Popular (by vote count)
-      popular: filteredMovies
-        .filter((m) => m.voteCount >= 500)
-        .sort((a, b) => (b.voteCount || 0) - (a.voteCount || 0))
-        .slice(0, 10),
+      // All Movies - sorted by rating - affected by search/filter
+      all: filteredMovies.sort((a, b) => (b.rating || 0) - (a.rating || 0)),
     };
-  }, [filteredMovies]);
+  }, [movies, filteredMovies]);
 
   if (loading) {
     return (
@@ -109,26 +93,6 @@ const MovieGallery = ({ movies, loading, error }) => {
         </Container>
       </div>
 
-      {/* Search */}
-      <div className="netflix-search-section">
-        <Container>
-          <div className="netflix-search-container">
-            <InputGroup size="lg">
-              <InputGroup.Text className="netflix-search-icon">
-                <Search size={20} />
-              </InputGroup.Text>
-              <Form.Control
-                type="text"
-                placeholder="Search for movies, actors, directors..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="netflix-search-input"
-              />
-            </InputGroup>
-          </div>
-        </Container>
-      </div>
-
       {/* Movie Rows */}
       <div className="netflix-content">
         {/* Featured Movies Row */}
@@ -137,50 +101,82 @@ const MovieGallery = ({ movies, loading, error }) => {
             title="Featured Historical Movies"
             icon={<Sparkles size={24} />}
             movies={movieCategories.featured}
-            rowType="poster"
             showRanking={true}
-          />
-        )}
-
-        {/* War Movies Row */}
-        {movieCategories.war.length > 0 && (
-          <NetflixRow
-            title="War & Action Movies"
-            icon={<Sword size={24} />}
-            movies={movieCategories.war}
-            rowType="poster"
-            genreBadge="WAR"
-          />
-        )}
-
-        {/* Drama Movies Row */}
-        {movieCategories.drama.length > 0 && (
-          <NetflixRow
-            title="Classic Dramas"
-            icon={<Drama size={24} />}
-            movies={movieCategories.drama}
             rowType="poster"
           />
         )}
 
-        {/* Highly Rated Row */}
-        {movieCategories.highRated.length > 0 && (
+        {/* Search and Filter - Below Featured Movies */}
+        <div className="netflix-search-section">
+          <Container>
+            <div className="netflix-search-container">
+              <div className="d-flex gap-3 align-items-center">
+                <InputGroup size="lg" className="flex-grow-1">
+                  <InputGroup.Text className="netflix-search-icon">
+                    <Search size={20} />
+                  </InputGroup.Text>
+                  <Form.Control
+                    type="text"
+                    placeholder="Search for movies, actors, directors..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="netflix-search-input"
+                  />
+                </InputGroup>
+
+                {/* Genre Filter Dropdown */}
+                <Dropdown>
+                  <Dropdown.Toggle
+                    variant="outline-warning"
+                    size="lg"
+                    className="d-flex align-items-center gap-2"
+                  >
+                    <Filter size={20} />
+                    {genreFilter}
+                  </Dropdown.Toggle>
+                  <Dropdown.Menu className="bg-dark border-warning">
+                    {allGenres.map((genre) => (
+                      <Dropdown.Item
+                        key={genre}
+                        className={`text-light ${
+                          genreFilter === genre ? "bg-warning text-dark" : ""
+                        }`}
+                        onClick={() => setGenreFilter(genre)}
+                      >
+                        {genre}
+                      </Dropdown.Item>
+                    ))}
+                  </Dropdown.Menu>
+                </Dropdown>
+              </div>
+            </div>
+          </Container>
+        </div>
+
+        {/* All Movies Row */}
+        {movieCategories.all.length > 0 && (
           <NetflixRow
-            title="Critically Acclaimed"
-            icon={<Award size={24} />}
-            movies={movieCategories.highRated}
-            rowType="poster"
+            title={`All Movies ${
+              genreFilter !== "All" ? `- ${genreFilter}` : ""
+            }`}
+            icon={<Film size={24} />}
+            movies={movieCategories.all}
+            showRanking={false}
+            rowType="standard"
           />
         )}
 
-        {/* Popular Movies Row */}
-        {movieCategories.popular.length > 0 && (
-          <NetflixRow
-            title="Popular Choices"
-            icon={<Trophy size={24} />}
-            movies={movieCategories.popular}
-            rowType="poster"
-          />
+        {/* No Results Message */}
+        {movieCategories.all.length === 0 && (
+          <Container>
+            <div className="text-center py-5">
+              <Film size={48} className="text-warning mb-3" />
+              <h3 className="text-light">No movies found</h3>
+              <p className="text-muted">
+                Try adjusting your search or filter criteria
+              </p>
+            </div>
+          </Container>
         )}
       </div>
     </div>
@@ -192,9 +188,8 @@ const NetflixRow = ({
   title,
   icon,
   movies,
-  rowType = "standard",
   showRanking = false,
-  genreBadge = null,
+  rowType = "standard",
 }) => {
   const scrollContainerRef = React.useRef(null);
   const [showLeftArrow, setShowLeftArrow] = React.useState(false);
@@ -208,21 +203,11 @@ const NetflixRow = ({
     mass: 0.8,
   });
 
-  // Calculate scroll amount and card width based on row type
-  const getCardDimensions = () => {
-    switch (rowType) {
-      case "featured":
-        return { width: 300, gap: 4, cardsToShow: 3 };
-      case "standard":
-        return { width: 300, gap: 4, cardsToShow: 3 };
-      case "poster":
-        return { width: 300, gap: 4, cardsToShow: 3 };
-      default:
-        return { width: 300, gap: 4, cardsToShow: 3 };
-    }
-  };
-
-  const { width: cardWidth, gap, cardsToShow } = getCardDimensions();
+  // Different card dimensions based on rowType
+  const cardWidth = rowType === "poster" ? 250 : 200;
+  const cardHeight = rowType === "poster" ? 425 : 300;
+  const gap = 8;
+  const cardsToShow = rowType === "poster" ? 8 : 6;
   const scrollAmount = (cardWidth + gap) * cardsToShow;
 
   // Calculate max scroll distance
@@ -245,11 +230,10 @@ const NetflixRow = ({
 
   const updateArrowVisibility = (currentX) => {
     setShowLeftArrow(currentX > 0);
-    setShowRightArrow(currentX < maxScrollWidth - 10); // Small buffer
+    setShowRightArrow(currentX < maxScrollWidth - 10);
   };
 
   React.useEffect(() => {
-    // Initial arrow state
     updateArrowVisibility(0);
   }, [movies]);
 
@@ -257,7 +241,11 @@ const NetflixRow = ({
     <div className="netflix-row">
       <Container>
         <div className="netflix-row-header">
-          <h2 className="netflix-row-title">{title}</h2>
+          <h2 className="netflix-row-title">
+            {icon}
+            {title}
+          </h2>
+          <span className="netflix-row-count">{movies.length} movies</span>
         </div>
       </Container>
 
@@ -301,7 +289,7 @@ const NetflixRow = ({
 
         <div className="netflix-movies-row-container">
           <motion.div
-            className={`netflix-movies-row `}
+            className="netflix-movies-row"
             style={{
               x: useTransform(springScrollX, (value) => -value),
               display: "flex",
@@ -312,10 +300,10 @@ const NetflixRow = ({
               <NetflixMovieCard
                 key={movie.id}
                 movie={movie}
-                rowType={rowType}
                 ranking={showRanking ? index + 1 : null}
-                genreBadge={genreBadge}
                 cardWidth={cardWidth}
+                cardHeight={cardHeight}
+                rowType={rowType}
               />
             ))}
           </motion.div>
@@ -328,24 +316,11 @@ const NetflixRow = ({
 // Netflix Movie Card Component with Framer Motion
 const NetflixMovieCard = ({
   movie,
-  rowType,
   ranking,
-  genreBadge,
   cardWidth,
+  cardHeight,
+  rowType,
 }) => {
-  const getImageUrl = () => {
-    // Always use the main image but with different Cloudinary transformations
-    const baseImage = movie.image;
-
-    if (rowType === "poster") {
-      // For poster rows, use 2:3 aspect ratio
-      return baseImage?.replace(/w_\d+,h_\d+/, "w_200,h_300") || baseImage;
-    } else {
-      // For landscape rows (featured/standard), use 16:9 aspect ratio
-      return baseImage?.replace(/w_\d+,h_\d+/, "w_400,h_225") || baseImage;
-    }
-  };
-
   const getYear = (dateString) => {
     if (!dateString) return "Unknown";
     try {
@@ -355,25 +330,12 @@ const NetflixMovieCard = ({
     }
   };
 
-  const getCardHeight = () => {
-    switch (rowType) {
-      case "featured":
-        return 169;
-      case "standard":
-        return 141;
-      case "poster":
-        return 225;
-      default:
-        return 141;
-    }
-  };
-
   return (
     <motion.div
       className="netflix-movie-card-wrapper"
       style={{
         width: cardWidth,
-        height: getCardHeight(),
+        height: cardHeight,
         flexShrink: 0,
       }}
       whileHover={{
@@ -410,21 +372,9 @@ const NetflixMovieCard = ({
             </motion.div>
           )}
 
-          {/* Genre Badge */}
-          {genreBadge && (
-            <motion.div
-              className="netflix-genre-badge"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.3 }}
-            >
-              {genreBadge}
-            </motion.div>
-          )}
-
           {/* Movie Image */}
           <motion.img
-            src={getImageUrl()}
+            src={movie.image}
             alt={movie.title}
             className="netflix-movie-image"
             initial={{ opacity: 0 }}
