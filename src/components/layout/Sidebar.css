@@ -1,0 +1,290 @@
+/* ===========================
+   TRANSPARENT SIDEBAR
+   =========================== */
+.transparent-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 240px;
+  height: 100vh;
+  background: rgba(13, 17, 23, 0.4);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  z-index: 1020;
+  transform: translateX(0);
+  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  padding: 0;
+  border: none;
+}
+
+.transparent-sidebar.collapsed {
+  transform: translateX(-240px);
+}
+
+/* Subtle right border */
+.transparent-sidebar::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 1px;
+  height: 100%;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(244, 196, 48, 0.2) 20%,
+    rgba(244, 196, 48, 0.2) 80%,
+    transparent 100%
+  );
+}
+
+/* ===========================
+   NAVIGATION CONTAINER
+   =========================== */
+.nav-container {
+  height: 100%;
+  padding: 3rem 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ===========================
+   NAVIGATION MENU
+   =========================== */
+.nav-menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  flex: 1;
+}
+
+.nav-item {
+  margin: 0.5rem 0;
+}
+
+.nav-link {
+  display: block;
+  padding: 1.2rem 2rem;
+  color: rgba(255, 255, 255, 0.6) !important;
+  text-decoration: none !important;
+  font-weight: 400;
+  font-size: 0.95rem;
+  letter-spacing: 0.3px;
+  position: relative;
+  border: none;
+  background: none;
+  /* Remove all CSS transitions - Framer Motion handles them */
+}
+
+/* Left border indicator */
+.nav-link::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0;
+  height: 20px;
+  background: #f4c430;
+  /* Remove transition - will be handled by Framer Motion */
+}
+
+.nav-link:hover::before {
+  width: 3px;
+  transition: width 0.2s ease-out;
+}
+
+.nav-link.active {
+  color: #f4c430 !important;
+  background: rgba(244, 196, 48, 0.08);
+}
+
+.nav-link.active::before {
+  width: 3px;
+}
+
+/* ===========================
+   USER SECTION
+   =========================== */
+.user-section {
+  padding: 2rem;
+  margin-top: auto;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: rgba(255, 255, 255, 0.6) !important;
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+  text-decoration: none !important;
+  transition: color 0.3s ease;
+}
+
+.user-info:hover {
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.user-dot {
+  width: 8px;
+  height: 8px;
+  background: #f4c430;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.logout-link {
+  color: rgba(255, 255, 255, 0.4);
+  background: none;
+  border: none;
+  font-size: 0.85rem;
+  transition: color 0.3s ease;
+  cursor: pointer;
+  padding: 0;
+  font-family: inherit;
+}
+
+.logout-link:hover {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* ===========================
+   MAIN CONTENT WRAPPER
+   =========================== */
+.main-content-wrapper {
+  transition: margin-left 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.main-content-wrapper.sidebar-open {
+  margin-left: 240px;
+}
+
+.main-content-wrapper.sidebar-closed {
+  margin-left: 0;
+}
+
+/* ===========================
+   ANIMATED MENU TOGGLE 
+   =========================== */
+.menu-toggle {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  background: rgba(13, 17, 23, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.6);
+  padding: 0.75rem;
+  border-radius: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1100;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  width: 48px;
+  height: 48px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.menu-toggle:hover {
+  background: rgba(244, 196, 48, 0.1);
+  color: #f4c430;
+  border-color: rgba(244, 196, 48, 0.3);
+  box-shadow: 0 6px 25px rgba(244, 196, 48, 0.2);
+}
+
+/* ===========================
+   CLICK OUTSIDE OVERLAY
+   =========================== */
+.sidebar-outside-click {
+  position: fixed;
+  top: 0;
+  left: 240px;
+  width: calc(100vw - 240px);
+  height: 100vh;
+  z-index: 1019;
+  background: transparent;
+  cursor: pointer;
+}
+
+/* ===========================
+   MOBILE RESPONSIVE
+   =========================== */
+@media (max-width: 768px) {
+  .transparent-sidebar {
+    transform: translateX(-240px);
+    background: rgba(13, 17, 23, 0.95);
+    z-index: 1021;
+  }
+
+  .transparent-sidebar.open {
+    transform: translateX(0);
+  }
+
+  .main-content-wrapper {
+    margin-left: 0 !important;
+  }
+
+  .sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 1020;
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+  }
+
+  .menu-toggle {
+    top: 1rem;
+    left: 1rem;
+  }
+
+  .nav-container {
+    padding: 2rem 0;
+  }
+}
+
+/* ===========================
+   FOCUS STATES FOR ACCESSIBILITY
+   =========================== */
+.nav-link:focus {
+  outline: none;
+  background: rgba(244, 196, 48, 0.1) !important;
+  color: #f4c430 !important;
+  box-shadow: inset 3px 0 0 #f4c430;
+}
+
+.menu-toggle:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(244, 196, 48, 0.3);
+}
+
+.logout-link:focus {
+  outline: none;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* ===========================
+   ANIMATION OPTIMIZATIONS
+   =========================== */
+.transparent-sidebar,
+.main-content-wrapper {
+  will-change: transform, margin-left;
+}
+
+/* Reduce animations for users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .transparent-sidebar,
+  .main-content-wrapper,
+  .nav-link,
+  .menu-toggle,
+  .logout-link {
+    transition: none;
+  }
+}

@@ -1,13 +1,6 @@
-import { useState, useEffect, useMemo } from "react";
-import {
-  Form,
-  Col,
-  Row,
-  Alert,
-  Container,
-  Spinner,
-  InputGroup,
-} from "react-bootstrap";
+// Updated src/pages/main-view.jsx
+import { useState, useEffect } from "react";
+import { Container, Row, Col } from "react-bootstrap";
 import { MovieCard, MovieView } from "../pages/MoviesPage/index.tsx";
 import {
   ProfileView,
@@ -16,13 +9,13 @@ import {
 } from "./ProfilePage/index.tsx";
 import { LoginView, SignupView } from "../pages/AuthPage/index";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { NavigationBar } from "../components/layout/navigation-bar.jsx";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../slice/userSlice";
 import { getMovies } from "../slice/movieSlice";
 import HomePage from "./HomePage/HomePage.jsx";
 import ProtectedRoute from "../components/ProtectedRoute.jsx";
 import MovieGallery from "./MovieGalleryPage/MovieGallery.jsx";
+import Sidebar from "../components/layout/Navbar.jsx";
 
 export const MainView = () => {
   // State management
@@ -44,9 +37,6 @@ export const MainView = () => {
     }
   }, []);
 
-  // Event handlers
-  const handleLogout = () => dispatch(logout());
-
   // Loading component
   const LoadingComponent = () => (
     <div
@@ -54,13 +44,10 @@ export const MainView = () => {
       style={{ height: "60vh" }}
     >
       <div className="text-center">
-        <Spinner
-          animation="border"
-          variant="warning"
-          size="lg"
-          className="mb-3"
-        />
-        <h4 className="text-warning">Loading Movies...</h4>
+        <div className="spinner-border text-warning" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+        <h4 className="text-warning mt-3">Loading Movies...</h4>
         <p className="text-light">Please wait while we fetch your content</p>
       </div>
     </div>
@@ -69,113 +56,117 @@ export const MainView = () => {
   return (
     <BrowserRouter>
       <div className="bg-dark min-vh-100">
-        <div fluid className="">
-          <Routes>
-            {/* PUBLIC ROUTES - No ProtectedRoute needed */}
-            <Route
-              path="/signup"
-              element={storedUser ? <Navigate to="/" /> : <SignupView />}
-            />
-            <Route
-              path="/login"
-              element={storedUser ? <Navigate to="/" /> : <LoginView />}
-            />
+        <Routes>
+          {/* PUBLIC ROUTES - No sidebar */}
+          <Route
+            path="/signup"
+            element={
+              storedUser ? (
+                <Navigate to="/" />
+              ) : (
+                <div className="min-vh-100">
+                  <SignupView />
+                </div>
+              )
+            }
+          />
+          <Route
+            path="/login"
+            element={
+              storedUser ? (
+                <Navigate to="/" />
+              ) : (
+                <div className="min-vh-100">
+                  <LoginView />
+                </div>
+              )
+            }
+          />
 
-            {/* PROTECTED ROUTES - Wrapped with ProtectedRoute */}
+          {/* PROTECTED ROUTES - With transparent sidebar */}
+          <Route
+            path="/*"
+            element={
+              <ProtectedRoute>
+                <Sidebar />
+                <Routes>
+                  {/* Homepage Route */}
+                  <Route path="/" element={<HomePage />} />
 
-            {/* Homepage Route - Protected */}
-            <Route
-              path="/"
-              element={
-                <ProtectedRoute>
-                  <HomePage />
-                </ProtectedRoute>
-              }
-            />
-
-            {/* Movies Gallery Route - */}
-            <Route
-              path="/movies"
-              element={
-                <ProtectedRoute>
-                  <MovieGallery
-                    movies={movies}
-                    loading={loading}
-                    error={error}
+                  {/* Movies Gallery Route */}
+                  <Route
+                    path="/movies"
+                    element={
+                      <MovieGallery
+                        movies={movies}
+                        loading={loading}
+                        error={error}
+                      />
+                    }
                   />
-                </ProtectedRoute>
-              }
-            />
 
-            {/* Profile Routes - Protected */}
-            <Route
-              path="/users"
-              element={
-                <ProtectedRoute>
-                  <Row className="justify-content-center">
-                    <Col lg={8} xl={6}>
-                      {!isEditingProfile ? (
-                        <ProfileView
-                          movies={movies}
-                          token={token}
-                          clickUpdate={setUserEdit}
-                        />
+                  {/* Profile Routes */}
+                  <Route
+                    path="/users"
+                    element={
+                      <Container className="py-4">
+                        <Row className="justify-content-center">
+                          <Col lg={8} xl={6}>
+                            {!isEditingProfile ? (
+                              <ProfileView
+                                movies={movies}
+                                token={token}
+                                clickUpdate={setUserEdit}
+                              />
+                            ) : (
+                              <ProfileEditView
+                                token={storedToken}
+                                clickUpdate={setUserEdit}
+                              />
+                            )}
+                          </Col>
+                        </Row>
+                      </Container>
+                    }
+                  />
+
+                  {/* Change Password Route */}
+                  <Route
+                    path="/change-password"
+                    element={
+                      <Container className="py-4">
+                        <Row className="justify-content-center">
+                          <Col lg={8} xl={6}>
+                            <ChangePasswordView />
+                          </Col>
+                        </Row>
+                      </Container>
+                    }
+                  />
+
+                  {/* Movie Detail Route */}
+                  <Route
+                    path="/movies/:movieId"
+                    element={
+                      movies.length === 0 ? (
+                        <Container className="py-4">
+                          <LoadingComponent />
+                        </Container>
                       ) : (
-                        <ProfileEditView
-                          token={storedToken}
-                          clickUpdate={setUserEdit}
-                        />
-                      )}
-                    </Col>
-                  </Row>
-                </ProtectedRoute>
-              }
-            />
+                        <Container className="py-4">
+                          <MovieView movies={movies} handleReset={() => {}} />
+                        </Container>
+                      )
+                    }
+                  />
 
-            {/* Change Password Route - Protected */}
-            <Route
-              path="/change-password"
-              element={
-                <ProtectedRoute>
-                  <Row className="justify-content-center">
-                    <Col lg={8} xl={6}>
-                      <ChangePasswordView />
-                    </Col>
-                  </Row>
-                </ProtectedRoute>
-              }
-            />
-
-            {/* Movie Detail Route - Protected */}
-            <Route
-              path="/Movies/:movieId"
-              element={
-                <ProtectedRoute>
-                  {movies.length === 0 ? (
-                    <LoadingComponent />
-                  ) : (
-                    <MovieView
-                      movies={movies}
-                      handleReset={() => {}} // No longer need search term reset
-                    />
-                  )}
-                </ProtectedRoute>
-              }
-            />
-
-            {/* Catch-all route - Redirect to login if not authenticated, home if authenticated */}
-            <Route
-              path="*"
-              element={
-                storedUser ? (
-                  <Navigate to="/" replace />
-                ) : (
-                  <Navigate to="/login" replace />
-                )
-              }
-            />
-          </Routes>
-        </div>
+                  {/* Catch-all route for authenticated users */}
+                  <Route path="*" element={<Navigate to="/" replace />} />
+                </Routes>
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
       </div>
     </BrowserRouter>
   );

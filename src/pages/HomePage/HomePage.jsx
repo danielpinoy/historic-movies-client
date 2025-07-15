@@ -1,7 +1,6 @@
 import HeroSection from "./sections/HeroSection";
 import HighlightsSection from "./sections/HighlightsSection";
 import NewReleasesSection from "./sections/NewReleasesSection"; // Import the new section
-import { StickyNavigationBar } from "../../components/layout/navigation-bar";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../slice/userSlice";
 
@@ -16,9 +15,6 @@ const HomePage = () => {
     <>
       {/* Hero Section - Top of page */}
       <HeroSection movies={movies} />
-
-      {/* Sticky Navigation */}
-      <StickyNavigationBar user={user} loggedOut={handleLogout} />
 
       {/* Highlights Section */}
       <HighlightsSection movies={movies} />
