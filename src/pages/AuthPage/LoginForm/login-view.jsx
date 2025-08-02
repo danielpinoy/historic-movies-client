@@ -1,11 +1,12 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { Button, Form, Spinner, Row, Col, Image, Card } from "react-bootstrap";
+import { Button, Form, Spinner, Card } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { loginUser } from "../../../asyncThunk/userAsyncThunks";
-import loginImage from "../../../assets/Logo_RetroLens.png";
+import { Link } from "react-router-dom";
 import NotificationToast from "../../../common/NotificationToast";
 import { clearStates } from "../../../slice/userSlice";
+import "./login-view.css";
 
 const LoginView = () => {
   const dispatch = useDispatch();
@@ -47,107 +48,83 @@ const LoginView = () => {
         onClose={() => setShowToast(false)}
       />
 
-      <Row className="justify-content-center align-items-center min-vh-100">
-        <Col lg={10} xl={8}>
-          <Card className="bg-dark text-white border-warning shadow-lg overflow-hidden">
-            <Row className="g-0">
-              {/* Login Form */}
-              <Col md={6}>
-                <Card.Body className="p-5">
-                  <div className="text-center mb-4">
-                    <h2 className="text-warning fw-bold mb-2">
-                      🎬 Welcome Back
-                    </h2>
-                    <p className="text-light mb-4">
-                      Sign in to continue to RetroLens
-                    </p>
-                  </div>
+      <div className="auth-container">
+        {/* Background Image */}
+        <div
+          className="auth-background"
+          style={{
+            backgroundImage: `url('https://via.placeholder.com/1920x1080/1a1a1a/666666?text=Historical+Movie+Background')`,
+          }}
+        />
 
-                  <Form onSubmit={login}>
-                    <Form.Group className="mb-3">
-                      <Form.Label className="text-warning fw-semibold">
-                        Username
-                      </Form.Label>
-                      <Form.Control
-                        type="text"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                        required
-                        className="bg-secondary border-warning text-white"
-                        placeholder="Enter your username"
-                        disabled={loading}
-                      />
-                    </Form.Group>
+        {/* Dark Overlay */}
+        <div className="auth-overlay" />
 
-                    <Form.Group className="mb-4">
-                      <Form.Label className="text-warning fw-semibold">
-                        Password
-                      </Form.Label>
-                      <Form.Control
-                        type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                        className="bg-secondary border-warning text-white"
-                        placeholder="Enter your password"
-                        disabled={loading}
-                      />
-                    </Form.Group>
+        {/* Logo */}
+        <div className="auth-logo">
+          <h1>RetroLens</h1>
+        </div>
 
-                    <Button
-                      type="submit"
-                      variant="warning"
-                      size="lg"
-                      className="w-100 fw-semibold text-dark"
-                      disabled={loading}
-                    >
-                      {loading ? (
-                        <>
-                          <Spinner
-                            as="span"
-                            animation="border"
-                            size="sm"
-                            role="status"
-                            aria-hidden="true"
-                            className="me-2"
-                          />
-                          Signing in...
-                        </>
-                      ) : (
-                        "Sign In"
-                      )}
-                    </Button>
-                  </Form>
+        {/* Login Form */}
+        <div className="auth-form-container">
+          <Card className="auth-form">
+            <Card.Body>
+              <h2 className="auth-title">Sign In</h2>
 
-                  <div className="text-center mt-4">
-                    <p className="text-light mb-0">
-                      Don't have an account?{" "}
-                      <a
-                        href="/signup"
-                        className="text-warning text-decoration-none fw-semibold"
-                      >
-                        Sign up here
-                      </a>
-                    </p>
-                  </div>
-                </Card.Body>
-              </Col>
-
-              {/* Image Side */}
-              <Col md={6} className="d-none d-md-block">
-                <div className="h-100 d-flex align-items-center justify-content-center bg-warning bg-opacity-10">
-                  <Image
-                    src={loginImage}
-                    alt="RetroLens Logo"
-                    className="img-fluid p-4"
-                    style={{ maxHeight: "400px" }}
+              <Form onSubmit={login}>
+                <div className="form-group">
+                  <Form.Control
+                    type="text"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    required
+                    className="form-input"
+                    placeholder=" "
+                    disabled={loading}
                   />
+                  <Form.Label className="form-label">Username</Form.Label>
                 </div>
-              </Col>
-            </Row>
+
+                <div className="form-group">
+                  <Form.Control
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    className="form-input"
+                    placeholder=" "
+                    disabled={loading}
+                  />
+                  <Form.Label className="form-label">Password</Form.Label>
+                </div>
+
+                <Button type="submit" className="submit-btn" disabled={loading}>
+                  {loading ? (
+                    <>
+                      <Spinner
+                        as="span"
+                        animation="border"
+                        size="sm"
+                        className="me-2"
+                      />
+                      Signing In...
+                    </>
+                  ) : (
+                    "Sign In"
+                  )}
+                </Button>
+              </Form>
+
+              <div className="signup-link">
+                New to RetroLens?{" "}
+                <Link to="/signup" className="auth-link">
+                  Sign up now
+                </Link>
+              </div>
+            </Card.Body>
           </Card>
-        </Col>
-      </Row>
+        </div>
+      </div>
     </>
   );
 };

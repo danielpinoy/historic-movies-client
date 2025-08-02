@@ -7,7 +7,7 @@ import { logout } from "../../slice/userSlice";
 import "./Sidebar.css";
 
 const Sidebar = () => {
-  const [isOpen, setIsOpen] = useState(false); // Start closed by default
+  const [isOpen, setIsOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const location = useLocation();
   const dispatch = useDispatch();
@@ -21,7 +21,6 @@ const Sidebar = () => {
       // Don't auto-open on desktop, let user control it
     };
 
-    // Set initial state
     handleResize();
 
     window.addEventListener("resize", handleResize);
@@ -53,7 +52,6 @@ const Sidebar = () => {
     setIsOpen(false);
   };
 
-  // Navigation items
   const navItems = [
     { path: "/", label: "Home", exact: true },
     { path: "/movies", label: "Movies" },
@@ -69,7 +67,6 @@ const Sidebar = () => {
     return location.pathname.startsWith(path);
   };
 
-  // Get user initials
   const getUserInitials = (username) => {
     if (!username) return "U";
     return username.charAt(0).toUpperCase();

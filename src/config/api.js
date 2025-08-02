@@ -1,6 +1,6 @@
 // src/config/api.js
 const API_CONFIG = {
-  PRIMARY_API: "http://94.130.107.9", // Replace with your actual Hetzner IP
+  PRIMARY_API: "http://94.130.107.9",
   FALLBACK_API:
     "https://xo4xjqevs42mbp46utxi3dua3y0lwywt.lambda-url.eu-north-1.on.aws",
   TIMEOUT: 5000, // 5 seconds timeout
@@ -42,31 +42,31 @@ export const getWorkingAPI = async () => {
     return workingAPI;
   }
 
-  console.log("🔍 Checking API health...");
+  console.log(" Checking API health...");
 
   // Test primary API first
   const primaryWorking = await testAPIHealth(API_CONFIG.PRIMARY_API);
 
   if (primaryWorking) {
-    console.log("✅ Using VPS API (Primary)");
+    console.log(" Using VPS API (Primary)");
     workingAPI = API_CONFIG.PRIMARY_API;
     lastHealthCheck = now;
     return workingAPI;
   }
 
   // Test fallback API
-  console.log("⚠️ Primary API down, testing fallback...");
+  console.log(" Primary API down, testing fallback...");
   const fallbackWorking = await testAPIHealth(API_CONFIG.FALLBACK_API);
 
   if (fallbackWorking) {
-    console.log("✅ Using Lambda API (Fallback)");
+    console.log("Using Lambda API (Fallback)");
     workingAPI = API_CONFIG.FALLBACK_API;
     lastHealthCheck = now;
     return workingAPI;
   }
 
   // If both fail, return primary and let the request fail naturally
-  console.log("❌ Both APIs appear down, defaulting to primary");
+  console.log(" Both APIs appear down, defaulting to primary");
   workingAPI = API_CONFIG.PRIMARY_API;
   lastHealthCheck = now;
   return workingAPI;
@@ -110,13 +110,13 @@ export const makeAPICall = async (endpoint, options = {}) => {
       if (fallbackResponse.ok) {
         workingAPI = fallbackUrl;
         lastHealthCheck = Date.now();
-        console.log(`✅ Fallback successful with ${fallbackUrl}`);
+        console.log(` Fallback successful with ${fallbackUrl}`);
       }
 
       return fallbackResponse;
     } catch (fallbackError) {
       console.error(
-        "❌ Both API endpoints failed:",
+        " Both API endpoints failed:",
         error.message,
         fallbackError.message
       );
@@ -129,7 +129,7 @@ export const makeAPICall = async (endpoint, options = {}) => {
 export const resetAPIHealth = () => {
   workingAPI = null;
   lastHealthCheck = 0;
-  console.log("🔄 API health check reset");
+  console.log(" API health check reset");
 };
 
 export default API_CONFIG;

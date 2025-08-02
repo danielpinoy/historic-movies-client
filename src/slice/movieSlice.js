@@ -2,16 +2,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { makeAPICall, resetAPIHealth } from "../config/api";
 
-// Helper functions
-const handleAuthError = (response) => {
-  if (response.status === 401 || response.status === 403) {
-    localStorage.clear();
-    window.location.href = "/login";
-    return true;
-  }
-  return false;
-};
-
 const getValidToken = () => {
   const token = localStorage.getItem("token");
   const user = localStorage.getItem("user");
@@ -106,7 +96,6 @@ export const getMovies = createAsyncThunk(
           backdrop: data.images?.backdrop || data.heroImage || data.image, // For components expecting 'backdrop'
           originalImage: data.images?.original || data.image,
 
-          // Keep the full images object for flexibility
           images: data.images || {
             thumbnail: data.image,
             poster: data.image,
@@ -115,7 +104,7 @@ export const getMovies = createAsyncThunk(
           },
 
           director: data.director,
-          actor: data.actors || data.actor, // Handle both field names
+          actor: data.actors || data.actor,
           genre: data.genre || [],
           featured: data.featured || false,
           releaseDate: data.releaseDate,
@@ -129,21 +118,21 @@ export const getMovies = createAsyncThunk(
         }));
 
         console.log(
-          `✅ Successfully loaded ${historyMovieApi.length} movies with fallback-ready images`
+          `Successfully loaded ${historyMovieApi.length} movies with fallback-ready images`
         );
 
-        // Debug: Log first movie to verify fields and fallbacks
-        if (historyMovieApi.length > 0) {
-          const firstMovie = historyMovieApi[0];
-          console.log("Sample movie with all image fields:", {
-            title: firstMovie.title,
-            image: firstMovie.image,
-            heroImage: firstMovie.heroImage,
-            backdrop: firstMovie.backdrop,
-            hasCloudinary: firstMovie.image?.includes("cloudinary"),
-            hasImages: !!firstMovie.images,
-          });
-        }
+        // // Debug: Log first movie to verify fields and fallbacks
+        // if (historyMovieApi.length > 0) {
+        //   const firstMovie = historyMovieApi[0];
+        //   console.log("Sample movie with all image fields:", {
+        //     title: firstMovie.title,
+        //     image: firstMovie.image,
+        //     heroImage: firstMovie.heroImage,
+        //     backdrop: firstMovie.backdrop,
+        //     hasCloudinary: firstMovie.image?.includes("cloudinary"),
+        //     hasImages: !!firstMovie.images,
+        //   });
+        // }
 
         return historyMovieApi;
       } else {
@@ -181,7 +170,7 @@ const movieSlice = createSlice({
     loading: false,
     error: null,
     lastFetchTime: null,
-    apiStatus: null, // Track which API is being used
+    apiStatus: null,
   },
   reducers: {
     clearMovieError: (state) => {
@@ -202,7 +191,7 @@ const movieSlice = createSlice({
     resetAPIHealthCheck: (state) => {
       resetAPIHealth();
       state.apiStatus = null;
-      console.log("🔄 API health check reset from Redux");
+      console.log(" API health check reset from Redux");
     },
   },
   extraReducers: (builder) => {

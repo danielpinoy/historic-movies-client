@@ -83,7 +83,7 @@ export const MainView = () => {
             }
           />
 
-          {/* PROTECTED ROUTES - With transparent sidebar */}
+          {/* PROTECTED ROUTES */}
           <Route
             path="/*"
             element={

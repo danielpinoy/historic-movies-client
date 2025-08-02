@@ -170,7 +170,7 @@
    =========================== */
 .menu-toggle {
   position: fixed;
-  top: 1rem;
+  top: 4rem;
   left: 1rem;
   background: rgba(13, 17, 23, 0.8);
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -184,8 +184,8 @@
   z-index: 1100;
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  width: 48px;
-  height: 48px;
+  width: 44px;
+  height: 44px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 

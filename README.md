@@ -58,15 +58,6 @@ Users can:
 -Filter movies by genre
 -Search for specific movies or directors
 
-## Error Handling
-
-The application includes comprehensive error handling:
-
--Network error detection and user feedback
--Form validation with clear error messages
--API rate limiting protection
--User-friendly toast notifications for all actions
-
 ## Security Implementation
 
 -JWT token-based authentication
@@ -96,5 +87,3 @@ The application includes comprehensive error handling:
 For any inquiries or feedback, please contact [Daniel John](mailto:almirante.danieljohn@gmail.com).
 
 ### Demo
-
-https://kaleidoscopic-tiramisu-9e52da.netlify.app/login
