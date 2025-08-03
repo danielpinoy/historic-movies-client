@@ -1,4 +1,3 @@
-// src/config/api.js
 const API_CONFIG = {
   PRIMARY_API: "http://94.130.107.9",
   FALLBACK_API:
@@ -6,7 +5,6 @@ const API_CONFIG = {
   TIMEOUT: 5000, // 5 seconds timeout
 };
 
-// Cache the working API to avoid repeated health checks
 let workingAPI = null;
 let lastHealthCheck = 0;
 const HEALTH_CHECK_INTERVAL = 5 * 60 * 1000; // 5 minutes
@@ -37,7 +35,6 @@ const testAPIHealth = async (apiUrl) => {
 export const getWorkingAPI = async () => {
   const now = Date.now();
 
-  // Use cached result if health check was recent
   if (workingAPI && now - lastHealthCheck < HEALTH_CHECK_INTERVAL) {
     return workingAPI;
   }

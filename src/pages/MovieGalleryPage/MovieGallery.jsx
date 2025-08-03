@@ -12,6 +12,11 @@ const MovieGallery = ({ movies, loading, error }) => {
   const [displayedCount, setDisplayedCount] = useState(12);
   const [showFilters, setShowFilters] = useState(false);
 
+  console.log("MovieGallery received:", {
+    moviesLength: movies?.length,
+    loading,
+    error,
+  });
   const getYear = (dateString) => {
     if (!dateString) return 0;
     try {

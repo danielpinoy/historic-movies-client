@@ -1,7 +1,7 @@
 // Updated src/pages/main-view.jsx
 import { useState, useEffect } from "react";
 import { Container, Row, Col } from "react-bootstrap";
-import { MovieCard, MovieView } from "../pages/MoviesPage/index.tsx";
+import { MovieView } from "../pages/MoviesPage/index.tsx";
 import {
   ProfileView,
   ProfileEditView,
@@ -10,7 +10,6 @@ import {
 import { LoginView, SignupView } from "../pages/AuthPage/index";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { logout } from "../slice/userSlice";
 import { getMovies } from "../slice/movieSlice";
 import HomePage from "./HomePage/HomePage.jsx";
 import ProtectedRoute from "../components/ProtectedRoute.jsx";
@@ -109,9 +108,9 @@ export const MainView = () => {
                   <Route
                     path="/users"
                     element={
-                      <Container className="py-4">
+                      <Container className="py-2">
                         <Row className="justify-content-center">
-                          <Col lg={8} xl={6}>
+                          <div className="py-2">
                             {!isEditingProfile ? (
                               <ProfileView
                                 movies={movies}
@@ -124,7 +123,7 @@ export const MainView = () => {
                                 clickUpdate={setUserEdit}
                               />
                             )}
-                          </Col>
+                          </div>
                         </Row>
                       </Container>
                     }
@@ -134,7 +133,7 @@ export const MainView = () => {
                   <Route
                     path="/change-password"
                     element={
-                      <Container className="py-4">
+                      <Container className="py-2">
                         <Row className="justify-content-center">
                           <Col lg={8} xl={6}>
                             <ChangePasswordView />
@@ -149,11 +148,11 @@ export const MainView = () => {
                     path="/movies/:movieId"
                     element={
                       movies.length === 0 ? (
-                        <Container className="py-4">
+                        <Container className="py-2">
                           <LoadingComponent />
                         </Container>
                       ) : (
-                        <Container className="py-4">
+                        <Container className="py-2">
                           <MovieView movies={movies} handleReset={() => {}} />
                         </Container>
                       )

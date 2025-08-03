@@ -101,13 +101,22 @@ export const editUser = createAsyncThunk(
         if (handleAuthError(response)) {
           return rejectWithValue("Session expired. Please log in again.");
         }
-        const errorData = await response.json();
-        throw new Error(errorData.message);
+
+        // Better error handling
+        try {
+          const errorData = await response.json();
+          throw new Error(errorData.message || `Error: ${response.status}`);
+        } catch (parseError) {
+          throw new Error(
+            `Server error: ${response.status} ${response.statusText}`
+          );
+        }
       }
 
       const updatedUser = await response.json();
       return updatedUser;
     } catch (error) {
+      console.error("Edit user error:", error);
       return rejectWithValue(error.message);
     }
   }
@@ -198,13 +207,19 @@ export const changePassword = createAsyncThunk(
         if (handleAuthError(response)) {
           return rejectWithValue("Session expired. Please log in again.");
         }
-        const errorData = await response.json();
-        throw new Error(errorData.message);
+
+        try {
+          const errorData = await response.json();
+          throw new Error(errorData.message || "Failed to change password");
+        } catch (parseError) {
+          throw new Error(`Server error: ${response.status}`);
+        }
       }
 
       await response.json();
       return { success: true, message: "Password changed successfully" };
     } catch (error) {
+      console.error("Change password error:", error);
       return rejectWithValue(error.message);
     }
   }
@@ -233,8 +248,18 @@ export const removeFavoriteMovie = createAsyncThunk(
         if (handleAuthError(response)) {
           return rejectWithValue("Session expired. Please log in again.");
         }
+
+        try {
+          const errorData = await response.json();
+          throw new Error(
+            errorData.message || "Failed to remove from favorites"
+          );
+        } catch (parseError) {
+          throw new Error(`Server error: ${response.status}`);
+        }
       }
 
+      // Return updated user object
       const updatedUser = {
         ...user,
         FavoriteMovies: user.FavoriteMovies.filter(
@@ -243,6 +268,7 @@ export const removeFavoriteMovie = createAsyncThunk(
       };
       return updatedUser;
     } catch (error) {
+      console.error("Remove favorite error:", error);
       return rejectWithValue(error.message);
     }
   }

@@ -1,4 +1,5 @@
-// src/slice/movieSlice.js
+// Fixed getMovies thunk - replace in your movieSlice.js
+
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { makeAPICall, resetAPIHealth } from "../config/api";
 
@@ -14,24 +15,10 @@ const getValidToken = () => {
   return token;
 };
 
-let isRequestInProgress = false;
-
 export const getMovies = createAsyncThunk(
   "movies/getMovies",
   async (_, { rejectWithValue, getState }) => {
-    if (isRequestInProgress) {
-      return rejectWithValue("Request already in progress");
-    }
-
-    const currentMovies = getState().movies.movies;
-    if (currentMovies && currentMovies.length > 0) {
-      console.log("Movies already loaded, skipping request");
-      return currentMovies;
-    }
-
     try {
-      isRequestInProgress = true;
-
       const token = getValidToken();
       if (!token) {
         return rejectWithValue(
@@ -39,7 +26,7 @@ export const getMovies = createAsyncThunk(
         );
       }
 
-      console.log("Fetching movies from API with automatic fallback...");
+      console.log("🎬 Fetching movies from API...");
 
       const response = await makeAPICall("/Movies", {
         headers: {
@@ -117,29 +104,13 @@ export const getMovies = createAsyncThunk(
           popularity: data.popularity || 0,
         }));
 
-        console.log(
-          `Successfully loaded ${historyMovieApi.length} movies with fallback-ready images`
-        );
-
-        // // Debug: Log first movie to verify fields and fallbacks
-        // if (historyMovieApi.length > 0) {
-        //   const firstMovie = historyMovieApi[0];
-        //   console.log("Sample movie with all image fields:", {
-        //     title: firstMovie.title,
-        //     image: firstMovie.image,
-        //     heroImage: firstMovie.heroImage,
-        //     backdrop: firstMovie.backdrop,
-        //     hasCloudinary: firstMovie.image?.includes("cloudinary"),
-        //     hasImages: !!firstMovie.images,
-        //   });
-        // }
-
+        console.log(`✅ Successfully loaded ${historyMovieApi.length} movies`);
         return historyMovieApi;
       } else {
         throw new Error("Invalid movie data received from server");
       }
     } catch (error) {
-      console.error("Movie fetch error:", error);
+      console.error("❌ Movie fetch error:", error);
 
       if (!navigator.onLine) {
         return rejectWithValue(
@@ -157,8 +128,6 @@ export const getMovies = createAsyncThunk(
       }
 
       return rejectWithValue(error.message);
-    } finally {
-      isRequestInProgress = false;
     }
   }
 );
@@ -185,24 +154,24 @@ const movieSlice = createSlice({
     },
     stopLoading: (state) => {
       state.loading = false;
-      isRequestInProgress = false;
     },
     // New action to manually reset API health check
     resetAPIHealthCheck: (state) => {
       resetAPIHealth();
       state.apiStatus = null;
-      console.log(" API health check reset from Redux");
+      console.log("🔄 API health check reset from Redux");
     },
   },
   extraReducers: (builder) => {
     builder
       .addCase(getMovies.pending, (state) => {
-        if (state.movies.length === 0) {
-          state.loading = true;
-        }
+        // ALWAYS set loading to true when starting request
+        console.log("🔄 Movies loading started...");
+        state.loading = true;
         state.error = null;
       })
       .addCase(getMovies.fulfilled, (state, action) => {
+        console.log("✅ Movies loaded successfully");
         state.loading = false;
         state.movies = action.payload;
         state.error = null;
@@ -210,6 +179,7 @@ const movieSlice = createSlice({
         state.apiStatus = "connected";
       })
       .addCase(getMovies.rejected, (state, action) => {
+        console.log("❌ Movies loading failed:", action.payload);
         state.loading = false;
         state.error = action.payload || "Failed to load movies";
         state.apiStatus = "error";
@@ -225,7 +195,7 @@ const movieSlice = createSlice({
           action.payload?.includes("CORS") ||
           action.payload?.includes("connect to server")
         ) {
-          console.log("CORS error detected, stopping auto-retry");
+          console.log("🚫 CORS error detected, stopping auto-retry");
         }
       });
   },

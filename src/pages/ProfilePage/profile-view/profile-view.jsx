@@ -1,26 +1,93 @@
-import {
-  Button,
-  Card,
-  Col,
-  Row,
-  ListGroup,
-  Spinner,
-  Alert,
-  Badge,
-} from "react-bootstrap";
+import React, { useMemo } from "react";
+import { Button, Spinner, Alert } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import {
   deleteUser,
   removeFavoriteMovie,
 } from "../../../asyncThunk/userAsyncThunks";
+import {
+  Edit3,
+  Lock,
+  Trash2,
+  Star,
+  Film,
+  Calendar,
+  X,
+  User,
+  Eye,
+  Plus,
+  Mail,
+  Cake,
+} from "lucide-react";
+import "./ProfileView.css";
 
 const ProfileView = ({ clickUpdate, movies, token }) => {
   const { user, loading, error } = useSelector((state) => state.user);
-  const formattedBirthday = new Date(user.Birthday).toLocaleDateString();
-  const favoriteMovies = movies.filter((m) =>
-    user.FavoriteMovies.includes(m.id)
-  );
+  const { loading: moviesLoading } = useSelector((state) => state.movies);
   const dispatch = useDispatch();
+
+  //  favorite movies calculation
+  const favoriteMovies = useMemo(() => {
+    if (!movies || movies.length === 0) return [];
+    return movies.filter(
+      (m) =>
+        user.FavoriteMovies.includes(m.id) ||
+        user.FavoriteMovies.includes(m._id)
+    );
+  }, [movies, user.FavoriteMovies]);
+
+  console.log("Matched favorites:", favoriteMovies);
+  console.log("========================");
+
+  // Calculate stats - show loading states if movies aren't loaded yet
+  const stats = useMemo(() => {
+    if (!movies || movies.length === 0 || moviesLoading) {
+      return {
+        avgRating: "...",
+        topGenre: "...",
+        newestYear: "...",
+      };
+    }
+
+    if (favoriteMovies.length === 0) {
+      return { avgRating: "0.0", topGenre: "None", newestYear: "N/A" };
+    }
+
+    // Average rating
+    const avgRating = (
+      favoriteMovies.reduce((sum, movie) => sum + (movie.rating || 0), 0) /
+      favoriteMovies.length
+    ).toFixed(1);
+
+    // Top genre
+    const genreCounts = {};
+    favoriteMovies.forEach((movie) => {
+      movie.genre?.forEach((g) => {
+        genreCounts[g] = (genreCounts[g] || 0) + 1;
+      });
+    });
+    const topGenre = Object.keys(genreCounts).reduce(
+      (a, b) => (genreCounts[a] > genreCounts[b] ? a : b),
+      "Drama"
+    );
+
+    const newestYear = Math.max(
+      ...favoriteMovies.map((movie) => {
+        const year = movie.releaseDate
+          ? new Date(movie.releaseDate).getFullYear()
+          : 0;
+        return year || 0;
+      })
+    );
+
+    return {
+      avgRating,
+      topGenre,
+      newestYear: newestYear > 0 ? newestYear.toString() : "N/A",
+    };
+  }, [favoriteMovies, movies, moviesLoading]);
+
+  const formattedBirthday = new Date(user.Birthday).toLocaleDateString();
 
   const handleDeleteClick = () => {
     const confirmed = window.confirm(
@@ -35,13 +102,26 @@ const ProfileView = ({ clickUpdate, movies, token }) => {
     dispatch(removeFavoriteMovie({ user, movieId }));
   };
 
+  const handleRemoveAllFavorites = () => {
+    const confirmed = window.confirm(
+      "Are you sure you want to remove ALL favorite movies?"
+    );
+    if (confirmed) {
+      favoriteMovies.forEach((movie) => {
+        dispatch(removeFavoriteMovie({ user, movieId: movie.id }));
+      });
+    }
+  };
+
+  const getUserInitial = () => {
+    return user.Username ? user.Username.charAt(0).toUpperCase() : "U";
+  };
+
+  // Only show full loading for user data
   if (loading) {
     return (
-      <div
-        className="d-flex justify-content-center align-items-center"
-        style={{ height: "60vh" }}
-      >
-        <div className="text-center">
+      <div className="profile-loading">
+        <div className="loading-content">
           <Spinner
             animation="border"
             variant="warning"
@@ -63,147 +143,201 @@ const ProfileView = ({ clickUpdate, movies, token }) => {
     );
   }
 
+  // Movie Collection Loading Component
+  const MovieCollectionLoader = () => (
+    <div className="movies-grid-container">
+      <div className="movie-collection-loading">
+        <div className="text-center py-5">
+          <Spinner
+            animation="border"
+            variant="warning"
+            size="lg"
+            className="mb-3"
+          />
+          <h5 className="text-warning">Loading your movies...</h5>
+          <p className="text-light">Fetching your favorite collection</p>
+        </div>
+      </div>
+    </div>
+  );
+
   return (
-    <Card className="bg-dark text-white border-warning shadow-lg">
-      {/* Header */}
-      <Card.Header className="bg-warning text-dark text-center py-4 border-0">
-        <h2 className="mb-0 fw-bold">
-          👤 {user.Username.charAt(0).toUpperCase() + user.Username.slice(1)}
-        </h2>
-        <small className="text-dark opacity-75">User Profile</small>
-      </Card.Header>
+    <div className="compact-profile-container">
+      {/* Left Sidebar - Profile Info */}
+      <div className="profile-sidebar">
+        <div className="profile-info">
+          <h1 className="profile-title">
+            <User size={18} />
+            Profile
+          </h1>
 
-      <Card.Body className="p-4">
-        {/* User Information */}
-        <ListGroup variant="flush" className="mb-4">
-          <ListGroup.Item className="bg-transparent border-secondary text-white px-0 py-3">
-            <Row>
-              <Col sm={4}>
-                <strong className="text-warning">Username:</strong>
-              </Col>
-              <Col sm={8}>
-                <span className="text-light">
-                  {user.Username.charAt(0).toUpperCase() +
-                    user.Username.slice(1)}
-                </span>
-              </Col>
-            </Row>
-          </ListGroup.Item>
+          <div className="avatar">{getUserInitial()}</div>
 
-          <ListGroup.Item className="bg-transparent border-secondary text-white px-0 py-3">
-            <Row>
-              <Col sm={4}>
-                <strong className="text-warning">Birthday:</strong>
-              </Col>
-              <Col sm={8}>
-                <span className="text-light">{formattedBirthday}</span>
-              </Col>
-            </Row>
-          </ListGroup.Item>
+          <h2 className="user-name">
+            {user.Username.charAt(0).toUpperCase() + user.Username.slice(1)}
+          </h2>
 
-          <ListGroup.Item className="bg-transparent border-secondary text-white px-0 py-3">
-            <Row>
-              <Col sm={4}>
-                <strong className="text-warning">Email:</strong>
-              </Col>
-              <Col sm={8}>
-                <span className="text-light">{user.Email}</span>
-              </Col>
-            </Row>
-          </ListGroup.Item>
-        </ListGroup>
-
-        {/* Favorite Movies Section */}
-        <div className="mb-4">
-          <div className="d-flex align-items-center justify-content-between mb-3">
-            <h4 className="text-warning mb-0">🎬 Favorite Movies</h4>
-            <Badge bg="warning" text="dark" className="fs-6">
-              {favoriteMovies.length}
-            </Badge>
+          <div className="user-details">
+            <div className="detail-item">
+              <span className="detail-label">
+                <Mail size={14} className="me-1" />
+                Email
+              </span>
+              <div className="detail-value">{user.Email}</div>
+            </div>
+            <div className="detail-item">
+              <span className="detail-label">
+                <Cake size={14} className="me-1" />
+                Birthday
+              </span>
+              <div className="detail-value">{formattedBirthday}</div>
+            </div>
+            <div className="detail-item">
+              <span className="detail-label">
+                <Calendar size={14} className="me-1" />
+                Member Since
+              </span>
+              <div className="detail-value">January 2024</div>
+            </div>
           </div>
 
-          {error && (
-            <Alert variant="danger" className="mb-3">
-              {error}
-            </Alert>
-          )}
-
-          {favoriteMovies.length === 0 ? (
-            <Alert variant="secondary" className="text-center">
-              <div className="py-3">
-                <h5 className="text-muted">No favorite movies yet</h5>
-                <p className="text-muted mb-0">
-                  Start exploring and add some movies to your favorites!
-                </p>
+          <div className="quick-stats">
+            <div className="stats-grid">
+              <div className="stat-item">
+                <span className="stat-value">
+                  {moviesLoading ? "..." : favoriteMovies.length}
+                </span>
+                <span className="stat-label">Movies</span>
               </div>
-            </Alert>
-          ) : (
-            <div
-              className="border border-secondary rounded p-3"
-              style={{ maxHeight: "300px", overflowY: "auto" }}
-            >
-              {favoriteMovies.map((movie) => (
-                <Card
-                  key={movie.title}
-                  className="bg-secondary text-white border-0 mb-2"
-                >
-                  <Card.Body className="p-3">
-                    <Row className="align-items-center">
-                      <Col xs={8}>
-                        <h6 className="mb-1 text-white fw-semibold">
-                          {movie.title}
-                        </h6>
-                        {movie.ReleaseDate && (
-                          <small className="text-warning">
-                            Released: {movie.ReleaseDate.slice(0, 4)}
-                          </small>
-                        )}
-                      </Col>
-                      <Col xs={4} className="text-end">
-                        <Button
-                          variant="outline-danger"
-                          size="sm"
-                          onClick={() => onDeleteFavoriteMovie(movie.id)}
-                          className="fw-medium"
-                        >
-                          Remove
-                        </Button>
-                      </Col>
-                    </Row>
-                  </Card.Body>
-                </Card>
-              ))}
+              <div className="stat-item">
+                <span className="stat-value">{stats.avgRating}</span>
+                <span className="stat-label">Avg Rating</span>
+              </div>
+              <div className="stat-item">
+                <span className="stat-value">{stats.topGenre}</span>
+                <span className="stat-label">Top Genre</span>
+              </div>
+              <div className="stat-item">
+                <span className="stat-value">{stats.newestYear}</span>
+                <span className="stat-label">Latest</span>
+              </div>
             </div>
-          )}
+          </div>
         </div>
-      </Card.Body>
 
-      {/* Footer Actions */}
-      <Card.Footer className="bg-transparent border-warning p-4">
-        <Row className="g-3">
-          <Col md={6}>
+        <div className="profile-actions">
+          <Button
+            className="btn-profile-primary"
+            onClick={() => clickUpdate(1)}
+          >
+            <Edit3 size={16} />
+            Edit Profile
+          </Button>
+          <Button
+            className="btn-profile-secondary"
+            onClick={() => clickUpdate(2)} // Change password
+          >
+            <Lock size={16} />
+            Change Password
+          </Button>
+        </div>
+      </div>
+
+      {/* Right Side - Movie Collection */}
+      <div className="movie-collection">
+        <div className="collection-header">
+          <h3 className="collection-title">
+            <Film size={18} />
+            Movie Collection
+          </h3>
+          <div className="collection-actions">
+            {!moviesLoading && favoriteMovies.length > 0 && (
+              <Button
+                variant="outline-danger"
+                size="sm"
+                onClick={handleRemoveAllFavorites}
+                className="btn-small"
+              >
+                <Trash2 size={14} />
+                Remove All
+              </Button>
+            )}
             <Button
-              variant="outline-danger"
-              onClick={handleDeleteClick}
-              className="w-100 fw-semibold"
-              size="lg"
+              variant="outline-primary"
+              size="sm"
+              onClick={() => (window.location.href = "/movies")}
+              className="btn-small"
             >
-              🗑️ Delete Account
+              <Eye size={14} />
+              View All
             </Button>
-          </Col>
-          <Col md={6}>
-            <Button
-              variant="warning"
-              onClick={() => clickUpdate(1)}
-              className="w-100 fw-semibold text-dark"
-              size="lg"
-            >
-              ✏️ Edit Profile
-            </Button>
-          </Col>
-        </Row>
-      </Card.Footer>
-    </Card>
+          </div>
+        </div>
+
+        {error && (
+          <Alert variant="danger" className="mb-3">
+            {error}
+          </Alert>
+        )}
+
+        {/* Show loading state only for movie collection */}
+        {moviesLoading || !movies || movies.length === 0 ? (
+          <MovieCollectionLoader />
+        ) : (
+          <>
+            <div className="movies-grid-container">
+              {favoriteMovies.length === 0 ? (
+                <div className="empty-state">
+                  <Film size={48} className="empty-icon" />
+                  <h4>No favorite movies yet</h4>
+                  <p>Start exploring and add some movies to your favorites!</p>
+                  <Button
+                    variant="primary"
+                    onClick={() => (window.location.href = "/movies")}
+                  >
+                    <Plus size={16} className="me-2" />
+                    Browse Movies
+                  </Button>
+                </div>
+              ) : (
+                <div className="movies-grid-profile">
+                  {favoriteMovies.map((movie) => (
+                    <div key={movie.id} className="movie-card">
+                      <img
+                        src={movie.image}
+                        alt={movie.title}
+                        className="movie-image"
+                      />
+                      <div className="movie-rating">
+                        {movie.rating ? movie.rating.toFixed(1) : "N/A"}
+                      </div>
+                      <button
+                        className="remove-btn"
+                        onClick={() => onDeleteFavoriteMovie(movie.id)}
+                        title={`Remove ${movie.title}`}
+                      >
+                        <X size={12} />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </>
+        )}
+
+        <div className="profile-footer">
+          <Button
+            variant="outline-danger"
+            onClick={handleDeleteClick}
+            className="btn-delete"
+          >
+            <Trash2 size={16} className="me-2" />
+            Delete Account
+          </Button>
+        </div>
+      </div>
+    </div>
   );
 };
 
