@@ -39,19 +39,6 @@
    SEARCH AND FILTERS 
    =========================== */
 
-.controls-section {
-  background: rgba(13, 17, 23, 0.95);
-  border-radius: 12px;
-  padding: 1.5rem;
-  margin-bottom: 2rem;
-  backdrop-filter: blur(10px);
-  position: sticky;
-  top: 1rem;
-  z-index: 100;
-  border: 1px solid rgba(244, 196, 48, 0.2);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-}
-
 .search-bar-container {
   display: flex;
   align-items: center;
@@ -411,11 +398,6 @@
 
   .gallery-title {
     font-size: 2rem;
-  }
-
-  .controls-section {
-    top: 0.5rem;
-    margin-bottom: 1rem;
   }
 
   .search-bar-container {

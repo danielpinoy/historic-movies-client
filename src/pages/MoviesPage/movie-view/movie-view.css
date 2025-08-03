@@ -334,22 +334,6 @@
   margin-top: 2rem;
 }
 
-/* Glassmorphism Cards */
-.glass-card {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 16px;
-  padding: 1.5rem;
-  transition: all 0.3s ease;
-}
-
-.glass-card:hover {
-  background: rgba(255, 255, 255, 0.08);
-  transform: translateY(-2px);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-}
-
 .detail-card {
   text-align: center;
 }
@@ -607,7 +591,6 @@
   .floating-rating,
   .back-button,
   .action-btn,
-  .glass-card,
   .similar-movie-image img {
     animation: none;
     transition: none;

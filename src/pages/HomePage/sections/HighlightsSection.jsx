@@ -9,7 +9,7 @@ import {
   Button,
 } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import { Star, Tag, Calendar, Users, Award, Eye, Gem } from "lucide-react";
+import { Star, Tag, Users, Award, Eye, Gem } from "lucide-react";
 import "./HighlightsSection.css";
 
 const HighlightsSection = ({ movies }) => {

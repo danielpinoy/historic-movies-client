@@ -127,7 +127,10 @@ const MovieGallery = ({ movies, loading, error }) => {
       </div>
 
       {/* Search and Filters */}
-      <div className="controls-section">
+      <div
+        className="glass-dark-strong rounded-3 p-4 sticky-top"
+        style={{ top: "1rem", zIndex: 100 }}
+      >
         <div className="search-bar-container">
           <div className="search-bar">
             <InputGroup size="lg">

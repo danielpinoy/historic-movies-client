@@ -19,24 +19,26 @@
   --border-warning: #f4c430;
   --border-secondary: rgba(255, 255, 255, 0.1);
 
-  /* Spacing */
-  --spacing-xs: 0.25rem;
-  --spacing-sm: 0.5rem;
-  --spacing-md: 1rem;
-  --spacing-lg: 1.5rem;
-  --spacing-xl: 2rem;
-  --spacing-xxl: 3rem;
+  /* Spacing System */
+  --space-1: 0.25rem; /* 4px */
+  --space-2: 0.5rem; /* 8px */
+  --space-3: 1rem; /* 16px */
+  --space-4: 1.5rem; /* 24px */
+  --space-5: 2rem; /* 32px */
+  --space-6: 3rem; /* 48px */
 
-  /* Transitions */
-  --transition-base: all 0.3s ease;
-  --transition-smooth: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-
-  /* Border Radius */
-  --radius-sm: 4px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
-  --radius-xl: 16px;
+  /* Radius System */
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
   --radius-pill: 50px;
+
+  /* Consistent Transitions */
+  --transition-fast: 0.2s ease;
+  --transition-base: 0.3s ease;
+  --transition-slow: 0.5s ease;
+  --transition-smooth: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 /* ===========================
@@ -54,12 +56,176 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: var(--text-primary) !;
+  color: var(--text-primary);
 }
 
 /* ===========================
-   COMMON ANIMATIONS
+   GLASSMORPHISM UTILITIES 
    =========================== */
+
+/* Base glassmorphism - most common variant */
+
+.glass-tab-container {
+  background: rgba(61, 34, 34, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 4px;
+  border-radius: 50px;
+}
+
+.glass {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Glassmorphism variants for different opacity needs */
+.glass-light {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glass-medium {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.glass-strong {
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Dark glass variants for different backgrounds */
+.glass-dark {
+  background: rgba(13, 17, 23, 0.8);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.glass-dark-strong {
+  background: rgba(13, 17, 23, 0.95);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(244, 196, 48, 0.2);
+}
+
+/* Hover effects for glassmorphism */
+.glass-hover {
+  transition: var(--transition-base);
+}
+
+.glass-hover:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+/* Warning-themed glass for special elements */
+.glass-warning {
+  background: rgba(244, 196, 48, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(244, 196, 48, 0.3);
+}
+
+.glass-warning:hover {
+  background: rgba(244, 196, 48, 0.15);
+  border-color: rgba(244, 196, 48, 0.5);
+}
+
+/* Browser support fallbacks */
+@supports not (backdrop-filter: blur(1px)) {
+  .glass,
+  .glass-light,
+  .glass-medium,
+  .glass-strong {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .glass-dark,
+  .glass-dark-strong {
+    background: rgba(13, 17, 23, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .glass-warning {
+    background: rgba(244, 196, 48, 0.15);
+    border: 1px solid rgba(244, 196, 48, 0.4);
+  }
+}
+
+/* ===========================
+    UTILITY CLASSES
+   =========================== */
+
+/* Card Utilities - Replace scattered card styles */
+.card-hover {
+  transition: var(--transition-base);
+}
+
+.card-hover:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+/* Rating Badge - Consolidate all rating styles */
+.rating-badge {
+  background: var(--primary-warning);
+  color: var(--primary-dark);
+  font-weight: 700;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Section Headers - Reusable across components */
+.section-header {
+  text-align: center;
+  margin-bottom: var(--space-5);
+}
+
+.section-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: var(--space-2);
+}
+
+.section-subtitle {
+  color: var(--text-muted);
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+/* ===========================
+   OPTIMIZED ANIMATIONS
+   =========================== */
+
+/* Single animation system instead of multiple variants */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
 @keyframes shimmer {
   0% {
@@ -70,41 +236,36 @@ body {
   }
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes slideUp {
-  from {
-    transform: translateY(30px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-
 @keyframes pulse {
   0%,
   100% {
     transform: scale(1);
   }
   50% {
-    transform: scale(1.1);
+    transform: scale(1.05);
   }
 }
 
-/* ===========================
-   UTILITY CLASSES
-   =========================== */
+/* Animation utility classes */
+.animate-in {
+  animation: fadeInUp 0.6s ease-out;
+}
 
-.skeleton-loading {
+.animate-in-delay-1 {
+  animation-delay: 0.1s;
+}
+.animate-in-delay-2 {
+  animation-delay: 0.2s;
+}
+.animate-in-delay-3 {
+  animation-delay: 0.3s;
+}
+
+.animate-pulse {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.animate-shimmer {
   background: linear-gradient(
     90deg,
     var(--secondary-dark) 25%,
@@ -115,74 +276,19 @@ body {
   animation: shimmer 1.5s infinite;
 }
 
-.text-warning-custom {
-  color: var(--primary-warning) !important;
-}
+/* Performance optimization */
+@media (prefers-reduced-motion: reduce) {
+  .animate-in,
+  .animate-pulse,
+  .animate-shimmer,
+  .card-hover {
+    animation: none;
+    transition: none;
+  }
 
-.bg-dark-custom {
-  background-color: var(--primary-dark) !important;
-}
-
-.border-warning-custom {
-  border-color: var(--border-warning) !important;
-}
-
-/* Card Hover Effects */
-.hover-lift {
-  transition: var(--transition-smooth);
-}
-
-.hover-lift:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-}
-
-/* ===========================
-   COMMON COMPONENTS
-   =========================== */
-
-/* Movie Cards Base Style */
-.movie-card-base {
-  background-color: var(--primary-dark);
-  border: 1px solid var(--border-secondary);
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  transition: var(--transition-smooth);
-}
-
-.movie-card-base:hover {
-  transform: translateY(-8px);
-  border-color: var(--border-warning);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-}
-
-/* Rating Badges */
-.rating-badge {
-  background-color: var(--primary-warning);
-  color: var(--primary-dark);
-  font-weight: 700;
-  padding: var(--spacing-sm) var(--spacing-md);
-  border-radius: var(--radius-md);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-}
-
-/* Section Headers */
-.section-header {
-  text-align: center;
-  margin-bottom: var(--spacing-xxl);
-}
-
-.section-title {
-  font-size: 2.5rem;
-  font-weight: 700;
-  color: var(--text-primary);
-  margin-bottom: var(--spacing-sm);
-}
-
-.section-subtitle {
-  font-size: 1.1rem;
-  color: var(--text-muted);
-  margin: 0;
+  .card-hover:hover {
+    transform: none;
+  }
 }
 
 /* ===========================
@@ -200,9 +306,9 @@ body {
 
 @media (max-width: 767px) {
   :root {
-    --spacing-lg: 1rem;
-    --spacing-xl: 1.5rem;
-    --spacing-xxl: 2rem;
+    --space-4: 1rem;
+    --space-5: 1.5rem;
+    --space-6: 2rem;
   }
 
   .section-title {
@@ -213,17 +319,6 @@ body {
 /* ===========================
    ACCESSIBILITY
    =========================== */
-
-/* @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
-} */
 
 /* Focus styles for keyboard navigation */
 *:focus-visible {
