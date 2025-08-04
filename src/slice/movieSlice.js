@@ -1,7 +1,7 @@
 // Fixed getMovies thunk - replace in your movieSlice.js
 
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { makeAPICall, resetAPIHealth } from "../config/api";
+import { makeAPICall } from "../config/api";
 
 const getValidToken = () => {
   const token = localStorage.getItem("token");
@@ -154,12 +154,6 @@ const movieSlice = createSlice({
     },
     stopLoading: (state) => {
       state.loading = false;
-    },
-    // New action to manually reset API health check
-    resetAPIHealthCheck: (state) => {
-      resetAPIHealth();
-      state.apiStatus = null;
-      console.log("🔄 API health check reset from Redux");
     },
   },
   extraReducers: (builder) => {

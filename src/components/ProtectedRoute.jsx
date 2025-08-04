@@ -1,5 +1,3 @@
-// 4. Create a ProtectedRoute component - src/components/ProtectedRoute.jsx
-
 import { useEffect } from "react";
 import { Navigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
@@ -20,9 +18,7 @@ const ProtectedRoute = ({ children }) => {
       return;
     }
 
-    // Optional: Check if token is expired (if you store expiry)
     try {
-      // If you want to decode JWT to check expiry
       const payload = JSON.parse(atob(token.split(".")[1]));
       const currentTime = Date.now() / 1000;
 
@@ -32,7 +28,6 @@ const ProtectedRoute = ({ children }) => {
         return;
       }
     } catch (error) {
-      // Invalid token format
       dispatch(forceLogout());
       return;
     }
