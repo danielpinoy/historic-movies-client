@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Button, Form, Modal } from "react-bootstrap";
+import { Button, Form, Modal, Alert } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { changePassword } from "../../../asyncThunk/userAsyncThunks";
+import { clearStates } from "../../../slice/userSlice";
 
-const ChangePasswordModal = ({ show, onClose }) => {
+const ChangePasswordModal = ({ show, onClose, showSuccess, showError }) => {
   const dispatch = useDispatch();
-  const { user, loading, error } = useSelector((state) => state.user);
+  const { user, loading } = useSelector((state) => state.user);
 
   const [passwordData, setPasswordData] = useState({
     currentPassword: "",
@@ -14,9 +15,14 @@ const ChangePasswordModal = ({ show, onClose }) => {
   });
   const [passwordsMatch, setPasswordsMatch] = useState(true);
 
-  // Reset form when modal opens/closes
+  // LOCAL error state for the modal
+  const [localError, setLocalError] = useState("");
+
+  // Clear form and errors when modal opens
   useEffect(() => {
     if (show) {
+      dispatch(clearStates()); // Clear global errors
+      setLocalError(""); // Clear local error
       setPasswordData({
         currentPassword: "",
         newPassword: "",
@@ -24,14 +30,18 @@ const ChangePasswordModal = ({ show, onClose }) => {
       });
       setPasswordsMatch(true);
     }
-  }, [show]);
+  }, [show, dispatch]);
 
   const handleChange = (e) => {
+    // Clear error when user starts typing
+    if (localError) {
+      setLocalError("");
+    }
+
     const { name, value } = e.target;
     const newData = { ...passwordData, [name]: value };
     setPasswordData(newData);
 
-    // Check if passwords match when typing in confirm password or new password
     if (name === "confirmPassword" || name === "newPassword") {
       setPasswordsMatch(
         newData.newPassword === newData.confirmPassword ||
@@ -53,6 +63,7 @@ const ChangePasswordModal = ({ show, onClose }) => {
     }
 
     try {
+      console.log("About to change password..."); // DEBUG
       await dispatch(
         changePassword({
           userData: user,
@@ -60,8 +71,24 @@ const ChangePasswordModal = ({ show, onClose }) => {
         })
       ).unwrap();
 
+      console.log("Password change successful, showing toast"); // DEBUG
+
+      // Close modal first, then show success toast
       onClose();
+
+      // Small delay to ensure modal closes before showing toast
+      setTimeout(() => {
+        showSuccess("Password changed successfully!");
+      }, 100);
     } catch (err) {
+      console.log("Password change failed, showing error toast:", err); // DEBUG
+
+      // Set local error for modal display
+      setLocalError(err || "Password change failed");
+
+      // Show error toast (modal stays open)
+      showError(err || "Password change failed");
+
       console.error("Password change failed:", err);
     }
   };
@@ -73,7 +100,12 @@ const ChangePasswordModal = ({ show, onClose }) => {
       </Modal.Header>
 
       <Modal.Body className="bg-dark">
-        {error && <div className="alert alert-danger">{error}</div>}
+        {/* Show LOCAL error in the modal */}
+        {localError && (
+          <Alert variant="danger" className="mb-3">
+            {localError}
+          </Alert>
+        )}
 
         <Form onSubmit={handleSubmit}>
           <Form.Group className="mb-4">

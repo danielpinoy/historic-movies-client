@@ -210,27 +210,25 @@ export const changePassword = createAsyncThunk(
       );
 
       if (!response.ok) {
-        if (handleAuthError(response)) {
-          return rejectWithValue("Session expired. Please log in again.");
-        }
-
         try {
           const errorData = await response.json();
-          throw new Error(errorData.message || "Failed to change password");
+          console.log("Backend error response:", errorData);
+          // Return the exact message instead of throwing
+          return rejectWithValue(errorData.message || "Password change failed");
         } catch (parseError) {
-          throw new Error(`Server error: ${response.status}`);
+          console.log("Failed to parse error:", parseError);
+          return rejectWithValue("Password change failed");
         }
       }
 
-      await response.json();
-      return { success: true, message: "Password changed successfully" };
+      const result = await response.json();
+      return { success: true, message: result.message };
     } catch (error) {
       console.error("Change password error:", error);
-      return rejectWithValue(error.message);
+      return rejectWithValue("Network error occurred");
     }
   }
 );
-
 export const removeFavoriteMovie = createAsyncThunk(
   "user/removeFavoriteMovie",
   async ({ user, movieId }, { rejectWithValue }) => {

@@ -2,7 +2,6 @@ import React from "react";
 import { Toast, ToastContainer } from "react-bootstrap";
 
 const NotificationToast = ({ show, message, type, onClose }) => {
-  // Map types to Bootstrap variants and icons
   const getToastConfig = (type) => {
     const configs = {
       success: {
@@ -13,7 +12,7 @@ const NotificationToast = ({ show, message, type, onClose }) => {
       },
       danger: {
         bg: "danger",
-        icon: "",
+        icon: "❌",
         title: "Problem!",
         textColor: "white",
       },

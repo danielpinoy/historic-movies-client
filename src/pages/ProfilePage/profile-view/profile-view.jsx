@@ -10,7 +10,6 @@ import {
   Lock,
   Trash2,
   Film,
-  Calendar,
   X,
   User,
   Eye,
@@ -21,14 +20,20 @@ import {
 import ProfileEditModal from "../profileEdit-view/profile-edit-modal";
 import "./ProfileView.css";
 import ChangePasswordModal from "../change-password/change-password-modal";
+import NotificationToast from "../../../common/NotificationToast";
+import { useToast } from "../../../hook/useToast";
 
 const ProfileView = ({ movies, token }) => {
   const { user, loading, error } = useSelector((state) => state.user);
   const { loading: moviesLoading } = useSelector((state) => state.movies);
   const dispatch = useDispatch();
 
+  // Shared toast hook for all modals and actions
+  const { toastProps, showSuccess, showError } = useToast();
+
   const [showEditModal, setShowEditModal] = useState(false);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
+
   // Favorite movies calculation
   const favoriteMovies = useMemo(() => {
     if (!movies || movies.length === 0) return [];
@@ -39,21 +44,17 @@ const ProfileView = ({ movies, token }) => {
     );
   }, [movies, user.FavoriteMovies]);
 
-  // Calculate stats - show loading states if movies aren't loaded yet
   const stats = useMemo(() => {
     if (!movies || movies.length === 0 || moviesLoading) {
       return {
         avgRating: "...",
-        topGenre: "...",
-        newestYear: "...",
       };
     }
 
     if (favoriteMovies.length === 0) {
-      return { avgRating: "0.0", topGenre: "None", newestYear: "N/A" };
+      return { avgRating: "0.0" };
     }
 
-    // Average rating
     const avgRating = (
       favoriteMovies.reduce((sum, movie) => sum + (movie.rating || 0), 0) /
       favoriteMovies.length
@@ -66,24 +67,9 @@ const ProfileView = ({ movies, token }) => {
         genreCounts[g] = (genreCounts[g] || 0) + 1;
       });
     });
-    const topGenre = Object.keys(genreCounts).reduce(
-      (a, b) => (genreCounts[a] > genreCounts[b] ? a : b),
-      "Drama"
-    );
-
-    const newestYear = Math.max(
-      ...favoriteMovies.map((movie) => {
-        const year = movie.releaseDate
-          ? new Date(movie.releaseDate).getFullYear()
-          : 0;
-        return year || 0;
-      })
-    );
 
     return {
       avgRating,
-      topGenre,
-      newestYear: newestYear > 0 ? newestYear.toString() : "N/A",
     };
   }, [favoriteMovies, movies, moviesLoading]);
 
@@ -99,7 +85,19 @@ const ProfileView = ({ movies, token }) => {
   };
 
   const onDeleteFavoriteMovie = (movieId) => {
-    dispatch(removeFavoriteMovie({ user, movieId }));
+    const movie = favoriteMovies.find((m) => m.id === movieId);
+    const movieTitle = movie ? movie.title : "Movie";
+
+    dispatch(removeFavoriteMovie({ user, movieId }))
+      .unwrap()
+      .then(() => {
+        console.log("Delete successful, showing toast");
+        showSuccess(`"${movieTitle}" removed from favorites`);
+      })
+      .catch((error) => {
+        console.log("Delete failed:", error);
+        showError("Failed to remove movie from favorites");
+      });
   };
 
   const handleRemoveAllFavorites = () => {
@@ -107,9 +105,15 @@ const ProfileView = ({ movies, token }) => {
       "Are you sure you want to remove ALL favorite movies?"
     );
     if (confirmed) {
+      const movieCount = favoriteMovies.length;
+
+      // Remove all movies
       favoriteMovies.forEach((movie) => {
         dispatch(removeFavoriteMovie({ user, movieId: movie.id }));
       });
+
+      // Show success toast
+      showSuccess(`Removed ${movieCount} movies from favorites`);
     }
   };
 
@@ -117,7 +121,6 @@ const ProfileView = ({ movies, token }) => {
     return user.Username ? user.Username.charAt(0).toUpperCase() : "U";
   };
 
-  // Only show full loading for user data
   if (loading) {
     return (
       <div className="profile-loading">
@@ -163,6 +166,9 @@ const ProfileView = ({ movies, token }) => {
 
   return (
     <>
+      {/* Shared toast component for all actions */}
+      <NotificationToast {...toastProps} />
+
       <div className="compact-profile-container">
         {/* Left Sidebar - Profile Info */}
         <div className="profile-sidebar">
@@ -333,10 +339,14 @@ const ProfileView = ({ movies, token }) => {
         onClose={() => setShowEditModal(false)}
         token={token}
       />
+
+      {/* Change Password Modal - Pass toast functions as props */}
       <ChangePasswordModal
         show={showPasswordModal}
         onClose={() => setShowPasswordModal(false)}
         token={token}
+        showSuccess={showSuccess}
+        showError={showError}
       />
     </>
   );

@@ -45,19 +45,13 @@ const ProfileEditModal = ({ show, onClose, token }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log("Submitting form data:", formData); // Debug log
+    console.log("Submitting form data:", formData);
 
     try {
-      // Send a placeholder password to satisfy backend validation = Fix later
-      const updatedData = {
-        ...formData,
-        Password: "unchanged",
-      };
-
       await dispatch(
         editUser({
           userData: user,
-          updatedUserData: updatedData,
+          updatedUserData: formData,
           token,
         })
       ).unwrap();
@@ -114,16 +108,6 @@ const ProfileEditModal = ({ show, onClose, token }) => {
               onChange={handleChange}
               className="bg-secondary text-white border-warning"
               required
-            />
-          </Form.Group>
-
-          <Form.Group className="mb-4" style={{ display: "none" }}>
-            <Form.Control
-              type="password"
-              name="Password"
-              value="dummy-password-for-validation" // dummy
-              readOnly
-              className="bg-secondary text-white border-warning"
             />
           </Form.Group>
         </Form>

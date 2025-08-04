@@ -25,14 +25,12 @@ const userSlice = createSlice({
       state.user = null;
       state.isAuthenticated = false;
       state.error = null;
-      // Force redirect to login
       window.location.href = "/login";
     },
     clearStates: (state) => {
       state.error = null;
       state.success = null;
     },
-    // Add action to handle automatic logout on auth errors
     forceLogout: (state) => {
       localStorage.clear();
       state.user = null;
@@ -138,7 +136,7 @@ const userSlice = createSlice({
         }
       })
       .addCase(removeFavoriteMovie.pending, (state) => {
-        state.loading = true;
+        // state.loading = true;
         state.error = null;
       })
       .addCase(removeFavoriteMovie.fulfilled, (state, action) => {
@@ -169,14 +167,6 @@ const userSlice = createSlice({
       })
       .addCase(changePassword.rejected, (state, action) => {
         state.loading = false;
-        if (action.payload?.includes("Session expired")) {
-          state.user = null;
-          state.isAuthenticated = false;
-          localStorage.clear();
-          window.location.href = "/login";
-        } else {
-          state.error = action.payload;
-        }
       });
   },
 });
