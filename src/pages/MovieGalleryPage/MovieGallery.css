@@ -43,7 +43,7 @@
   display: flex;
   align-items: center;
   gap: 1rem;
-  margin-bottom: 1rem;
+  /* margin-bottom: 1rem; */
 }
 
 .search-bar {
@@ -398,12 +398,6 @@
 
   .gallery-title {
     font-size: 2rem;
-  }
-
-  .search-bar-container {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 0.75rem;
   }
 
   .filters-toggle-btn {

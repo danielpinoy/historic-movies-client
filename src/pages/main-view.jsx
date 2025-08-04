@@ -1,11 +1,10 @@
-// Updated src/pages/main-view.jsx
 import { useState, useEffect } from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import { MovieView } from "../pages/MoviesPage/index.tsx";
 import {
   ProfileView,
   ProfileEditView,
-  ChangePasswordView,
+  ChangePasswordModal,
 } from "./ProfilePage/index.tsx";
 import { LoginView, SignupView } from "../pages/AuthPage/index";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
@@ -136,7 +135,7 @@ export const MainView = () => {
                       <Container className="py-2">
                         <Row className="justify-content-center">
                           <Col lg={8} xl={6}>
-                            <ChangePasswordView />
+                            <ChangePasswordModal />
                           </Col>
                         </Row>
                       </Container>

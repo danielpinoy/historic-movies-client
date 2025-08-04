@@ -13,8 +13,8 @@ const NotificationToast = ({ show, message, type, onClose }) => {
       },
       danger: {
         bg: "danger",
-        icon: "❌",
-        title: "Error!",
+        icon: "",
+        title: "Problem!",
         textColor: "white",
       },
       warning: {
@@ -53,9 +53,6 @@ const NotificationToast = ({ show, message, type, onClose }) => {
             {config.icon}
           </span>
           <strong className="me-auto fw-bold">{config.title}</strong>
-          <small className={`text-${config.textColor} opacity-75`}>
-            just now
-          </small>
         </Toast.Header>
         <Toast.Body className={`text-${config.textColor} fw-medium`}>
           {message}

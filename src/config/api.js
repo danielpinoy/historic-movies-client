@@ -2,12 +2,12 @@ const API_CONFIG = {
   PRIMARY_API: "http://94.130.107.9",
   FALLBACK_API:
     "https://xo4xjqevs42mbp46utxi3dua3y0lwywt.lambda-url.eu-north-1.on.aws",
-  TIMEOUT: 5000, // 5 seconds timeout
+  TIMEOUT: 5000,
 };
 
 let workingAPI = null;
 let lastHealthCheck = 0;
-const HEALTH_CHECK_INTERVAL = 5 * 60 * 1000; // 5 minutes
+const HEALTH_CHECK_INTERVAL = 5 * 60 * 1000;
 
 // Test if an API endpoint is working
 const testAPIHealth = async (apiUrl) => {

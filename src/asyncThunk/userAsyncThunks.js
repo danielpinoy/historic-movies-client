@@ -88,13 +88,20 @@ export const editUser = createAsyncThunk(
       const authToken = token || getStoredToken();
       if (!authToken) return rejectWithValue("No authentication token");
 
+      //  exclude Password
+      const dataToSend = {
+        Username: updatedUserData.Username,
+        Email: updatedUserData.Email,
+        Birthday: updatedUserData.Birthday,
+      };
+
       const response = await makeAPICall(`/user/${userData.Username}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${authToken}`,
         },
-        body: JSON.stringify(updatedUserData),
+        body: JSON.stringify(dataToSend),
       });
 
       if (!response.ok) {
@@ -102,7 +109,6 @@ export const editUser = createAsyncThunk(
           return rejectWithValue("Session expired. Please log in again.");
         }
 
-        // Better error handling
         try {
           const errorData = await response.json();
           throw new Error(errorData.message || `Error: ${response.status}`);
