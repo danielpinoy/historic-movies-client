@@ -5,8 +5,8 @@ import { useNavigate, Link } from "react-router-dom";
 import { signupUser } from "../../../asyncThunk/userAsyncThunks";
 import NotificationToast from "../../../common/NotificationToast";
 import { clearStates } from "../../../slice/userSlice";
-import "./signup-view.css";
-import imageBackground from "../../../images/background.jpg";
+import "./SignupView.css";
+// import imageBackground from "../../../images/background.jpg";
 
 const SignupView = () => {
   const navigate = useNavigate();

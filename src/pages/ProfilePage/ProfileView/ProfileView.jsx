@@ -17,9 +17,9 @@ import {
   Mail,
   Cake,
 } from "lucide-react";
-import ProfileEditModal from "../profileEdit-view/profile-edit-modal";
+import ProfileEditModal from "../ProfileEditView/ProfileEditModal";
 import "./ProfileView.css";
-import ChangePasswordModal from "../change-password/change-password-modal";
+import ChangePasswordModal from "../ChangePassword/ChangePasswordModal";
 import NotificationToast from "../../../common/NotificationToast";
 import { useToast } from "../../../hook/useToast";
 

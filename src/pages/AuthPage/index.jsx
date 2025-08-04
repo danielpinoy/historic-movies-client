@@ -1,4 +1,4 @@
-import LoginView from "./LoginForm/login-view";
-import SignupView from "./SignupForm/signup-view";
+import LoginView from "./LoginForm/LoginView";
+import SignupView from "./SignupForm/SignupView";
 
 export { LoginView, SignupView };

@@ -1,6 +1,5 @@
-// src/asyncThunk/userAsyncThunks.js
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { makeAPICall, resetAPIHealth } from "../config/api";
+import { makeAPICall } from "../config/api";
 
 // Helper function to handle auth errors
 const handleAuthError = (response) => {
@@ -88,7 +87,6 @@ export const editUser = createAsyncThunk(
       const authToken = token || getStoredToken();
       if (!authToken) return rejectWithValue("No authentication token");
 
-      //  exclude Password
       const dataToSend = {
         Username: updatedUserData.Username,
         Email: updatedUserData.Email,
@@ -213,7 +211,6 @@ export const changePassword = createAsyncThunk(
         try {
           const errorData = await response.json();
           console.log("Backend error response:", errorData);
-          // Return the exact message instead of throwing
           return rejectWithValue(errorData.message || "Password change failed");
         } catch (parseError) {
           console.log("Failed to parse error:", parseError);

@@ -1,4 +1,3 @@
-// TransparentSidebar.jsx
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
@@ -41,7 +40,6 @@ const Sidebar = () => {
     }
   };
 
-  // Close sidebar when clicking outside
   const handleOutsideClick = () => {
     setIsOpen(false);
   };
@@ -56,7 +54,7 @@ const Sidebar = () => {
     { path: "/", label: "Home", exact: true },
     { path: "/movies", label: "Movies" },
     { path: "/users", label: "Profile" },
-    { path: "/favorites", label: "Favorites" },
+    // { path: "/favorites", label: "Favorites" },
   ];
 
   // Check if path is active

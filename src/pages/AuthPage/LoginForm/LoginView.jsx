@@ -6,7 +6,7 @@ import { loginUser } from "../../../asyncThunk/userAsyncThunks";
 import { Link } from "react-router-dom";
 import NotificationToast from "../../../common/NotificationToast";
 import { clearStates } from "../../../slice/userSlice";
-import "./login-view.css";
+import "./LoginView.css";
 
 const LoginView = () => {
   const dispatch = useDispatch();

@@ -1,5 +1,5 @@
 import { Provider } from "react-redux";
-import { MainView } from "./pages/main-view";
+import { MainView } from "./pages/MainView";
 import store from "./store/configureStore";
 import "bootstrap/dist/css/bootstrap.min.css";
 

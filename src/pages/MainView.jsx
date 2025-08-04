@@ -1,33 +1,30 @@
 import { useState, useEffect } from "react";
 import { Container, Row, Col } from "react-bootstrap";
-import { MovieView } from "../pages/MoviesPage/index.tsx";
+import { MovieView } from "./MoviesPage/index.jsx";
 import {
   ProfileView,
   ProfileEditView,
   ChangePasswordModal,
-} from "./ProfilePage/index.tsx";
-import { LoginView, SignupView } from "../pages/AuthPage/index";
+} from "./ProfilePage/index.jsx";
+import { LoginView, SignupView } from "./AuthPage/index";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { getMovies } from "../slice/movieSlice";
+import { getMovies } from "../slice/movieSlice.js";
 import HomePage from "./HomePage/HomePage.jsx";
 import ProtectedRoute from "../components/ProtectedRoute.jsx";
 import MovieGallery from "./MovieGalleryPage/MovieGallery.jsx";
 import Sidebar from "../components/layout/Navbar.jsx";
 
 export const MainView = () => {
-  // State management
   const storedUser = JSON.parse(localStorage.getItem("user"));
   const storedToken = localStorage.getItem("token");
   const [token, setToken] = useState(storedToken ?? null);
   const [isEditingProfile, setUserEdit] = useState(null);
 
-  // Redux
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
   const { movies, loading, error } = useSelector((state) => state.movies);
 
-  // Effects
   useEffect(() => {
     // Only fetch once when component mounts
     if (storedUser && storedToken) {
@@ -35,7 +32,6 @@ export const MainView = () => {
     }
   }, []);
 
-  // Loading component
   const LoadingComponent = () => (
     <div
       className="d-flex justify-content-center align-items-center"
