@@ -9,7 +9,6 @@ The development focused on creating a responsive, user-friendly interface while 
 
 -User Authentication with JWT tokens
 -Secure password hashing and validation
--Real-time error handling with user-friendly notifications
 -Rate limiting for API protection
 -CORS security implementation
 -MongoDB database integration
