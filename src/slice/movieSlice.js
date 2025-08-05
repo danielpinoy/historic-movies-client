@@ -26,8 +26,6 @@ export const getMovies = createAsyncThunk(
         );
       }
 
-      console.log("🎬 Fetching movies from API...");
-
       const response = await makeAPICall("/Movies", {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -104,13 +102,13 @@ export const getMovies = createAsyncThunk(
           popularity: data.popularity || 0,
         }));
 
-        console.log(`✅ Successfully loaded ${historyMovieApi.length} movies`);
+        console.log(` Successfully loaded ${historyMovieApi.length} movies`);
         return historyMovieApi;
       } else {
         throw new Error("Invalid movie data received from server");
       }
     } catch (error) {
-      console.error("❌ Movie fetch error:", error);
+      console.error("Movie fetch error:", error);
 
       if (!navigator.onLine) {
         return rejectWithValue(
